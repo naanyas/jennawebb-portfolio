@@ -18,11 +18,16 @@ export const projects: Project[] = [
     tagline:
       "Commercial fraud-detection API — POST a signup submission (domain, email, phone, IP, device fingerprint), get a scored risk decision with explainable signals.",
     description:
-      "The successor to the Config-checker prototype. Multi-tenant SaaS modeled on industry leaders like eHawk: an API-first product where customers automate fraud decisions instead of running them through a human-review console. The moat is a cross-customer fingerprint reputation network plus a community feedback loop that improves accuracy over time.",
+      "The successor to the Config-checker prototype. Multi-tenant SaaS modeled on industry leaders like eHawk: an API-first product where customers automate fraud decisions instead of running them through a human-review console. The initial version of this engine was installed into a prominent email provider’s infrastructure during a fraud-detection consulting engagement, validating the scoring model on real submission traffic. v2 wraps that proven analyzer in a multi-tenant API with a cross-customer fingerprint reputation network and community feedback loop.",
     role: "Solo founder & engineer — architecture, API, scoring engine, schema design",
     stack: ["Django 5", "Postgres", "Python", "REST API", "Multi-tenant"],
-    status: "In progress",
+    status: "Shipped",
+    link: {
+      label: "domain-infra-production.up.railway.app",
+      href: "https://domain-infra-production.up.railway.app/console/",
+    },
     highlights: [
+      "Initial version installed into a prominent email provider’s infrastructure for live fraud detection",
       "Wraps the proven Config-checker analyzer instead of rewriting it",
       "API-first: sync POST /submissions today, async-compatible response shape for tomorrow",
       "Multi-tenant org isolation with API-key auth from day one",
@@ -67,20 +72,27 @@ export const projects: Project[] = [
     accent: "emerald",
   },
   {
-    slug: "momentum-screeners",
-    name: "Momentum Screeners & Trading Pipeline",
+    slug: "momentum-screener",
+    name: "V9 Momentum Breakout Screener",
     tagline:
-      "Python data pipelines and algorithmic trading strategies across equities, futures, and options — pattern screeners, backtesting, risk controls, live execution.",
+      "Real-time multi-signal momentum scanner — EMA10, RSI(7), 3D/10D momentum, 10D RVOL, VWAP and order-flow analysis across the full sub-$5 small-cap universe.",
     description:
-      "An ongoing personal project applying the same signal-mining discipline I used in trust & safety to financial markets. Scans 1,500+ tickers daily for high-conviction setups (Gap Up + Fade, momentum reversal, etc.), backtests strategies against historical data, and runs risk-controlled execution. Built from a hypothesis-test-iterate loop rather than a black box.",
-    role: "Solo engineer — strategy design, pipeline, backtest harness, execution",
-    stack: ["Python", "yfinance", "pandas", "backtesting", "options/futures"],
+      "An algorithmic equities screener I built to apply the same signal-mining discipline I used in trust & safety to financial markets. The V9 model fuses six independent technical signals into a single conviction score, ranks the universe live (alphabetical, randomized, or live-volume-ranked), and auto-refreshes every 60 seconds with audio alerts on watchlist hits. Powers the manual side of an end-to-end trading pipeline that includes backtesting, risk controls, and live execution.",
+    role: "Solo engineer — model design, signal engineering, screener UI, infra",
+    stack: [
+      "Python",
+      "Streamlit",
+      "yfinance",
+      "pandas",
+      "Plotly",
+      "concurrent.futures",
+    ],
     status: "In progress",
     highlights: [
-      "Pattern screener scanning 1,500+ tickers daily for setups like Gap Up + Fade",
-      "Backtesting harness for validating strategies against historical data",
-      "Risk controls built in: position sizing, stop logic, daily loss caps",
-      "Live execution layer for hands-off trade entry once a setup triggers",
+      "Six-signal model: EMA10, RSI(7), 3D & 10D momentum, 10D relative volume, VWAP + order flow",
+      "Scans up to 2,000 tickers with a thread pool; 60-second auto-refresh",
+      "Three universe modes including live volume-ranked construction",
+      "Watchlist mode with audio alerts on signal crosses",
     ],
     accent: "teal",
   },
@@ -88,10 +100,10 @@ export const projects: Project[] = [
     slug: "tangled-webb-platform",
     name: "Tangled Webb Bar Platform",
     tagline:
-      "Live bar entertainment platform — trivia, bingo, open mic, Triple Down, and Shut Up & Roll, all running off one host console.",
+      "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, Triple Down, and Shut Up & Roll, all running off one host console.",
     description:
-      "A full multi-game platform for venues. Players join by scanning a QR code, hosts run live rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. Built for Tangled Webb Entertainment.",
-    role: "Solo founder & engineer — product, UX, full-stack build",
+      "A full multi-game platform for venues. Players join by scanning a QR code, hosts run live rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. The same Next.js app serves tangleweb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
+    role: "Solo founder & engineer — product, UX, full-stack build, marketing site",
     stack: [
       "Next.js 16",
       "React 19",
@@ -101,11 +113,12 @@ export const projects: Project[] = [
       "JWT auth",
     ],
     status: "Beta",
+    link: { label: "tangleweb.com", href: "https://tangleweb.com" },
     highlights: [
       "Five live game modes share one player join flow and host console",
       "Player, host, admin, and performer roles each get a tailored interface",
       "QR-driven team join, per-venue leaderboards, drink-special promotions",
-      "Booking and performer-profile system links the platform to GigHive",
+      "Same codebase serves the public marketing site at tangleweb.com",
     ],
     accent: "amber",
   },
