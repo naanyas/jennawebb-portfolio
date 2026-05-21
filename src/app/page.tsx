@@ -8,6 +8,9 @@ const accentClasses: Record<Project["accent"], string> = {
     "from-emerald-500/20 to-emerald-500/0 ring-emerald-500/30 text-emerald-300",
   sky: "from-sky-500/20 to-sky-500/0 ring-sky-500/30 text-sky-300",
   rose: "from-rose-500/20 to-rose-500/0 ring-rose-500/30 text-rose-300",
+  teal: "from-teal-500/20 to-teal-500/0 ring-teal-500/30 text-teal-300",
+  indigo:
+    "from-indigo-500/20 to-indigo-500/0 ring-indigo-500/30 text-indigo-300",
 };
 
 const statusClasses: Record<Project["status"], string> = {

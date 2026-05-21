@@ -8,27 +8,81 @@ export type Project = {
   status: "Shipped" | "Beta" | "In progress" | "Prototype";
   highlights: string[];
   link?: { label: string; href: string };
-  accent: "amber" | "violet" | "emerald" | "sky" | "rose";
+  accent: "amber" | "violet" | "emerald" | "sky" | "rose" | "teal" | "indigo";
 };
 
 export const projects: Project[] = [
   {
-    slug: "domain-infra",
-    name: "domain-infra",
+    slug: "domain-risk-api",
+    name: "Domain Risk API (SDAT v2)",
     tagline:
-      "Multi-tenant fraud-detection SaaS evaluating signup submissions across domain, contact, and infrastructure signals.",
+      "Commercial fraud-detection API — POST a signup submission (domain, email, phone, IP, device fingerprint), get a scored risk decision with explainable signals.",
     description:
-      "A commercial fraud-detection platform modeled on industry leaders like eHawk. Customers POST a submission (domain, contact email, phone, IP, device fingerprint) and the API returns a risk decision with an explainable signal breakdown. The moat is a cross-customer fingerprint reputation network plus a community feedback loop that improves accuracy over time.",
+      "The successor to the Config-checker prototype. Multi-tenant SaaS modeled on industry leaders like eHawk: an API-first product where customers automate fraud decisions instead of running them through a human-review console. The moat is a cross-customer fingerprint reputation network plus a community feedback loop that improves accuracy over time.",
     role: "Solo founder & engineer — architecture, API, scoring engine, schema design",
     stack: ["Django 5", "Postgres", "Python", "REST API", "Multi-tenant"],
     status: "In progress",
     highlights: [
-      "Wraps a proven Python analyzer instead of rewriting it — kept the engine, built a SaaS around it",
-      "API-first design (sync POST /submissions today, async-compatible response shape for tomorrow)",
+      "Wraps the proven Config-checker analyzer instead of rewriting it",
+      "API-first: sync POST /submissions today, async-compatible response shape for tomorrow",
       "Multi-tenant org isolation with API-key auth from day one",
       "Cross-org entity linking and fingerprint reputation as a sellable network signal",
     ],
     accent: "violet",
+  },
+  {
+    slug: "config-checker",
+    name: "Config Checker (SDAT v1)",
+    tagline:
+      "Streamlit prototype that scores domains for fraud risk — DMARC, RDAP, lookalike detection, threat intel, plus a human-readable risk summary.",
+    description:
+      "The original Streamlit-based domain-risk analyzer (~400KB Python). Accepts a domain, returns a structured DomainApprovalResult with risk score, recommendation, and an investigator-friendly summary. Still in active use; the engine that the v2 API now wraps. Lives at naanyas/Config-checker on GitHub.",
+    role: "Solo engineer — analyzer, scoring logic, Streamlit UI",
+    stack: ["Python", "Streamlit", "RDAP", "DMARC", "VirusTotal"],
+    status: "Shipped",
+    highlights: [
+      "Single-domain risk scoring with a structured, queryable result object",
+      "Pulls DMARC, RDAP, and threat-intel signals into one report",
+      "Investigator-friendly summary explaining the score",
+      "Direct predecessor to the v2 commercial API",
+    ],
+    accent: "sky",
+  },
+  {
+    slug: "social-media-verify",
+    name: "Social Media Verify",
+    tagline:
+      "Python OSINT and domain-verification toolkit — lookalike detection, contact OSINT, threat intel, and remediation workflows.",
+    description:
+      "A 45KB analyzer that classifies a domain across category, contact OSINT, and threat-intel signals. Detects lookalike domains used for phishing infrastructure, integrates VirusTotal, and surfaces a remediation workflow. A second analyzer in the trust-and-safety toolkit.",
+    role: "Solo engineer — analyzer, classification logic, tests",
+    stack: ["Python", "Flask", "RDAP", "DMARC", "VirusTotal"],
+    status: "Shipped",
+    highlights: [
+      "Domain category classification with contact OSINT pivots",
+      "Lookalike-domain detection for phishing infrastructure",
+      "Threat-intel integration: VirusTotal, hacklink scanning",
+      "Production-ready with test coverage",
+    ],
+    accent: "emerald",
+  },
+  {
+    slug: "momentum-screeners",
+    name: "Momentum Screeners & Trading Pipeline",
+    tagline:
+      "Python data pipelines and algorithmic trading strategies across equities, futures, and options — pattern screeners, backtesting, risk controls, live execution.",
+    description:
+      "An ongoing personal project applying the same signal-mining discipline I used in trust & safety to financial markets. Scans 1,500+ tickers daily for high-conviction setups (Gap Up + Fade, momentum reversal, etc.), backtests strategies against historical data, and runs risk-controlled execution. Built from a hypothesis-test-iterate loop rather than a black box.",
+    role: "Solo engineer — strategy design, pipeline, backtest harness, execution",
+    stack: ["Python", "yfinance", "pandas", "backtesting", "options/futures"],
+    status: "In progress",
+    highlights: [
+      "Pattern screener scanning 1,500+ tickers daily for setups like Gap Up + Fade",
+      "Backtesting harness for validating strategies against historical data",
+      "Risk controls built in: position sizing, stop logic, daily loss caps",
+      "Live execution layer for hands-off trade entry once a setup triggers",
+    ],
+    accent: "teal",
   },
   {
     slug: "tangled-webb-platform",
@@ -71,7 +125,7 @@ export const projects: Project[] = [
       "Urgent / fill-in board for last-minute coverage",
       "Public events feed with follow system, free to consumers",
     ],
-    accent: "emerald",
+    accent: "indigo",
   },
   {
     slug: "two-drink-memories",
@@ -90,23 +144,5 @@ export const projects: Project[] = [
       "Dark, branded UI tuned for low-light bar environments",
     ],
     accent: "rose",
-  },
-  {
-    slug: "social-media-verify",
-    name: "Social Media Verify",
-    tagline:
-      "Python OSINT and domain-verification toolkit — DMARC, RDAP, lookalike detection, threat intel, and remediation workflows.",
-    description:
-      "A 45KB analyzer that classifies a domain across category, contact OSINT, and threat-intel signals. Pulls DMARC and RDAP records, detects lookalike domains, checks against VirusTotal, and surfaces a remediation workflow. The engine that seeded domain-infra.",
-    role: "Solo engineer — analyzer, classification logic, tests",
-    stack: ["Python", "Flask", "RDAP", "DMARC", "VirusTotal"],
-    status: "Shipped",
-    highlights: [
-      "Domain category classification with contact OSINT pivots",
-      "Lookalike-domain detection for phishing infrastructure",
-      "Threat-intel integration: VirusTotal, hacklink scanning",
-      "Direct ancestor of the domain-infra commercial product",
-    ],
-    accent: "sky",
   },
 ];
