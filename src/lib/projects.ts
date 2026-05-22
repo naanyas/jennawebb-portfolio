@@ -124,7 +124,11 @@ export const projects: Project[] = [
       "Plotly",
       "concurrent.futures",
     ],
-    status: "In progress",
+    status: "Shipped",
+    link: {
+      label: "Try the live screener",
+      href: "https://momentum-screener-production-1255.up.railway.app/",
+    },
     highlights: [
       "Six-signal model: EMA10, RSI(7), 3D & 10D momentum, 10D relative volume, VWAP + order flow",
       "Scans up to 2,000 tickers with a thread pool; 60-second auto-refresh",
