@@ -1,6 +1,12 @@
+export type Category =
+  | "detection"
+  | "entertainment"
+  | "trading";
+
 export type Project = {
   slug: string;
   name: string;
+  category: Category;
   tagline: string;
   description: string;
   role: string;
@@ -11,10 +17,38 @@ export type Project = {
   accent: "amber" | "violet" | "emerald" | "sky" | "rose" | "teal" | "indigo";
 };
 
+export const categoryMeta: Record<
+  Category,
+  { label: string; subtitle: string; description: string; accent: string }
+> = {
+  detection: {
+    label: "Detection & Verification",
+    subtitle: "Trust &amp; Safety tooling",
+    description:
+      "Fraud-detection APIs, domain risk scoring, and OSINT verification &mdash; tools shaped by ten years of frontline T&amp;S work.",
+    accent: "violet",
+  },
+  entertainment: {
+    label: "Live Entertainment",
+    subtitle: "Platforms for venues, performers, and patrons",
+    description:
+      "Bar-game platforms, booking marketplaces, and mobile games built for real venues under Tangled Webb Entertainment.",
+    accent: "amber",
+  },
+  trading: {
+    label: "Algorithmic Trading",
+    subtitle: "Signal-mining for markets",
+    description:
+      "Same hypothesis-test-iterate discipline I bring to abuse detection, applied to equities momentum and volatility setups.",
+    accent: "teal",
+  },
+};
+
 export const projects: Project[] = [
   {
     slug: "domain-risk-api",
     name: "Domain Risk API (SDAT v2)",
+    category: "detection",
     tagline:
       "Commercial fraud-detection API — POST a signup submission (domain, email, phone, IP, device fingerprint), get a scored risk decision with explainable signals.",
     description:
@@ -38,6 +72,7 @@ export const projects: Project[] = [
   {
     slug: "config-checker",
     name: "Config Checker (SDAT v1)",
+    category: "detection",
     tagline:
       "Streamlit prototype that scores domains for fraud risk — DMARC, RDAP, lookalike detection, threat intel, plus a human-readable risk summary.",
     description:
@@ -56,6 +91,7 @@ export const projects: Project[] = [
   {
     slug: "social-media-verify",
     name: "Social Media Verify",
+    category: "detection",
     tagline:
       "Python OSINT and domain-verification toolkit — lookalike detection, contact OSINT, threat intel, and remediation workflows.",
     description:
@@ -74,6 +110,7 @@ export const projects: Project[] = [
   {
     slug: "momentum-screener",
     name: "V9 Momentum Breakout Screener",
+    category: "trading",
     tagline:
       "Real-time multi-signal momentum scanner — EMA10, RSI(7), 3D/10D momentum, 10D RVOL, VWAP and order-flow analysis across the full sub-$5 small-cap universe.",
     description:
@@ -99,10 +136,11 @@ export const projects: Project[] = [
   {
     slug: "tangled-webb-platform",
     name: "Tangled Webb Bar Platform",
+    category: "entertainment",
     tagline:
       "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, Triple Down, and Shut Up & Roll, all running off one host console.",
     description:
-      "A full multi-game platform for venues. Players join by scanning a QR code, hosts run live rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. The same Next.js app serves tangleweb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
+      "A full multi-game platform for venues. Players join by scanning a QR code, hosts run live rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
     role: "Solo founder & engineer — product, UX, full-stack build, marketing site",
     stack: [
       "Next.js 16",
@@ -113,18 +151,19 @@ export const projects: Project[] = [
       "JWT auth",
     ],
     status: "Beta",
-    link: { label: "tangleweb.com", href: "https://tangleweb.com" },
+    link: { label: "tanglewebb.com", href: "https://tanglewebb.com" },
     highlights: [
       "Five live game modes share one player join flow and host console",
       "Player, host, admin, and performer roles each get a tailored interface",
       "QR-driven team join, per-venue leaderboards, drink-special promotions",
-      "Same codebase serves the public marketing site at tangleweb.com",
+      "Same codebase serves the public marketing site at tanglewebb.com",
     ],
     accent: "amber",
   },
   {
     slug: "gighive",
     name: "GigHive",
+    category: "entertainment",
     tagline:
       "Mobile-first booking marketplace where bars and venues book live entertainment — musicians, comedians, DJs, karaoke hosts.",
     description:
@@ -143,6 +182,7 @@ export const projects: Project[] = [
   {
     slug: "two-drink-memories",
     name: "2 Drink Memories",
+    category: "entertainment",
     tagline:
       "Bar-friendly photo-hunt game — find the differences between two AI-generated images before the timer runs out.",
     description:
