@@ -57,8 +57,8 @@ export const projects: Project[] = [
     stack: ["Django 5", "Postgres", "Python", "REST API", "Multi-tenant"],
     status: "Shipped",
     link: {
-      label: "domain-infra-production.up.railway.app",
-      href: "https://domain-infra-production.up.railway.app/console/",
+      label: "Try the live demo",
+      href: "https://domain-infra-production.up.railway.app/",
     },
     highlights: [
       "Initial version installed into a prominent email provider’s infrastructure for live fraud detection",
