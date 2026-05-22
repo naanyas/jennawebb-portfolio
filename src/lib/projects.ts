@@ -14,6 +14,10 @@ export type Project = {
   status: "Shipped" | "Beta" | "In progress" | "Prototype";
   highlights: string[];
   link?: { label: string; href: string };
+  // Optional secondary live-demo links rendered as a small row of chips.
+  // Useful for projects with multiple demo surfaces (e.g. Tangled Webb's
+  // five game modes, each with its own marketing/demo page).
+  subLinks?: { label: string; href: string }[];
   accent: "amber" | "violet" | "emerald" | "sky" | "rose" | "teal" | "indigo";
 };
 
@@ -76,10 +80,14 @@ export const projects: Project[] = [
     tagline:
       "Streamlit prototype that scores domains for fraud risk — DMARC, RDAP, lookalike detection, threat intel, plus a human-readable risk summary.",
     description:
-      "The original Streamlit-based domain-risk analyzer (~400KB Python). Accepts a domain, returns a structured DomainApprovalResult with risk score, recommendation, and an investigator-friendly summary. Still in active use; the engine that the v2 API now wraps. Lives at naanyas/Config-checker on GitHub.",
+      "The original Streamlit-based domain-risk analyzer (~400KB Python). Accepts a domain, returns a structured DomainApprovalResult with risk score, recommendation, and an investigator-friendly summary. Still in active use; the engine that the v2 API now wraps.",
     role: "Solo engineer — analyzer, scoring logic, Streamlit UI",
     stack: ["Python", "Streamlit", "RDAP", "DMARC", "VirusTotal"],
     status: "Shipped",
+    link: {
+      label: "Try the live demo",
+      href: "https://sdat-v1-demo-production.up.railway.app/",
+    },
     highlights: [
       "Single-domain risk scoring with a structured, queryable result object",
       "Pulls DMARC, RDAP, and threat-intel signals into one report",
@@ -93,19 +101,46 @@ export const projects: Project[] = [
     name: "Social Media Verify",
     category: "detection",
     tagline:
-      "Python OSINT and domain-verification toolkit — lookalike detection, contact OSINT, threat intel, and remediation workflows.",
+      "Streamlit OSINT toolkit — discovers and verifies social-media profiles from a company domain, plus review-site coverage and risk scoring.",
     description:
-      "A 45KB analyzer that classifies a domain across category, contact OSINT, and threat-intel signals. Detects lookalike domains used for phishing infrastructure, integrates VirusTotal, and surfaces a remediation workflow. A second analyzer in the trust-and-safety toolkit.",
-    role: "Solo engineer — analyzer, classification logic, tests",
-    stack: ["Python", "Flask", "RDAP", "DMARC", "VirusTotal"],
+      "Enter a domain or email address. The tool auto-discovers social media profiles from the company's own site, verifies each one resolves and references the domain, scans reviews across Google/BBB/Trustpilot/Glassdoor/G2/Yelp/Capterra, detects developer signals (GitHub, npm, Product Hunt, app stores), and computes a 0-100 risk score with Low/Medium/High/Critical tier.",
+    role: "Solo engineer — analyzer, scoring logic, Streamlit UI",
+    stack: ["Python", "Streamlit", "BeautifulSoup", "WHOIS", "OSINT"],
     status: "Shipped",
+    link: {
+      label: "Try the live demo",
+      href: "https://social-media-verify-production.up.railway.app/",
+    },
     highlights: [
-      "Domain category classification with contact OSINT pivots",
-      "Lookalike-domain detection for phishing infrastructure",
-      "Threat-intel integration: VirusTotal, hacklink scanning",
-      "Production-ready with test coverage",
+      "Social-profile auto-discovery from a company's own website first",
+      "Review-site coverage across 7 major platforms (Google, BBB, Trustpilot, etc.)",
+      "Developer/startup signal detection (GitHub, npm, Product Hunt, Crunchbase)",
+      "Domain intelligence: WHOIS age, DNS history, website analysis",
     ],
     accent: "emerald",
+  },
+  {
+    slug: "gap-fade-screener",
+    name: "Gap Up + Fade Screener (v1)",
+    category: "trading",
+    tagline:
+      "Pattern-mining predecessor to V9 — scans a small-cap universe for premarket gap-ups that fade intraday, a high-conviction reversal signal on low-float names.",
+    description:
+      "The first algorithmic screener I shipped. Configurable thresholds for the premarket gap (>2%) and intraday fade (<-1%), a parallel ThreadPoolExecutor scanning ~90 tickers, and a sortable result table with CSV export. The work that taught me how this signal actually behaves at scale — and what V9 needed to do better.",
+    role: "Solo engineer — pattern definition, scanner, Streamlit UI",
+    stack: ["Python", "Streamlit", "yfinance", "pandas", "concurrent.futures"],
+    status: "Shipped",
+    link: {
+      label: "Try the live screener",
+      href: "https://gap-fade-screener-production.up.railway.app/",
+    },
+    highlights: [
+      "Configurable premarket-gap and intraday-fade thresholds",
+      "Parallel scan over ~90-ticker small-cap universe; custom watchlist supported",
+      "Sortable hit table with CSV export",
+      "Predecessor to the V9 multi-signal model",
+    ],
+    accent: "indigo",
   },
   {
     slug: "momentum-screener",
@@ -156,6 +191,13 @@ export const projects: Project[] = [
     ],
     status: "Beta",
     link: { label: "tanglewebb.com", href: "https://tanglewebb.com" },
+    subLinks: [
+      { label: "Trivia", href: "https://tanglewebb.com/services/trivia" },
+      { label: "Bingo", href: "https://tanglewebb.com/services/bingo" },
+      { label: "Open Mic", href: "https://tanglewebb.com/services/openmic" },
+      { label: "Triple Down", href: "https://tanglewebb.com/services/triple-down" },
+      { label: "Open Mic demo (live)", href: "https://tanglewebb.com/demo/openmic" },
+    ],
     highlights: [
       "Five live game modes share one player join flow and host console",
       "Player, host, admin, and performer roles each get a tailored interface",
@@ -175,6 +217,10 @@ export const projects: Project[] = [
     role: "Solo founder & engineer — product, mobile, backend, payments",
     stack: ["Expo (React Native)", "Supabase", "Stripe", "TypeScript"],
     status: "Beta",
+    link: {
+      label: "View the pitch deck",
+      href: "https://pitch-site-nine.vercel.app/",
+    },
     highlights: [
       "10 act types, location matching by radius and region",
       "$5/month subscription with beta-tester bypass; Stripe handles billing",
@@ -194,6 +240,10 @@ export const projects: Project[] = [
     role: "Solo founder & engineer — game design, mobile build, content pipeline",
     stack: ["Expo SDK 54", "TypeScript", "Gemini 2.5 Flash", "Supabase (planned)"],
     status: "Prototype",
+    link: {
+      label: "Game-mode preview on tanglewebb.com",
+      href: "https://tanglewebb.com/services",
+    },
     highlights: [
       "AI-generated image-pair pipeline with hotspot coordinates",
       "Token wallet (10/$1.99, 30/$4.99, 100/$12.99) wired for IAP",

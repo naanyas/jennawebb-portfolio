@@ -148,6 +148,14 @@ export default function Home() {
             >
               V9 screener
             </a>
+            <a
+              href="https://gap-fade-screener-production.up.railway.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-white"
+            >
+              Gap+Fade v1
+            </a>
           </div>
           <a
             href="#contact"
@@ -387,6 +395,29 @@ export default function Home() {
                               </a>
                             )}
                           </div>
+
+                          {p.subLinks && p.subLinks.length > 0 && (
+                            <div className="mt-3 border-t border-white/5 pt-3">
+                              <p className="text-xs uppercase tracking-widest text-white/40">
+                                Live demos
+                              </p>
+                              <ul className="mt-1.5 flex flex-wrap gap-1.5">
+                                {p.subLinks.map((s) => (
+                                  <li key={s.href}>
+                                    <a
+                                      href={s.href}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className={`inline-flex items-center gap-1 rounded-md bg-white/5 px-2 py-1 text-xs ring-1 ring-inset ring-white/10 transition hover:bg-white/10 ${accentText[p.accent]}`}
+                                    >
+                                      {s.label}
+                                      <span className="text-white/40">&rarr;</span>
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       </article>
                     </li>
