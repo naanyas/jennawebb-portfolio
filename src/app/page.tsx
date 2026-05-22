@@ -156,6 +156,14 @@ export default function Home() {
             >
               Gap+Fade v1
             </a>
+            <a
+              href="https://ml-screener-production.up.railway.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-white"
+            >
+              ML screener
+            </a>
           </div>
           <a
             href="#contact"

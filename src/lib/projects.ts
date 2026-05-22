@@ -143,6 +143,36 @@ export const projects: Project[] = [
     accent: "indigo",
   },
   {
+    slug: "ml-screener",
+    name: "ML Momentum Screener",
+    category: "trading",
+    tagline:
+      "Most advanced of the three screeners — fuses real-time Finviz news, multi-timeframe momentum, RVOL, VWAP, and order-flow into a single composite ML-style score with breaking-news flags.",
+    description:
+      "The current production model. Scrapes today's Finviz news per ticker (with a sub-20-minute 'breaking' flag), layers in pre-market and intraday flow signals, and ranks the universe by a composite score. ~1,700 lines of orchestrated screening logic — the iteration on V9 that added external catalyst awareness to the technical signals.",
+    role: "Solo engineer — model design, news scraping, scoring composition, UI",
+    stack: [
+      "Python",
+      "Streamlit",
+      "yfinance",
+      "BeautifulSoup",
+      "pandas",
+      "Plotly",
+    ],
+    status: "Shipped",
+    link: {
+      label: "Try the live screener",
+      href: "https://ml-screener-production.up.railway.app/",
+    },
+    highlights: [
+      "Live Finviz news scrape with 'breaking' flag for <20-minute headlines",
+      "Multi-timeframe momentum (premarket, intraday, 3D, 10D)",
+      "Composite scoring blending technicals with news catalysts",
+      "Three universe modes including live volume-ranked construction",
+    ],
+    accent: "rose",
+  },
+  {
     slug: "momentum-screener",
     name: "V9 Momentum Breakout Screener",
     category: "trading",
