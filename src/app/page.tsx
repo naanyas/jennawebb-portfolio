@@ -97,10 +97,10 @@ const categoryIcon: Record<Category, React.ReactNode> = {
 };
 
 const stats: { value: string; label: string }[] = [
+  { value: "96%", label: "False-negative rate cut on recent T&S engagement" },
   { value: "71%", label: "Abuse incidents cut at Twilio" },
+  { value: "350h", label: "Per month of manual review automated away" },
   { value: "10+", label: "Years in Trust & Safety" },
-  { value: "7", label: "Products shipped solo" },
-  { value: "1,500+", label: "Tickers scanned daily by V9" },
 ];
 
 export default function Home() {
@@ -370,8 +370,10 @@ export default function Home() {
                   org: "Notification-platform engagement",
                   dates: "Jan 2026 – Apr 2026",
                   bullets: [
-                    "Designed behavioral risk scoring and identity-verification frameworks for onboarding-fraud detection.",
-                    "Built automated decisioning combining device intelligence, document authenticity, network reputation, and behavioral signals.",
+                    "Cut ~350 hours/month of manual review effort by automating decisioning across device intelligence, document authenticity, network reputation, and behavioral signals.",
+                    "Improved enablement time by 90%, with full automation set to bring it further.",
+                    "Reduced false-negative rate by 96%, with a clear runway to continued gains as the automated pipeline matures.",
+                    "Held fraud detection stable with consistently low false-positive rates — the signal-health metric I was optimizing for.",
                     "Closed gaps in third-party detection with supplemental controls targeting previously unmitigated abuse vectors.",
                   ],
                 },
