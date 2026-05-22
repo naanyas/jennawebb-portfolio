@@ -220,13 +220,12 @@ export const projects: Project[] = [
       "JWT auth",
     ],
     status: "Beta",
-    link: { label: "tanglewebb.com", href: "https://tanglewebb.com" },
+    link: {
+      label: "Try the live Open Mic demo",
+      href: "https://tanglewebb.com/demo/openmic",
+    },
     subLinks: [
-      { label: "Trivia", href: "https://tanglewebb.com/services/trivia" },
-      { label: "Bingo", href: "https://tanglewebb.com/services/bingo" },
-      { label: "Open Mic", href: "https://tanglewebb.com/services/openmic" },
-      { label: "Triple Down", href: "https://tanglewebb.com/services/triple-down" },
-      { label: "Open Mic demo (live)", href: "https://tanglewebb.com/demo/openmic" },
+      { label: "tanglewebb.com (marketing site)", href: "https://tanglewebb.com" },
     ],
     highlights: [
       "Five live game modes share one player join flow and host console",
@@ -270,10 +269,9 @@ export const projects: Project[] = [
     role: "Solo founder & engineer — game design, mobile build, content pipeline",
     stack: ["Expo SDK 54", "TypeScript", "Gemini 2.5 Flash", "Supabase (planned)"],
     status: "Prototype",
-    link: {
-      label: "Game-mode preview on tanglewebb.com",
-      href: "https://tanglewebb.com/services",
-    },
+    // No public web build yet — Expo app is mobile-first and still
+    // pre-TestFlight. Intentionally omitting a link rather than pointing
+    // at a page that doesn't actually demo the game.
     highlights: [
       "AI-generated image-pair pipeline with hotspot coordinates",
       "Token wallet (10/$1.99, 30/$4.99, 100/$12.99) wired for IAP",
