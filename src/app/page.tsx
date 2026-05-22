@@ -112,6 +112,54 @@ export default function Home() {
 
   return (
     <main className="relative overflow-hidden">
+      {/* Top nav — sticky, links to in-page sections plus live demos */}
+      <nav className="sticky top-0 z-40 border-b border-white/5 bg-ink-900/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3">
+          <a
+            href="#top"
+            className="group flex items-center gap-2 text-sm font-semibold text-white"
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-ink-900">
+              JW
+            </span>
+            <span className="hidden sm:inline">jennawebb.co</span>
+          </a>
+          <div className="hidden items-center gap-1 text-sm text-white/70 md:flex">
+            <a href="#projects" className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-white">
+              Projects
+            </a>
+            <a href="#experience" className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-white">
+              Experience
+            </a>
+            <span className="mx-1 h-4 w-px bg-white/10" />
+            <a
+              href="https://domain-infra-production.up.railway.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-white"
+            >
+              SDAT demo
+            </a>
+            <a
+              href="https://momentum-screener-production-1255.up.railway.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md px-3 py-1.5 hover:bg-white/5 hover:text-white"
+            >
+              V9 screener
+            </a>
+          </div>
+          <a
+            href="#contact"
+            className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white ring-1 ring-white/15 transition hover:bg-white/15"
+          >
+            Contact
+          </a>
+        </div>
+      </nav>
+
+      <div id="top" />
+
       {/* Hero */}
       <section className="relative">
         {/* Decorative gradient blob */}
@@ -351,7 +399,7 @@ export default function Home() {
       </section>
 
       {/* Experience */}
-      <section className="relative border-t border-white/5">
+      <section id="experience" className="relative border-t border-white/5">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <div className="grid gap-12 md:grid-cols-3">
             <div>
