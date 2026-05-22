@@ -269,14 +269,15 @@ export const projects: Project[] = [
     role: "Solo founder & engineer — game design, mobile build, content pipeline",
     stack: ["Expo SDK 54", "TypeScript", "Gemini 2.5 Flash", "Supabase (planned)"],
     status: "Prototype",
-    // No public web build yet — Expo app is mobile-first and still
-    // pre-TestFlight. Intentionally omitting a link rather than pointing
-    // at a page that doesn't actually demo the game.
+    link: {
+      label: "Play the web build",
+      href: "https://two-drink-memories.vercel.app/",
+    },
     highlights: [
       "AI-generated image-pair pipeline with hotspot coordinates",
       "Token wallet (10/$1.99, 30/$4.99, 100/$12.99) wired for IAP",
       "Tappable hotspot detection with miss-marker feedback",
-      "Dark, branded UI tuned for low-light bar environments",
+      "Web build uses placeholder images while real Gemini-generated puzzles are pending",
     ],
     accent: "rose",
   },
