@@ -14,10 +14,12 @@ export type Project = {
   status: "Shipped" | "Beta" | "In progress" | "Prototype";
   highlights: string[];
   link?: { label: string; href: string };
-  // Optional secondary live-demo links rendered as a small row of chips.
-  // Useful for projects with multiple demo surfaces (e.g. Tangled Webb's
-  // five game modes, each with its own marketing/demo page).
+  // Optional secondary links rendered as a small row of chips.
   subLinks?: { label: string; href: string }[];
+  // Section label for the subLinks chips. Defaults to "Live demos" — set
+  // explicitly when the secondary links are info/marketing pages rather
+  // than actual playable demos.
+  subLinksLabel?: string;
   accent: "amber" | "violet" | "emerald" | "sky" | "rose" | "teal" | "indigo";
 };
 
@@ -224,8 +226,14 @@ export const projects: Project[] = [
       label: "Try the live Open Mic demo",
       href: "https://tanglewebb.com/demo/openmic",
     },
+    subLinksLabel: "Game pages on tanglewebb.com",
     subLinks: [
-      { label: "tanglewebb.com (marketing site)", href: "https://tanglewebb.com" },
+      { label: "Trivia", href: "https://tanglewebb.com/services/trivia" },
+      { label: "Open Mic", href: "https://tanglewebb.com/services/openmic" },
+      { label: "Bar Bingo", href: "https://tanglewebb.com/services/bingo" },
+      { label: "Triple Down", href: "https://tanglewebb.com/services/triple-down" },
+      { label: "Shut Up & Roll", href: "https://tanglewebb.com/services/shutuproll" },
+      { label: "Main site", href: "https://tanglewebb.com" },
     ],
     highlights: [
       "Five live game modes share one player join flow and host console",

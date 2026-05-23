@@ -407,7 +407,7 @@ export default function Home() {
                           {p.subLinks && p.subLinks.length > 0 && (
                             <div className="mt-3 border-t border-white/5 pt-3">
                               <p className="text-xs uppercase tracking-widest text-white/40">
-                                Live demos
+                                {p.subLinksLabel ?? "Live demos"}
                               </p>
                               <ul className="mt-1.5 flex flex-wrap gap-1.5">
                                 {p.subLinks.map((s) => (
