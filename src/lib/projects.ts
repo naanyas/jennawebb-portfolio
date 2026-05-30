@@ -209,7 +209,7 @@ export const projects: Project[] = [
     name: "Tangled Webb Bar Platform",
     category: "entertainment",
     tagline:
-      "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, Triple Down, and Shut Up & Roll, all running off one host console.",
+      "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, Triple Down, Shut Up & Roll, and Tab Out, all running off one host console.",
     description:
       "A full multi-game platform for venues. Players join by scanning a QR code, hosts run live rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
     role: "Solo founder & engineer — product, UX, full-stack build, marketing site",
@@ -233,6 +233,7 @@ export const projects: Project[] = [
       { label: "Bar Bingo", href: "https://tanglewebb.com/services/bingo" },
       { label: "Triple Down", href: "https://tanglewebb.com/services/triple-down" },
       { label: "Shut Up & Roll", href: "https://tanglewebb.com/services/shutuproll" },
+      { label: "Tab Out", href: "https://tanglewebb.com/services/tabout" },
       { label: "Main site", href: "https://tanglewebb.com" },
     ],
     highlights: [
