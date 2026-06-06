@@ -99,6 +99,29 @@ export const projects: Project[] = [
     accent: "sky",
   },
   {
+    slug: "domain-risk-checker",
+    name: "Domain Risk Checker",
+    category: "detection",
+    tagline:
+      "The evolved analyzer — scores the registrable root AND the exact submitted URL separately, and flags consumer-harm patterns (pop/push-ad networks, scareware, browser-lock, cloaking) that domain-only checks miss.",
+    description:
+      "The next iteration of the Config-checker engine, built around two upgrades. First, dual scoring: a platform-as-tenant link like payhip.com/b/<id> is analyzed twice — once for the clean platform root and once for the specific seller page that actually carries the risk — returning an independent verdict for each, so a bad tenant on a trusted host can no longer hide behind a clean root. Second, a consumer-harm pipeline that detects intrusive pop/push-ad networks, fake-virus scareware, browser-lock traps, and crawler cloaking, surfacing a plain-English consumer summary with the raw signal evidence tucked into an analyst-only panel.",
+    role: "Solo engineer — analyzer, dual-scoring model, consumer-harm pipeline, Streamlit UI",
+    stack: ["Python", "Streamlit", "RDAP", "DMARC", "Threat Intel"],
+    status: "Shipped",
+    link: {
+      label: "Try the live demo",
+      href: "https://domain-risk-checker-production.up.railway.app/",
+    },
+    highlights: [
+      "Dual scoring: separate risk verdicts for the registrable root and the exact submitted URL/subdomain",
+      "Catches bad platform tenants (e.g. a scam payhip.com/b/<id>) that root-only checks rate as clean",
+      "Consumer-harm detection: pop/push-ad networks, scareware, browser-lock, and crawler cloaking",
+      "Plain-English consumer summary, with the raw signal breakdown in a separate analyst panel",
+    ],
+    accent: "teal",
+  },
+  {
     slug: "social-media-verify",
     name: "Social Media Verify",
     category: "detection",
