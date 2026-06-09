@@ -99,7 +99,7 @@ const categoryIcon: Record<Category, React.ReactNode> = {
 const stats: { value: string; label: string }[] = [
   { value: "96%", label: "False-negative rate cut on recent T&S engagement" },
   { value: "71%", label: "Abuse incidents cut as Staff PM in a Trust & Safety org" },
-  { value: "350h", label: "Per month of manual review automated away" },
+  { value: "350h", label: "Per month of manual review automated on recent T&S engagement" },
   { value: "10+", label: "Years in Trust & Safety" },
 ];
 
