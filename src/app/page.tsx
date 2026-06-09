@@ -498,11 +498,13 @@ export default function Home() {
                   role: "Compliance Specialist",
                   org: "Twilio Inc.",
                   dates: "Jun 2020 – Nov 2020",
+                  note: "Founding role — built the compliance program from scratch",
                   bullets: [
-                    "Helped establish Twilio's messaging compliance operations and customer vetting processes — fraud prevention, onboarding review, and abuse mitigation.",
-                    "Designed escalation workflows, monitoring procedures, and enforcement documentation that supported scalable compliance operations as the team grew.",
-                    "Developed tooling and training materials enabling consistent review of high-risk accounts and suspicious traffic patterns.",
-                    "Served as escalation lead for compliance incidents, customer investigations, and enforcement response coordination.",
+                    "Built Twilio's messaging compliance program from the ground up — established the operational playbook, customer vetting processes, and escalation framework that the team scaled on for years.",
+                    "Defined the original escalation workflows, monitoring procedures, and enforcement documentation that became the foundation of Twilio's compliance ops.",
+                    "Designed the first-cut tooling and training materials for high-risk-account review — the patterns the team adopted as canonical for suspicious-traffic triage.",
+                    "Served as escalation lead for compliance incidents, customer investigations, and enforcement response coordination — the operating model that informed the Staff PM role that followed.",
+                    "Recognized with the Magic Owl Award for building the compliance department from the ground up.",
                   ],
                 },
                 {
@@ -515,7 +517,7 @@ export default function Home() {
                     "Supported CFPB audits through reporting, operational analysis, and remediation planning.",
                   ],
                 },
-              ].map((job) => (
+              ].map((job: { role: string; org: string; dates: string; bullets: string[]; note?: string }) => (
                 <div
                   key={job.role}
                   className="rounded-xl bg-ink-800/50 p-5 ring-1 ring-white/5"
@@ -531,6 +533,13 @@ export default function Home() {
                       {job.dates}
                     </p>
                   </div>
+                  {job.note && (
+                    <div className="mt-3">
+                      <span className="inline-block rounded-full bg-accent/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-accent ring-1 ring-accent/30">
+                        ★ {job.note}
+                      </span>
+                    </div>
+                  )}
                   <ul className="mt-3 space-y-1.5 text-sm text-white/75">
                     {job.bullets.map((b) => (
                       <li key={b} className="flex gap-2">
