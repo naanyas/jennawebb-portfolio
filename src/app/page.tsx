@@ -98,7 +98,7 @@ const categoryIcon: Record<Category, React.ReactNode> = {
 
 const stats: { value: string; label: string }[] = [
   { value: "96%", label: "False-negative rate cut on recent T&S engagement" },
-  { value: "71%", label: "Abuse incidents cut at Twilio" },
+  { value: "71%", label: "Abuse incidents cut as Staff PM at a global CPaaS leader" },
   { value: "350h", label: "Per month of manual review automated away" },
   { value: "10+", label: "Years in Trust & Safety" },
 ];
@@ -207,7 +207,7 @@ export default function Home() {
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70">
             10+ years building abuse-prevention systems across email, messaging,
             fintech, and SaaS &mdash; most recently Staff PM for Trusted
-            Communications at Twilio, where my detection frameworks cut abuse
+            Communications at a global CPaaS leader, where my detection frameworks cut abuse
             incidents by <span className="text-accent">71%</span>. Off-hours,
             I build full products end to end across three lanes: detection,
             live entertainment, and quantitative trading.
@@ -264,13 +264,15 @@ export default function Home() {
             <div className="md:col-span-2 space-y-4 text-white/75 leading-relaxed">
               <p>
                 I spent the last decade-plus running Trust &amp; Safety and
-                fraud programs at scale &mdash; Twilio (Staff PM, Trusted
-                Communications), Alliance Data (Fair Billing), and most
-                recently a consulting engagement designing onboarding-fraud
-                detection for a major notification platform. I&rsquo;m fluent
-                in the operational side: SQL, Snowflake, Looker, Splunk,
-                behavioral analytics, root-cause investigation, KPI design,
-                carrier and cross-functional escalation.
+                fraud programs at scale &mdash; Staff PM for Trusted
+                Communications at a global CPaaS leader, Fair Billing
+                Compliance at a major retail-financial-services firm, and
+                most recently a consulting engagement designing
+                onboarding-fraud detection for a notification platform.
+                I&rsquo;m fluent in the operational side: SQL, Snowflake,
+                Looker, Splunk, behavioral analytics, root-cause
+                investigation, KPI design, carrier and cross-functional
+                escalation.
               </p>
               <p>
                 What sets me apart is that I don&rsquo;t stop at the spec
@@ -466,7 +468,7 @@ export default function Home() {
                 },
                 {
                   role: "Staff Product Manager, Trusted Communications",
-                  org: "Twilio Inc.",
+                  org: "Global CPaaS leader (public)",
                   dates: "Jun 2022 – Apr 2025",
                   bullets: [
                     "Led Trust & Safety strategy for email and messaging abuse prevention protecting millions of users globally.",
@@ -477,7 +479,7 @@ export default function Home() {
                 },
                 {
                   role: "Staff Messaging Compliance Program Manager",
-                  org: "Twilio Inc.",
+                  org: "Global CPaaS leader (public)",
                   dates: "Nov 2020 – Jun 2022",
                   bullets: [
                     "Led compliance and abuse-prevention strategy for A2P messaging (10DLC, Short Code, Toll-Free).",
@@ -535,10 +537,11 @@ export default function Home() {
                   </li>
                   <li>
                     <span className="text-white/80">Recognition:</span>{" "}
-                    Superb Owl Award (Twilio, 10DLC carrier connections),
-                    Magic Owl Award (Twilio, building the compliance
-                    department), President&rsquo;s Circle nomination (Alliance
-                    Data).
+                    Superb Owl Award (10DLC compliance &amp; carrier direct
+                    connections), Magic Owl Award (building the compliance
+                    department from the ground up), President&rsquo;s Circle
+                    nomination (creating the debt-settlement function at a
+                    major retail-financial-services firm).
                   </li>
                   <li>
                     <span className="text-white/80">Core stack:</span> SQL,
