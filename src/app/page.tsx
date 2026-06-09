@@ -98,7 +98,7 @@ const categoryIcon: Record<Category, React.ReactNode> = {
 
 const stats: { value: string; label: string }[] = [
   { value: "96%", label: "False-negative rate cut on recent T&S engagement" },
-  { value: "71%", label: "Abuse incidents cut as Staff PM at a global CPaaS leader" },
+  { value: "71%", label: "Abuse incidents cut as Staff PM in a Trust & Safety org" },
   { value: "350h", label: "Per month of manual review automated away" },
   { value: "10+", label: "Years in Trust & Safety" },
 ];
@@ -206,8 +206,9 @@ export default function Home() {
           </p>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70">
             10+ years building abuse-prevention systems across email, messaging,
-            fintech, and SaaS &mdash; most recently Staff PM for Trusted
-            Communications at a global CPaaS leader, where my detection frameworks cut abuse
+            fintech, and SaaS &mdash; most recently a Staff Product Manager
+            leading Trust &amp; Safety strategy for abuse prevention across
+            email and messaging, where my detection frameworks cut abuse
             incidents by <span className="text-accent">71%</span>. Off-hours,
             I build full products end to end across three lanes: detection,
             live entertainment, and quantitative trading.
@@ -264,10 +265,11 @@ export default function Home() {
             <div className="md:col-span-2 space-y-4 text-white/75 leading-relaxed">
               <p>
                 I spent the last decade-plus running Trust &amp; Safety and
-                fraud programs at scale &mdash; Staff PM for Trusted
-                Communications at a global CPaaS leader, Fair Billing
-                Compliance at a major retail-financial-services firm, and
-                most recently a consulting engagement designing
+                fraud programs at scale &mdash; most recently a Staff Product
+                Manager role leading abuse-prevention strategy for a global
+                email + messaging platform, before that a Fair Billing
+                Compliance program at a major retail-financial-services firm,
+                and most recently a consulting engagement designing
                 onboarding-fraud detection for a notification platform.
                 I&rsquo;m fluent in the operational side: SQL, Snowflake,
                 Looker, Splunk, behavioral analytics, root-cause
@@ -467,8 +469,8 @@ export default function Home() {
                   ],
                 },
                 {
-                  role: "Staff Product Manager, Trusted Communications",
-                  org: "Global CPaaS leader (public)",
+                  role: "Staff Product Manager, Trust & Safety",
+                  org: "Global email + messaging platform",
                   dates: "Jun 2022 – Apr 2025",
                   bullets: [
                     "Led Trust & Safety strategy for email and messaging abuse prevention protecting millions of users globally.",
@@ -479,7 +481,7 @@ export default function Home() {
                 },
                 {
                   role: "Staff Messaging Compliance Program Manager",
-                  org: "Global CPaaS leader (public)",
+                  org: "Global email + messaging platform",
                   dates: "Nov 2020 – Jun 2022",
                   bullets: [
                     "Led compliance and abuse-prevention strategy for A2P messaging (10DLC, Short Code, Toll-Free).",
