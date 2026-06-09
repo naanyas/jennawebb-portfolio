@@ -500,7 +500,6 @@ export default function Home() {
                   role: "Compliance Specialist",
                   org: "Twilio Inc.",
                   dates: "Jun 2020 – Nov 2020",
-                  note: "Founding role — built the compliance program from scratch",
                   bullets: [
                     "Built Twilio's messaging compliance program from the ground up — established the operational playbook, customer vetting processes, and escalation framework that the team scaled on for years.",
                     "Defined the original escalation workflows, monitoring procedures, and enforcement documentation that became the foundation of Twilio's compliance ops.",
