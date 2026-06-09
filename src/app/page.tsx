@@ -461,12 +461,13 @@ export default function Home() {
                   role: "Independent Security & Risk Consultant",
                   org: "Notification-platform engagement",
                   dates: "Jan 2026 – Apr 2026",
+                  note: "Built a domain-risk tool that closed a 68% vendor gap",
                   bullets: [
-                    "Cut ~350 hours/month of manual review effort by automating decisioning across device intelligence, document authenticity, network reputation, and behavioral signals.",
-                    "Improved enablement time by 90%, with full automation set to bring it further.",
-                    "Reduced false-negative rate by 96%, with a clear runway to continued gains as the automated pipeline matures.",
-                    "Held fraud detection stable with consistently low false-positive rates — the signal-health metric I was optimizing for.",
-                    "Closed gaps in third-party detection with supplemental controls targeting previously unmitigated abuse vectors.",
+                    "Used signal analysis to surface that the incumbent third-party vendor was only catching ~32% of fraudsters — the other ~68% were getting through hijacked-domain attacks the vendor wasn't built to detect.",
+                    "Built a domain-risk analyzer (SDAT — see the Domain Risk API project below) from scratch to target that exact gap, then partnered with Engineering to integrate it into the platform's vetting pipeline — turning a single-vendor pass into a full third-party-plus-supplemental vetting program.",
+                    "That integration drove a 96% reduction in false-negative rate while holding false-positive rates flat — the signal-health metric I was optimizing for.",
+                    "Same pipeline cut ~350 hours/month of manual review effort and improved enablement time by 90%, with full automation set to push both further.",
+                    "Designed the behavioral risk scoring and identity-verification frameworks behind it — combining device intelligence, document authenticity, network reputation, and behavioral signals.",
                   ],
                 },
                 {
