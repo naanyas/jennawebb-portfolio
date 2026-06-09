@@ -501,7 +501,6 @@ export default function Home() {
                   org: "Twilio Inc.",
                   dates: "Jun 2020 – Nov 2020",
                   bullets: [
-                    "Built Twilio's messaging compliance program from the ground up — established the operational playbook, customer vetting processes, and escalation framework that the team scaled on for years.",
                     "Defined the original escalation workflows, monitoring procedures, and enforcement documentation that became the foundation of Twilio's compliance ops.",
                     "Designed the first-cut tooling and training materials for high-risk-account review — the patterns the team adopted as canonical for suspicious-traffic triage.",
                     "Served as escalation lead for compliance incidents, customer investigations, and enforcement response coordination — the operating model that informed the Staff PM role that followed.",
