@@ -495,6 +495,17 @@ export default function Home() {
                   ],
                 },
                 {
+                  role: "Compliance Specialist",
+                  org: "Twilio Inc.",
+                  dates: "Jun 2020 – Nov 2020",
+                  bullets: [
+                    "Helped establish Twilio's messaging compliance operations and customer vetting processes — fraud prevention, onboarding review, and abuse mitigation.",
+                    "Designed escalation workflows, monitoring procedures, and enforcement documentation that supported scalable compliance operations as the team grew.",
+                    "Developed tooling and training materials enabling consistent review of high-risk accounts and suspicious traffic patterns.",
+                    "Served as escalation lead for compliance incidents, customer investigations, and enforcement response coordination.",
+                  ],
+                },
+                {
                   role: "Fair Billing Compliance Program Manager",
                   org: "Alliance Data (now Bread Financial)",
                   dates: "Apr 2012 – Aug 2018",
