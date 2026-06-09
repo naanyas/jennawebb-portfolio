@@ -205,13 +205,14 @@ export default function Home() {
             Trust &amp; Safety operator who ships products.
           </p>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70">
-            10+ years building abuse-prevention systems across email, messaging,
-            fintech, and SaaS &mdash; most recently a Staff Product Manager
-            leading Trust &amp; Safety strategy for abuse prevention across
-            email and messaging, where my detection frameworks cut abuse
-            incidents by <span className="text-accent">71%</span>. Off-hours,
-            I build full products end to end across three lanes: detection,
-            live entertainment, and quantitative trading.
+            10+ years living at the intersection of <span className="text-accent">risk, data, and strategy</span>
+            &mdash; turning behavioral signals, regulatory frameworks, and
+            operational KPIs into programs that actually move the numbers.
+            Across email, messaging, fintech, and SaaS, my most recent
+            Staff PM work used cross-functional, data-driven detection
+            frameworks to cut abuse incidents by <span className="text-accent">71%</span>.
+            Off-hours, I ship full products end to end across three lanes:
+            detection, live entertainment, and quantitative trading.
           </p>
 
           {/* Stat row */}
@@ -469,29 +470,33 @@ export default function Home() {
                   ],
                 },
                 {
-                  role: "Staff Product Manager, Trust & Safety",
-                  org: "Global email + messaging platform",
+                  role: "Staff Product Manager, Trusted Communications",
+                  org: "Twilio Inc.",
                   dates: "Jun 2022 – Apr 2025",
                   bullets: [
                     "Led Trust & Safety strategy for email and messaging abuse prevention protecting millions of users globally.",
                     "Designed detection and enforcement frameworks that reduced abuse incidents by 71% while minimizing impact to legitimate senders.",
-                    "Built monitoring dashboards and reporting workflows in SQL, Looker, Tableau, Splunk, and Snowflake for real-time visibility into enforcement and abuse trends.",
+                    "Built monitoring dashboards and reporting workflows in SQL, Looker, Tableau, Splunk, and Snowflake — used for executive reporting on enforcement, abuse trends, and policy effectiveness.",
                     "Investigated phishing, spoofing, malicious-link propagation, account compromise, and large-scale spam campaigns.",
+                    "Collaborated cross-functionally with Security, Engineering, Legal, and carrier partners to deploy scalable anti-abuse controls.",
                   ],
                 },
                 {
                   role: "Staff Messaging Compliance Program Manager",
-                  org: "Global email + messaging platform",
+                  org: "Twilio Inc.",
                   dates: "Nov 2020 – Jun 2022",
                   bullets: [
-                    "Led compliance and abuse-prevention strategy for A2P messaging (10DLC, Short Code, Toll-Free).",
+                    "Led compliance and abuse-prevention strategy for A2P messaging ecosystems (10DLC, Short Code, Toll-Free).",
                     "Built automated enforcement workflows and carrier policy controls that reduced messaging violation rates by 40%.",
+                    "Owned the weekly compliance operating rhythm — triaging carrier developments, escalating critical issues to senior leadership, and driving cross-functional remediation.",
+                    "Defined KPIs and operational dashboards tracking violation frequency, MTTR, escalation trends, and enforcement effectiveness for executive reporting.",
                     "Improved compliance review throughput by 60% YoY; reduced average incident resolution time by 35%.",
+                    "Developed training materials and internal documentation that scaled regulatory expertise across Product, Engineering, and Operations.",
                   ],
                 },
                 {
                   role: "Fair Billing Compliance Program Manager",
-                  org: "Alliance Data",
+                  org: "Alliance Data (now Bread Financial)",
                   dates: "Apr 2012 – Aug 2018",
                   bullets: [
                     "Founded and operationalized the Fair Billing compliance program: fraud identification, dispute resolution, ACH/Reg E.",
@@ -539,11 +544,11 @@ export default function Home() {
                   </li>
                   <li>
                     <span className="text-white/80">Recognition:</span>{" "}
-                    Superb Owl Award (10DLC compliance &amp; carrier direct
-                    connections), Magic Owl Award (building the compliance
-                    department from the ground up), President&rsquo;s Circle
-                    nomination (creating the debt-settlement function at a
-                    major retail-financial-services firm).
+                    Superb Owl Award (Twilio, 10DLC compliance &amp; carrier
+                    direct connections), Magic Owl Award (Twilio, building the
+                    compliance department from the ground up), President&rsquo;s
+                    Circle nomination (Alliance Data / now Bread Financial,
+                    creating the debt-settlement function).
                   </li>
                   <li>
                     <span className="text-white/80">Core stack:</span> SQL,
