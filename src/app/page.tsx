@@ -465,6 +465,7 @@ export default function Home() {
                   bullets: [
                     "Used signal analysis to surface that the incumbent third-party vendor was only catching ~32% of fraudsters — the other ~68% were getting through hijacked-domain attacks the vendor wasn't built to detect.",
                     "Built a domain-risk analyzer (SDAT — see the Domain Risk API project below) from scratch to target that exact gap, then partnered with Engineering to integrate it into the platform's vetting pipeline — turning a single-vendor pass into a full third-party-plus-supplemental vetting program.",
+                    "Made it ops-configurable on purpose — scoring weights, rules, thresholds, and taxonomies all live in a UI so the compliance team can pivot to new fraud trends without an engineering release cycle.",
                     "That integration drove a 96% reduction in false-negative rate while holding false-positive rates flat — the signal-health metric I was optimizing for.",
                     "Same pipeline cut ~350 hours/month of manual review effort and improved enablement time by 90%, with full automation set to push both further.",
                     "Designed the behavioral risk scoring and identity-verification frameworks behind it — combining device intelligence, document authenticity, network reputation, and behavioral signals.",
