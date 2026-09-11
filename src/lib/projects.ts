@@ -269,7 +269,7 @@ export const projects: Project[] = [
     tagline:
       "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, Triple Down, Shut Up & Roll, and Tab Out, all running off one host console.",
     description:
-      "A full multi-game platform for venues, running live bar nights every week. Players join by scanning a QR code, hosts run rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. A shared prize wheel runs across the games with per-prize stock that pulls a prize once it hits zero, a physical-deck mode for hosts who would rather deal real cards, and landing math centralized behind regression tests after it drifted between the wedge and the prize text. Bar Bingo was rebuilt phone-first this summer: server-side auto-call (the old client-side timer died whenever the host backgrounded the tab), themed square rounds, generated trash talk, and proper handling for two people calling bingo at once. Tab Out gained sabotage cards and rotating banter. The TV displays now survive a crash and hold their screen when the event stream drops. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
+      "A full multi-game platform for venues, running live bar nights every week and still in active beta testing at the venue — real crowds are the test harness. Players join by scanning a QR code, hosts run rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. A shared prize wheel runs across the games with per-prize stock that pulls a prize once it hits zero, a physical-deck mode for hosts who would rather deal real cards, and landing math centralized behind regression tests after it drifted between the wedge and the prize text. Bar Bingo was rebuilt phone-first this summer: server-side auto-call (the old client-side timer died whenever the host backgrounded the tab), themed square rounds, generated trash talk, and proper handling for two people calling bingo at once. Tab Out gained sabotage cards and rotating banter. The TV displays now survive a crash and hold their screen when the event stream drops. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
     role: "Solo founder & engineer — product, UX, full-stack build, marketing site",
     stack: [
       "Next.js 16",
@@ -279,7 +279,7 @@ export const projects: Project[] = [
       "Tailwind",
       "JWT auth",
     ],
-    status: "Beta",
+    status: "Shipped",
     link: {
       label: "Try the live Open Mic demo",
       href: "https://tanglewebb.com/demo/openmic",
@@ -349,7 +349,7 @@ export const projects: Project[] = [
     tagline:
       "QR-code ordering for a real working bar — patio customers scan their table's code, the bartender works a live queue, and phones ding when the order's ready.",
     description:
-      "Built for Louie’s Corner House (Buckeye Lake, OH) to replace the patio-to-bar-phone workflow that kept pulling bartenders off service. Each table's QR code bakes the seat into the link, so nobody types a table number and nobody gets it wrong. Customers browse a real menu — 300+ items with priced variants, mixers, flavours and bartender-only recipes — order in a tap, edit while they're still in line, message the bar, and get a chime-and-vibrate alert with their total. Behind it: a specials engine that runs happy hour and one-off bartender specials on a schedule and recalculates every price server-side at submit; running tabs; and a bartender queue where one tap finishes an order. The admin console runs the rest — role-based staff PINs, GPS geofencing with a gentle fallback for phones that won't share location, three service modes from open through pickup-only to closed, attributed customer blocking, a loyalty card that stamps a separate day at a time, and an impact dashboard. In production at the bar today, switched on for the shifts it's being tested on.",
+      "Built for Louie’s Corner House (Buckeye Lake, OH) to replace the patio-to-bar-phone workflow that kept pulling bartenders off service. Each table's QR code bakes the seat into the link, so nobody types a table number and nobody gets it wrong. Customers browse a real menu — 300+ items with priced variants, mixers, flavours and bartender-only recipes — order in a tap, edit while they're still in line, message the bar, and get a chime-and-vibrate alert with their total. Behind it: a specials engine that runs happy hour and one-off bartender specials on a schedule and recalculates every price server-side at submit; running tabs; and a bartender queue where one tap finishes an order. The admin console runs the rest — role-based staff PINs, GPS geofencing with a gentle fallback for phones that won't share location, three service modes from open through pickup-only to closed, attributed customer blocking, a loyalty card, and an impact dashboard. The card rewards ten different days rather than ten visits or ten dollars — ordering a drink or playing a game both count, two devices on one night still count once, and it cannot be farmed by buying four rounds in a single sitting. A full card is redeemed by the customer spinning the prize wheel themselves, with no staff involved. In production at the bar today, switched on for the shifts it's being tested on.",
     role: "Solo engineer — product, UX, full-stack build, deployment",
     stack: [
       "Next.js 16",
@@ -369,7 +369,8 @@ export const projects: Project[] = [
       "Scheduled specials engine: happy hour by day and hour, one-off bartender specials, scoped to sections or hand-picked products",
       "Live queue with per-table QR codes, two-way messaging, running tabs, and web-push lock-screen alerts for the bar device",
       "GPS geofencing that flags rather than blocks, three service modes, and attributed customer blocking",
-      "Loyalty card keyed to an anonymous device cookie — one stamp per day, no account to create",
+      "Loyalty card rewards ten different days, not visits or spend — un-farmable by design, keyed to an anonymous device cookie with no account to create",
+      "A full card is redeemed by the customer spinning the prize wheel themselves — no staff in the loop",
       "Impact dashboard: orders per day, busiest hours, time-to-delivery, repeat customers, captured revenue",
     ],
     accent: "emerald",
