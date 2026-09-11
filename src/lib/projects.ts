@@ -1,6 +1,7 @@
 export type Category =
   | "detection"
   | "entertainment"
+  | "operations"
   | "trading";
 
 export type Project = {
@@ -31,7 +32,7 @@ export const categoryMeta: Record<
     label: "Detection & Verification",
     subtitle: "Trust &amp; Safety tooling",
     description:
-      "Fraud-detection APIs, domain risk scoring, and OSINT verification &mdash; tools shaped by ten years of frontline T&amp;S work.",
+      "Fraud-detection APIs, domain risk scoring, OSINT verification, and GRC tooling &mdash; shaped by ten years of frontline T&amp;S work.",
     accent: "violet",
   },
   entertainment: {
@@ -40,6 +41,13 @@ export const categoryMeta: Record<
     description:
       "Bar-game platforms, booking marketplaces, and mobile games built for real venues under Tangled Webb Entertainment.",
     accent: "amber",
+  },
+  operations: {
+    label: "Process Improvement",
+    subtitle: "Operational tooling for real businesses",
+    description:
+      "Workflow and customer-facing apps for working venues &mdash; replacing phone calls, paper, and interruptions with queues, alerts, and self-service the staff run themselves.",
+    accent: "emerald",
   },
   trading: {
     label: "Algorithmic Trading",
@@ -145,6 +153,33 @@ export const projects: Project[] = [
     accent: "emerald",
   },
   {
+    slug: "risk-graph",
+    name: "Risk Graph",
+    category: "detection",
+    tagline:
+      "Risk as a linked graph, not a spreadsheet — a GRC platform that prices every gap in dollars, including the customers you would lose.",
+    description:
+      "A working prototype for a governance, risk, and compliance system built around ten linked objects — Risk, Control, Metric/KRI, Incident, Action, Policy, Vendor/Asset, Assessment — rather than the disconnected register-plus-spreadsheet setup most teams actually live in. The engine derives residual risk from the inherent score and measured control effectiveness, halved when a control has not been tested in 180 days, then scores every risk across four impact lenses: direct monetary, regulatory, reputational, and customer churn. The churn lens is the part most GRC tools do not have — affected customers × churn probability × lifetime value, with the churn coefficient learned from incident actuals rather than guessed. Compliance and bad-actor risk share one graph: a threat-framework library (MITRE ATT&CK, fraud kill chain, messaging-abuse patterns), attack-vector objects, and detections as a control subtype carrying TPR, FPR, and MTTD — so a vectors × detections coverage matrix becomes the fraud-side gap analysis. A gap engine makes absence first-class, and reporting comes out as three audience packs — regulator, board, and customer trust — frozen as immutable snapshots for defensibility.",
+    role: "Solo — product concept, risk model, scoring engine, prototype build",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "SQLite (better-sqlite3)",
+      "Tailwind",
+    ],
+    status: "In progress",
+    highlights: [
+      "Ten linked core objects — every template is a view over the graph, never a separate table",
+      "Residual scoring from measured control effectiveness, with a staleness penalty for untested controls",
+      "Dollarized churn lens: affected customers × churn probability × LTV, calibrated on real incident outcomes",
+      "Compliance and fraud in one graph — attack vectors × detections coverage matrix as the gap analysis",
+      "Gap engine treats absence as a finding: unmeasured risks, stale metrics, unwatched vectors, broken report lineage",
+      "Dig-deeper queue ranks investigations by exposure × blindness × velocity",
+    ],
+    accent: "sky",
+  },
+  {
     slug: "gap-fade-screener",
     name: "Gap Up + Fade Screener (v1)",
     category: "trading",
@@ -234,7 +269,7 @@ export const projects: Project[] = [
     tagline:
       "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, Triple Down, Shut Up & Roll, and Tab Out, all running off one host console.",
     description:
-      "A full multi-game platform for venues. Players join by scanning a QR code, hosts run live rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
+      "A full multi-game platform for venues, running live bar nights every week. Players join by scanning a QR code, hosts run rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. A shared prize wheel runs across the games with per-prize stock that pulls a prize once it hits zero, a physical-deck mode for hosts who would rather deal real cards, and landing math centralized behind regression tests after it drifted between the wedge and the prize text. Bar Bingo was rebuilt phone-first this summer: server-side auto-call (the old client-side timer died whenever the host backgrounded the tab), themed square rounds, generated trash talk, and proper handling for two people calling bingo at once. Tab Out gained sabotage cards and rotating banter. The TV displays now survive a crash and hold their screen when the event stream drops. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
     role: "Solo founder & engineer — product, UX, full-stack build, marketing site",
     stack: [
       "Next.js 16",
@@ -260,12 +295,158 @@ export const projects: Project[] = [
       { label: "Main site", href: "https://tanglewebb.com" },
     ],
     highlights: [
-      "Five live game modes share one player join flow and host console",
+      "Seven game modes share one player join flow and host console, including a Queen of Hearts raffle tracker",
       "Player, host, admin, and performer roles each get a tailored interface",
-      "QR-driven team join, per-venue leaderboards, drink-special promotions",
+      "Shared prize wheel: per-prize stock with auto-removal at zero, physical-deck mode, landing math under regression test",
+      "Bingo rebuilt phone-first — server-side auto-call that survives a backgrounded tab, themed rounds, co-winner handling",
+      "Turso resilience work: self-healing connections, graceful degradation, and paged reads after a week of production outages",
+      "TV displays recover from a crash and hold their screen when the event stream drops",
       "Same codebase serves the public marketing site at tanglewebb.com",
     ],
     accent: "amber",
+  },
+  {
+    slug: "louies-games",
+    name: "Louie’s Phone Games",
+    category: "entertainment",
+    tagline:
+      "Five pick-up-and-play games on the bar’s own phones — playable only when you are actually in the building, with leaderboards anyone can see.",
+    description:
+      "A games arcade for Louie’s Corner House running off the Tangled Webb platform: trivia, Shut Up & Roll, Tab Out, Triple Down, and a solo flick-to-throw Beer Pong. Play is gated behind proof you are in the bar — the geofence borrowed from the ordering app, or the table code printed on the QR — so the games stay a reason to come in rather than something to burn through at home. Leaderboards sit deliberately outside that gate: best score per person per board, across tonight, this week, and all time. Beer Pong Solo is scored on the server rather than the handset, because a flick-to-throw score computed on a phone is a claim, not an observation — the client reports throws and hits, the server does the scoring and clamps the impossible cases, and the leftover-throws bonus pays only on a cleared rack so “do not throw at all” cannot become the winning strategy. It is a leaderboard game by design and never feeds a prize wheel.",
+    role: "Solo engineer — game design, full-stack build, deployment",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Turso (libsql)",
+      "Tailwind",
+    ],
+    status: "Shipped",
+    link: {
+      label: "See the live leaderboards",
+      href: "https://trivia-app-orcin.vercel.app/games/leaderboards",
+    },
+    subLinksLabel: "Also public",
+    subLinks: [
+      {
+        label: "Games home (play is gated to the bar)",
+        href: "https://trivia-app-orcin.vercel.app/games",
+      },
+    ],
+    highlights: [
+      "Five games on one join flow: trivia, Shut Up & Roll, Tab Out, Triple Down, Beer Pong Solo",
+      "At-bar gate uses the ordering app’s geofence or the printed table code — play stays in the building",
+      "Leaderboards live outside the gate: best-per-person, tonight / this week / all time",
+      "Beer Pong scoring is server-side and clamped — the handset reports events, never a score",
+      "Time-based flight physics so a throw plays the same on a 60Hz and a 120Hz phone",
+    ],
+    accent: "violet",
+  },
+  {
+    slug: "louies-orders",
+    name: "Louie’s Patio & Bar Orders",
+    category: "operations",
+    tagline:
+      "QR-code ordering for a real working bar — patio customers scan their table's code, the bartender works a live queue, and phones ding when the order's ready.",
+    description:
+      "Built for Louie’s Corner House (Buckeye Lake, OH) to replace the patio-to-bar-phone workflow that kept pulling bartenders off service. Each table's QR code bakes the seat into the link, so nobody types a table number and nobody gets it wrong. Customers browse a real menu — 300+ items with priced variants, mixers, flavours and bartender-only recipes — order in a tap, edit while they're still in line, message the bar, and get a chime-and-vibrate alert with their total. Behind it: a specials engine that runs happy hour and one-off bartender specials on a schedule and recalculates every price server-side at submit; running tabs; and a bartender queue where one tap finishes an order. The admin console runs the rest — role-based staff PINs, GPS geofencing with a gentle fallback for phones that won't share location, three service modes from open through pickup-only to closed, attributed customer blocking, a loyalty card that stamps a separate day at a time, and an impact dashboard. In production at the bar today, switched on for the shifts it's being tested on.",
+    role: "Solo engineer — product, UX, full-stack build, deployment",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Supabase (Postgres)",
+      "Tailwind",
+      "Web Push",
+    ],
+    status: "Shipped",
+    link: {
+      label: "Play with the working demo",
+      href: "https://louies-orders.vercel.app/demo",
+    },
+    highlights: [
+      "Full menu with priced variants, option groups and server-authoritative pricing — the phone never decides what anything costs",
+      "Scheduled specials engine: happy hour by day and hour, one-off bartender specials, scoped to sections or hand-picked products",
+      "Live queue with per-table QR codes, two-way messaging, running tabs, and web-push lock-screen alerts for the bar device",
+      "GPS geofencing that flags rather than blocks, three service modes, and attributed customer blocking",
+      "Loyalty card keyed to an anonymous device cookie — one stamp per day, no account to create",
+      "Impact dashboard: orders per day, busiest hours, time-to-delivery, repeat customers, captured revenue",
+    ],
+    accent: "emerald",
+  },
+  {
+    slug: "louies-50th",
+    name: "Louie’s 50th Memory Wall",
+    category: "operations",
+    tagline:
+      "Community memory wall for a bar’s 50th anniversary — patrons upload photos, videos, and handwritten stories; 800+ memories and counting, playing on the TV at the bar every night.",
+    description:
+      "Built for Louie’s Corner House (Buckeye Lake, OH, est. 1976) to collect fifty years of customer history before it disappeared into shoeboxes. Patrons upload photos and videos, tag who is in them, add the year and the occasion, and leave comments; stories can be typed or photographed straight off the handwritten wall inside the bar. The wall groups itself by year and event, and a perceptual-hash duplicate detector catches the same photo arriving from four different phones. The team runs it from a dashboard — a review queue that clears in one tap, bulk edit and filtering, name-tag approvals, per-photo comment locks with IP and device capture plus a block list, and a visitor-analytics snapshot. A /tv mode casts the whole thing to the screens at the bar: polaroid frames with Sharpie captions, four-up montages, typed stories as story cards, event flyers and the Queen of Hearts board woven into the rotation, and a rotating ad every ninth set. In production with real patron data since June, and the bar has been playing it nightly ever since.",
+    role: "Solo engineer — product, UX, full-stack build, deployment",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Supabase (Postgres + Storage)",
+      "Tailwind",
+    ],
+    status: "Shipped",
+    link: {
+      label: "Visit the memory wall",
+      href: "https://louies50.vercel.app/",
+    },
+    subLinksLabel: "Also on the site",
+    subLinks: [
+      { label: "TV slideshow mode", href: "https://louies50.vercel.app/tv" },
+      { label: "Submit a memory", href: "https://louies50.vercel.app/submit" },
+    ],
+    highlights: [
+      "800+ real patron memories — photo and video uploads, external video embeds, and handwritten stories",
+      "Perceptual-hash duplicate detection groups the same photo arriving from four different phones",
+      "Name tagging with approval, year and event grouping, search across names, events, years, and text",
+      "Moderation with per-photo comment locks, IP and device capture, and a block list",
+      "/tv casting mode: polaroid frames, montages, flyers, and ads on a timed rotation that self-heals every four hours",
+      "Built-in visitor analytics so the team can see the wall actually being used",
+    ],
+    accent: "rose",
+  },
+  {
+    slug: "cornerhouse",
+    name: "CornerHouse",
+    category: "operations",
+    tagline:
+      "The bar’s front door — a database-driven website where the team adds events, menu options, and entire new apps without anyone touching code.",
+    description:
+      "The main site for Louie’s Corner House and the hub that ties the other apps together. Everything on it is data, not code: the top nav and the homepage app tiles are driven by rows in a site_links table, so when the next app ships the team adds it themselves and it appears with no deploy. Events carry uploaded flyers, the homepage headlines the current Queen of Hearts jackpot, and a password-gated admin console runs all four surfaces — events, Queen of Hearts, menu options, and site info. The raffle section is the substantial one: a 54-envelope board, live 1-in-N odds, a jackpot trend chart, per-draw history, and admin-editable rules. Logging a draw rolls the jackpot, recomputes the odds, rejects a duplicate envelope, and records the winner automatically when the Queen turns up. Admin passwords are self-service from the dashboard — a hash in the database overrides the environment variable and signs every other device out.",
+    role: "Solo engineer — product, UX, full-stack build, deployment",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Supabase (Postgres)",
+      "Tailwind",
+    ],
+    status: "Shipped",
+    link: {
+      label: "Visit cornerhouse.vercel.app",
+      href: "https://cornerhouse.vercel.app/",
+    },
+    subLinksLabel: "Pages",
+    subLinks: [
+      {
+        label: "Queen of Hearts board",
+        href: "https://cornerhouse.vercel.app/queen-of-hearts",
+      },
+      { label: "Events", href: "https://cornerhouse.vercel.app/events" },
+    ],
+    highlights: [
+      "Nav and homepage tiles are database rows — the team adds new apps without a deploy",
+      "Queen of Hearts: envelope board, live 1-in-N odds, jackpot trend chart, auto-recorded winner",
+      "Four-tab admin console covering events, the raffle, menu options, and site-wide settings",
+      "Self-service admin password — hashed in the DB, overrides the env var, signs out other devices",
+      "Shares one Postgres project with the ordering app and memory wall; reads degrade gracefully when a table is missing",
+    ],
+    accent: "sky",
   },
   {
     slug: "gighive",
