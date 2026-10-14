@@ -310,9 +310,9 @@ export const projects: Project[] = [
     name: "Louie’s Phone Games",
     category: "entertainment",
     tagline:
-      "Five pick-up-and-play games on the bar’s own phones — playable only when you are actually in the building, with leaderboards anyone can see.",
+      "An eight-game arcade on customers’ own phones — play solo or challenge someone across the bar, playable only when you are actually in the building, with leaderboards anyone can see.",
     description:
-      "A games arcade for Louie’s Corner House running off the Tangled Webb platform: trivia, Shut Up & Roll, Tab Out, Triple Down, and a solo flick-to-throw Beer Pong. Play is gated behind proof you are in the bar — the geofence borrowed from the ordering app, or the table code printed on the QR — so the games stay a reason to come in rather than something to burn through at home. Leaderboards sit deliberately outside that gate: best score per person per board, across tonight, this week, and all time. Beer Pong Solo is scored on the server rather than the handset, because a flick-to-throw score computed on a phone is a claim, not an observation — the client reports throws and hits, the server does the scoring and clamps the impossible cases, and the leftover-throws bonus pays only on a cleared rack so “do not throw at all” cannot become the winning strategy. It is a leaderboard game by design and never feeds a prize wheel.",
+      "A games arcade for Louie’s Corner House running off the Tangled Webb platform: trivia, Shut Up & Roll, Tab Out, Triple Down, a flick-to-throw Beer Pong, and three newer skill games — Perfect Pour (hold the tap, let go on the line), Last Call (a reaction test), and Dead Ringer (rings at a swinging hook in a crosswind). Every game plays against the house or head-to-head against another customer through a challenge flow. The index is an arcade: each game gets a lit cabinet screen playing its own mechanic on a loop in inline SVG, so a name like “Dead Ringer” explains itself before anyone taps it. Play is gated behind proof you are in the bar — the ordering app’s geofence, or a code read out by the bartender that is derived rather than stored, changes daily, rolls at 4am because the bar is open past midnight, and skips characters like O/0 and S/5 that get misheard across a loud room. Leaderboards sit deliberately outside that gate, with a chase line (“141 more takes 4th”) because a gap is a target and a rank is just a fact. Every skill game is scored on the server, never the handset: a score computed on a phone is a claim, not an observation, so the client reports events, the server scores and clamps the impossible cases, and those games rank on the leaderboard but can never earn a spin of the prize wheel. Confetti fires only for something actually won — never for simply finishing.",
     role: "Solo engineer — game design, full-stack build, deployment",
     stack: [
       "Next.js 16",
@@ -334,13 +334,45 @@ export const projects: Project[] = [
       },
     ],
     highlights: [
-      "Five games on one join flow: trivia, Shut Up & Roll, Tab Out, Triple Down, Beer Pong Solo",
-      "At-bar gate uses the ordering app’s geofence or the printed table code — play stays in the building",
-      "Leaderboards live outside the gate: best-per-person, tonight / this week / all time",
-      "Beer Pong scoring is server-side and clamped — the handset reports events, never a score",
-      "Time-based flight physics so a throw plays the same on a 60Hz and a 120Hz phone",
+      "Eight games, solo or head-to-head: trivia, Shut Up & Roll, Tab Out, Triple Down, Beer Pong Solo, Perfect Pour, Last Call, Dead Ringer",
+      "Arcade index with a live animated cabinet per game — the rules explain themselves before anyone taps",
+      "At-bar gate: geofence, or a daily bartender code derived from the date (no scheduler, rolls at 4am, DST-tested)",
+      "Leaderboards outside the gate with a chase line — and deliberately no movement arrows, since no rank history exists to back them",
+      "Skill games scored server-side and clamped (tests cover a phone claiming 500 catches) — leaderboard-only, never a prize",
+      "Louie’s card sign-in carries across domains via a stateless five-minute HMAC handoff token",
     ],
     accent: "violet",
+  },
+  {
+    slug: "louies-game-nights",
+    name: "Louie’s Game Nights",
+    category: "entertainment",
+    tagline:
+      "Three hosted game-night formats built for the bar — Hangman, a survey-show face-off called The Corner House Crew, and UNO with real decks — each run from a host console with phones and the bar TV in sync.",
+    description:
+      "Live, hosted games for Louie’s weekly game nights, built on the Tangled Webb platform’s host-console-plus-phones-plus-TV pattern. Hangman gives every player their own gallows against the same phrase; the TV never shows the word, the letters called, or a letter feed — only a small hangman per player with a name and points — because anything on the bar TV can be read off it. Puzzles come in rounds, and the prize wheel goes to the top scorer across the round rather than each puzzle’s solver. Phrases live in an editable database word bank, and a played phrase rests for 60 days across every game at the venue. The Corner House Crew is a king-of-the-hill survey-show tournament: two teams, a server-enforced buzzer race (the first guarded database update wins, so two simultaneous taps can’t both buzz in), face-off and answer turns that rotate through each team’s roster automatically, and a host who judges spoken answers with a tap so nobody types on a phone. Its boards come from a starter bank, a host editor, and real patron surveys collected through a public form. UNO runs on real decks across up to four tables: the host seats players from their phones, each table plays its own rounds without waiting on the others, the winner spins the prize wheel on their own phone, and the TV queues full-screen spin pop-ups and a leaderboard per table. All three share breaks, announcements, promo cards in the lobby, and an animated how-to-play loop on the TV.",
+    role: "Solo engineer — game design, host tooling, full-stack build, deployment",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Turso (libsql)",
+      "Tailwind",
+    ],
+    status: "Shipped",
+    link: {
+      label: "Take a Corner House Crew survey",
+      href: "https://trivia-app-orcin.vercel.app/survey",
+    },
+    highlights: [
+      "Hangman: per-player gallows against one shared phrase; the TV deliberately shows nothing a player could cheat from",
+      "Rounds with a wheel for the round’s top scorer, host-only puzzle advance, kick/restore, and send-a-spin to any player",
+      "Database word bank with a 60-day rest per phrase across every game at the venue",
+      "The Corner House Crew: king-of-the-hill teams, race-safe server buzzers, auto-rotating turns, host-judged answers",
+      "Boards built from real patron surveys (“We surveyed N patrons”) alongside a 40-board starter bank",
+      "UNO with physical decks: 1–4 independent tables, winner spins on their phone, TV pop-ups and per-table standings",
+    ],
+    accent: "amber",
   },
   {
     slug: "louies-orders",
@@ -374,6 +406,36 @@ export const projects: Project[] = [
       "Impact dashboard: orders per day, busiest hours, time-to-delivery, repeat customers, captured revenue",
     ],
     accent: "emerald",
+  },
+  {
+    slug: "louies-bar-tools",
+    name: "Louie’s Bar Screen & Back Office",
+    category: "operations",
+    tagline:
+      "The staff side of the ordering app — taking orders at the table, running tabs, counting the drawer, scheduling the staff, and selling out of a cooler at events.",
+    description:
+      "What started as a queue for patio orders became the tool the bar staff run their shift from. Bartenders take orders at a table on their own phone — set the table once, add each person, and everyone gets their own order and their own tab. Tabs can be split by order (never by dividing a total, because half of a round somebody bought isn’t anybody’s half) or combined; “their usual” turns “another Coors” into one tap; family pricing is applied by the person ringing it rather than as a special anyone standing there would get; and tips written on the slip after a card runs go into a pile to fill in later instead of holding a screen open per slip. A card surcharge was replaced with a cash discount after working through the rules — a surcharge is capped, can’t touch debit, and needs registration, while a discount has none of those problems and reads as a favour rather than a penalty. The night ends at 5am, not midnight, so a 1:30am tab lands on the right day; the drawer is counted against what was rung up as cash, and paid-outs are logged as they happen and voided rather than deleted. Scheduling treats publishing as a step so a late week is visible, totals everyone’s hours in the open, and records every change made after publishing. A time clock and an hours report put scheduled and worked side by side. For outdoor events, a cooler bar sells in one tap with no tab or customer, copies the price onto each sale, and settles owner-stocked gear separately from the bar’s takings.",
+    role: "Solo engineer — product, UX, full-stack build, deployment",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Supabase (Postgres)",
+      "Tailwind",
+      "PWA",
+    ],
+    status: "Shipped",
+    highlights: [
+      "Staff ordering at the table: one person per order, one tab per person, matched on name and table",
+      "Split by order and combine tabs, one-tap “their usual”, family pricing, and a tips-to-add pile for card slips",
+      "Cash discount instead of a card surcharge — same recovery, no cap, no debit restriction, no registration",
+      "Money operations fail closed: the audit row is written first, and the change is refused if it can’t be",
+      "5am business day, drawer count vs rung-up cash, paid-outs logged and voided rather than deleted",
+      "Scheduling where publishing is a visible step, hours are totalled openly, and post-publish changes are recorded",
+      "Time clock and hours reporting: scheduled vs worked over any period",
+      "One-tap event cooler bar with price snapshots, voids instead of deletes, and separate settlement for gear",
+    ],
+    accent: "teal",
   },
   {
     slug: "louies-50th",
@@ -418,7 +480,7 @@ export const projects: Project[] = [
     tagline:
       "The bar’s front door — a database-driven website where the team adds events, menu options, and entire new apps without anyone touching code.",
     description:
-      "The main site for Louie’s Corner House and the hub that ties the other apps together. Everything on it is data, not code: the top nav and the homepage app tiles are driven by rows in a site_links table, so when the next app ships the team adds it themselves and it appears with no deploy. Events carry uploaded flyers, the homepage headlines the current Queen of Hearts jackpot, and a password-gated admin console runs all four surfaces — events, Queen of Hearts, menu options, and site info. The raffle section is the substantial one: a 54-envelope board, live 1-in-N odds, a jackpot trend chart, per-draw history, and admin-editable rules. Logging a draw rolls the jackpot, recomputes the odds, rejects a duplicate envelope, and records the winner automatically when the Queen turns up. Admin passwords are self-service from the dashboard — a hash in the database overrides the environment variable and signs every other device out.",
+      "The main site for Louie’s Corner House and the hub that ties the other apps together. Everything on it is data, not code: the top nav and the homepage app tiles are driven by rows in a site_links table, so when the next app ships the team adds it themselves and it appears with no deploy. Events carry uploaded flyers, the homepage headlines the current Queen of Hearts jackpot, and a password-gated admin console runs all four surfaces — events, Queen of Hearts, menu options, and site info. The raffle section is the substantial one: a 54-envelope board, live 1-in-N odds, a jackpot trend chart, per-draw history, and admin-editable rules. Logging a draw rolls the jackpot, recomputes the odds, rejects a duplicate envelope, and records the winner automatically when the Queen turns up. Customers reserve raffle tickets online and the bar prints them from its own screen; the default is “I’ll pick numbers at the bar”, because a reservation without card numbers becomes one sticker image with copies set to N on the bar’s handheld label printer instead of one import per number. Pricing lives in one function so the customer’s quote, the admin preview, and the bar screen can never disagree, and the public lookup by reservation code never returns a name or phone. The bar can block a phone number from reserving online, with a plain-spoken message rather than a vague error that would read as a broken app. Sharing the raffle page produces a live Open Graph card with the current jackpot and cards left. Custom pages carry generic signup sheets — named slots with optional limits — so one primitive covers a 50th-anniversary potluck, a volunteer list, and local businesses offering game-night prizes. Repeating events can have one themed date with its own flyer. The front page shows the games as a physics-driven attract screen (bouncing dice with restitution, a real pendulum, a beer-pong arc solved for its target cup) on a single canvas that stops when scrolled out of view. A first-party analytics tracker shared by all four Louie’s apps feeds a dashboard tab with no IP, name, or phone stored. Admin passwords are self-service from the dashboard — a hash in the database overrides the environment variable and signs every other device out.",
     role: "Solo engineer — product, UX, full-stack build, deployment",
     stack: [
       "Next.js 16",
@@ -443,7 +505,12 @@ export const projects: Project[] = [
     highlights: [
       "Nav and homepage tiles are database rows — the team adds new apps without a deploy",
       "Queen of Hearts: envelope board, live 1-in-N odds, jackpot trend chart, auto-recorded winner",
-      "Four-tab admin console covering events, the raffle, menu options, and site-wide settings",
+      "Online raffle reservations printed at the bar — designed around a handheld label printer that takes one image at a time",
+      "Phone-number blocklist that fails open: a database error never locks out a real customer",
+      "Live Open Graph share card with the current jackpot, rendered per request so the pot never freezes",
+      "Custom pages with generic signup sheets — potlucks, volunteers, and business sponsors on one primitive",
+      "Physics attract screen for the games on one canvas — no keyframes, pauses offscreen, respects reduced motion",
+      "First-party, privacy-light analytics across all four Louie’s apps",
       "Self-service admin password — hashed in the DB, overrides the env var, signs out other devices",
       "Shares one Postgres project with the ordering app and memory wall; reads degrade gracefully when a table is missing",
     ],
