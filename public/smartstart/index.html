@@ -26,7 +26,7 @@ html,body{margin:0;-webkit-font-smoothing:antialiased}
 .intro{margin:0;max-width:72ch;color:var(--muted);font-size:14px}
 .intro b{color:var(--ink);font-weight:600}
 .foot{color:var(--muted);font-size:12.5px;margin:0}
-.tip{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--line);color:var(--muted);font:600 10.5px/1 var(--f-body);text-transform:none;letter-spacing:0;cursor:pointer;vertical-align:middle;margin-left:6px;flex:none}
+.tip{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;border:1px solid color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent);font:600 10.5px/1 var(--f-body);text-transform:none;letter-spacing:0;cursor:pointer;vertical-align:middle;margin-left:6px;flex:none}
 .tip:hover,.tip[aria-expanded="true"]{color:var(--on-accent);background:var(--accent);border-color:var(--accent)}
 .tip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #tipPop{position:absolute;z-index:50;width:max-content;max-width:320px;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:0 12px 32px rgba(0,0,0,.45);font-size:13px;line-height:1.5}
@@ -129,8 +129,8 @@ details.policy summary .muted{font-weight:400;font-family:var(--f-body);font-siz
 .acct .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .acct .name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .acct .sub{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
-.age{height:3px;background:var(--soft);border-radius:2px;overflow:hidden}
-.age i{display:block;height:100%;background:var(--muted)}
+.strip{display:grid;grid-template-columns:repeat(90,minmax(0,1fr));gap:1px;height:7px}
+.strip i{display:block;background:var(--soft);border-radius:1px}
 
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap;
   color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 35%,transparent)}
@@ -144,7 +144,14 @@ details.policy summary .muted{font-weight:400;font-family:var(--f-body);font-siz
 .dhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
 .dhead .meta{color:var(--muted);font-size:13px;margin-top:2px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.tabs{display:flex;gap:2px;padding:0 12px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{all:unset;box-sizing:border-box;cursor:pointer;padding:11px 12px;font-size:13.5px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.chart-wrap rect.hit{fill:transparent;cursor:pointer}
+.chart-wrap rect.hit:hover{fill:color-mix(in srgb,var(--ink) 10%,transparent)}
 .kpi .v.warn{color:var(--t-limited)}
 .health-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
 table.health{width:100%;border-collapse:collapse;font-size:12.5px;min-width:620px}
@@ -160,6 +167,10 @@ table.health td.dim{color:var(--muted)}
 .authitem{display:grid;gap:6px;justify-items:start;font-size:12px;color:var(--muted)}
 @media (max-width:1100px){.authgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:560px){.authgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rbox{border:1px solid color-mix(in srgb,var(--c) 45%,transparent);background:color-mix(in srgb,var(--c) 9%,transparent);border-radius:8px;padding:12px 14px;display:grid;gap:8px}
+.rbox h4{margin:0;font-family:var(--f-display);font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rbox ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13px}
+.rbox li b{font-weight:600}
 .empty-note{margin:0;color:var(--muted);font-size:13px}
 .kpi{display:grid;gap:2px}
 .kpi .k{font-size:12px;color:var(--muted)}
@@ -232,19 +243,10 @@ table.sig tr.total td{border-bottom:0;font-weight:600;padding-top:8px}
       <div class="dist" id="dist"></div>
       <div class="dist-legend" id="distLegend"></div>
     </div>
-    <div class="stat"><span class="v" id="sActive">0</span><span class="k">In SmartStart · <span id="sGrad">0</span> exited at Day 90<button type="button" class="tip" data-tip="day90" aria-label="Explain the Day 90 exit" aria-expanded="false">?</button></span></div>
+    <div class="stat"><span class="v" id="sActive">0</span><span class="k">In SmartStart · <span id="sGrad">0</span> completed 90 days<button type="button" class="tip" data-tip="day90" aria-label="Explain the Day 90 exit" aria-expanded="false">?</button></span></div>
     <div class="stat"><span class="v" id="sRisky">0</span><span class="k"><span id="sRiskyK">Risky email held</span><button type="button" class="tip" data-tip="risky" aria-label="Explain risky email held" aria-expanded="false">?</button></span></div>
     <div class="stat"><span class="v" id="sLegit">0</span><span class="k"><span id="sLegitK">Legitimate email held (friction)</span><button type="button" class="tip" data-tip="legit" aria-label="Explain legitimate email held" aria-expanded="false">?</button></span></div>
     <div class="stat"><span class="v"><span id="sUp">0</span> / <span id="sDown">0</span></span><span class="k">Promotions / restrictions and step-downs<button type="button" class="tip" data-tip="decisions" aria-label="Explain decision counts" aria-expanded="false">?</button></span></div>
-  </section>
-
-  <section class="panel lanes" aria-label="Every account, day by day">
-    <div class="lanes-head">
-      <h3>Every account, day by day<button type="button" class="tip" data-tip="lanes" aria-label="Explain the lifecycle board" aria-expanded="false">?</button></h3>
-      <div class="lane-legend"><span><b style="color:var(--t-established)">▲</b> moved up</span><span><b style="color:var(--t-limited)">▼</b> stepped down</span><span><b style="color:var(--t-limited)">!</b> spike hold</span><span><b style="color:var(--t-restricted)">✕</b> restricted</span><span><b style="color:var(--accent)">◆</b> override</span></div>
-    </div>
-    <div class="lane-axis"><span class="nm">Account day</span><span class="tr" id="axisRanges"></span><span class="end"></span></div>
-    <div id="lanes"></div>
   </section>
 
   <details class="panel policy" id="policyBox">
@@ -371,10 +373,9 @@ const TIPS={
   decisions:()=>['Decisions','<p>Promotions count every move up a tier. The second number counts restrictions and step-downs triggered by sending behavior. Accounts that start Restricted at signup are not counted here.</p>'],
   traps:()=>['Spam trap hits',`<p>Spam traps are addresses that never signed up for anything, so any mail sent to them proves the list was bought, scraped or badly out of date.</p><p>One hit is a warning. <b>${policy.trapLimit}</b> or more in a day restricts the account.</p>`],
   health:()=>['Sending health',`<p>The daily numbers SmartStart judges each account on, with the decision each day produced.</p><p><b>Bounces</b>: above ${policy.maxBounce}% steps down, ${policy.critBounce}% or more restricts.<br><b>Spam complaints</b>: above ${policy.maxComplaint}% steps down, ${policy.critComplaint}% or more restricts.<br><b>Spam traps</b>: ${policy.trapLimit} or more in a day restricts.</p><p>Rates are measured on delivered mail. Restricted accounts deliver nothing, so their rates show as dashes.</p>`],
-  lanes:()=>['Every account, day by day','<p>One row per customer. Each square is one day of that account\'s 90-day lifecycle, colored by the classification it was in that day, so you can watch every account progress at once while the simulation plays.</p><p>Symbols mark the decisions: moving up, stepping down, a spike hold, a restriction, or a fraud ops override. A row is highlighted for a few days after its classification changes. Click a row to see that account in detail.</p>'],
   policy:()=>['Policy settings','<p>The thresholds fraud ops can tune without a code deploy: daily limits, step-down and restriction triggers, and what it takes to move up. Changes apply from the next simulated day.</p>']
 };
-let healthRange='recent', focusDay=null;
+let healthRange='recent', focusDay=null, detailTab='overview';
 let state, nextSeed=1, playTimer=null, selected=0, view='detail';
 function makeAccount(def){
   const sc=score(def.s);
@@ -455,11 +456,14 @@ function advance(n){
   }
   render();
 }
-function stopPlay(){if(playTimer){clearInterval(playTimer);playTimer=null;}$('play').textContent='Play';}
+const finished=()=>state&&state.accounts.every(a=>a.exited);
+function syncPlay(){$('play').textContent=playTimer?'Pause':finished()?'Replay':'Play';}
+function stopPlay(){if(playTimer){clearInterval(playTimer);playTimer=null;}if(state)syncPlay();}
 function togglePlay(){
   if(playTimer){stopPlay();return;}
-  $('play').textContent='Pause';
-  playTimer=setInterval(()=>{if(state.accounts.every(a=>a.exited)){stopPlay();return;}advance(1);},220);
+  if(finished()) init();
+  playTimer=setInterval(()=>{if(finished()){stopPlay();return;}advance(1);},220);
+  syncPlay();
 }
 
 /* ---------- rendering ---------- */
@@ -486,8 +490,8 @@ function renderList(){
   $('acctList').innerHTML=state.accounts.map(a=>`
     <button class="acct${a.id===selected&&view==='detail'?' sel':''}" data-id="${a.id}" aria-label="${esc(a.name)}, ${LABEL[a.tier]}">
       <span class="row"><span class="name">${esc(a.name)}</span>${pill(a.tier)}</span>
-      <span class="sub"><span>${esc(PROFILES[a.profile].label)}</span><span class="num">${a.exited?'Exited':'Day '+a.age}</span></span>
-      <span class="age"><i style="width:${Math.min(100,a.age/90*100)}%"></i></span>
+      <span class="sub"><span>${esc(PROFILES[a.profile].label)}</span><span class="num">${a.exited?'Completed':'Day '+a.age}</span></span>
+      <span class="strip" aria-hidden="true">${Array.from({length:90},(_,i)=>{const h=a.history[i];return `<i${h?` style="background:${tierColor(h.tier)}"`:''}></i>`;}).join('')}</span>
     </button>`).join('');
 }
 function chartSVG(a){
@@ -506,12 +510,13 @@ function chartSVG(a){
     lim+=`<line x1="${cx-pw/180}" x2="${cx+pw/180}" y1="${ly}" y2="${ly}" style="stroke:var(--ink)" stroke-width="1.5" stroke-dasharray="3 2"/>`;
     strip+=`<rect x="${cx-pw/180}" y="${stripY}" width="${pw/90+0.3}" height="8" style="fill:${tierColor(h.tier)}"/>`;
   });
+  let hits='';a.history.forEach(h=>{const cx=x(h.day);hits+=`<rect class="hit" data-day="${h.day}" x="${cx-pw/180}" y="${T}" width="${pw/90}" height="${ph+18}"><title>Day ${h.day}</title></rect>`;});
   const now=a.exited?'':`<line x1="${x(a.age+1)}" x2="${x(a.age+1)}" y1="${T}" y2="${stripY+8}" style="stroke:var(--accent)" stroke-width="1" stroke-dasharray="2 3"/>`;
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily sending for ${esc(a.name)}: emails attempted, delivered and the daily limit over 90 days">${g}<rect x="${L}" y="${stripY}" width="${pw}" height="8" style="fill:var(--soft)"/>${bars}${lim}${strip}${now}<text x="${L}" y="${stripY+24}" font-size="11" style="fill:var(--muted)">Day</text></svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily sending for ${esc(a.name)}: emails attempted, delivered and the daily limit over 90 days">${g}<rect x="${L}" y="${stripY}" width="${pw}" height="8" style="fill:var(--soft)"/>${bars}${lim}${strip}${now}${hits}<text x="${L}" y="${stripY+24}" font-size="11" style="fill:var(--muted)">Day</text></svg>`;
 }
 function nextStep(a){
-  if(a.exited) return `<p class="muted" style="margin:0">Exited SmartStart on day 90 as ${LABEL[a.tier]}.</p>`;
-  if(a.tier==='restricted') return `<p class="muted" style="margin:0">Under fraud ops review. Only an override below can lift a restriction.</p>`;
+  if(a.exited) return `<p class="muted" style="margin:0">Completed SmartStart on day 90 as ${LABEL[a.tier]}. Standard fraud monitoring continues.</p>`;
+  if(a.tier==='restricted') return `<p class="muted" style="margin:0">Under fraud ops review. Only an override on the Decisions tab can lift a restriction.</p>`;
   if(a.tier==='established') return `<p class="muted" style="margin:0">Top classification. Abuse signals can still restrict this account at any time.</p>`;
   const [days,vol,to]=a.tier==='limited'?[policy.daysLD,policy.volLD,'Developing']:[policy.daysDE,policy.volDE,'Established'];
   const row=(k,v,t)=>`<div class="bar"><span>${k}</span><span class="track"><i style="width:${Math.min(100,v/t*100)}%"></i></span><span class="num">${fmt(Math.min(v,t))} / ${fmt(t)}</span></div>`;
@@ -533,7 +538,7 @@ function customerMsg(a){
   }
   return `<div class="cust"><span>${m}</span>${tips.length?`<ul>${tips.map(t=>`<li>${t}</li>`).join('')}</ul>`:''}</div>`;
 }
-const DLABEL={up:'Moved up',down:'Stepped down',hold:'Held, clean days reset',flag:'Spike hold',restrict:'Restricted',override:'Override',exit:'Exited SmartStart'};
+const DLABEL={up:'Moved up',down:'Stepped down',hold:'Held, clean days reset',flag:'Spike hold',restrict:'Restricted',override:'Override',exit:'Completed SmartStart'};
 function healthTable(a){
   if(!a.history.length) return '<p class="empty-note">No sending yet. Press Play or +1 day to see daily bounce, spam complaint and spam trap numbers here.</p>';
   const cls=(v,soft,hard,measured)=>!measured?' class="dim"':v>=hard?' class="bad"':v>soft?' class="warn"':'';
@@ -550,7 +555,7 @@ function healthTable(a){
       <td>${evs.length?evs.join(', '):'<span class="muted">No change</span>'}</td></tr>`;
   }).join('');
   return btns+`<div class="health-wrap"><table class="health"><thead><tr><th>Day</th><th>Tier that day</th><th>Tried</th><th>Delivered</th><th>Held</th><th>Bounces</th><th>Spam complaints</th><th>Spam traps</th><th>Decision</th></tr></thead><tbody>${rows}</tbody></table></div>
-  <p class="empty-note" style="font-size:12px">Newest first. Click any square on the board above to jump to that day. Amber is above the step-down limit and red is at or above the restriction limit. Days with fewer than 50 emails delivered are too small to judge and show in grey.</p>`;
+  <p class="empty-note" style="font-size:12px">Newest first. Click a bar on the Overview chart to jump to that day. Amber is above the step-down limit and red is at or above the restriction limit. Days with fewer than 50 emails delivered are too small to judge and show in grey.</p>`;
 }
 function authPanel(a){
   const s=a.s;
@@ -566,6 +571,32 @@ function authPanel(a){
   return `<div class="authgrid">${items.map(([l,k,v])=>`<div class="authitem"><span class="k">${l}${tip('sig-'+k,l)}</span>${v}</div>`).join('')}</div>
   <p class="empty-note" style="font-size:12.5px">${meets?'Meets the Gmail and Yahoo bulk sender authentication rules.':'Does not meet the Gmail and Yahoo bulk sender rules, so its mail is more likely to be filtered or rejected.'}</p>`;
 }
+function restrictionBox(a){
+  const lim=limitFor(a.tier), t=a.tier;
+  const trig=[...a.log].reverse().find(l=>l.type==='restrict'&&l.text.startsWith('Restricted'));
+  const ov=[...a.log].reverse().find(l=>l.type==='override');
+  let title, items;
+  if(t==='restricted'){
+    const why=trig?`Restricted on day ${trig.day}: ${trig.text.replace(/^Restricted from \w+: /,'').replace(/ Routed to fraud ops for review\.?.*$/,'').replace(/\.$/,'')}.`:`Restricted at signup: risk score ${a.score.total} is 70 or above, based on the signup signals in Risk signals.`;
+    title='Restricted: sending is blocked';
+    items=[`<b>Blocked:</b> no email is delivered. Everything the account tries to send is held.`,
+      `<b>Why:</b> ${esc(why)}`,
+      `<b>Review:</b> the account is in the fraud ops queue. Only a reviewer override in Decisions can lift it.`,
+      `<b>Customer view:</b> they're told sending is paused for review, without the thresholds.`,
+      `<b>At Day 90:</b> the restriction stays in place under standard fraud controls.`];
+  } else {
+    const nextTier={limited:'Developing',developing:'Established'}[t];
+    title=`${LABEL[t]}: capped at ${fmt(lim)} emails a day`;
+    items=[`<b>Daily cap:</b> up to ${fmt(lim)} emails delivered per day. Anything over the cap is held, not sent.`,
+      t==='established'?`<b>Next:</b> this is the top tier. It stays here while sending stays clean.`:`<b>To move up to ${nextTier}:</b> ${t==='limited'?policy.daysLD:policy.daysDE} clean sending days and ${fmt(t==='limited'?policy.volLD:policy.volDE)} emails delivered.`,
+      `<b>Step-down:</b> bounces above ${policy.maxBounce}% or spam complaints above ${policy.maxComplaint}% drop it a tier${t==='limited'?' (at Limited, the clean-day count resets instead)':''}.`,
+      `<b>Restriction:</b> bounces at ${policy.critBounce}%, complaints at ${policy.critComplaint}%, or ${policy.trapLimit}+ spam trap hits in a day block all sending, at any tier.`];
+    if(a.spikeHold) items.splice(1,0,`<b>Spike hold:</b> promotion is paused for ${a.spikeHold} more day${a.spikeHold>1?'s':''} after a sudden volume jump.`);
+  }
+  if(ov) items.push(`<b>Last override:</b> ${esc(ov.text.replace('Override by fraud ops: ',''))} (day ${ov.day}).`);
+  if(state.shadow) items.push('<b>Shadow mode:</b> none of this is enforced right now. Decisions are only logged.');
+  return `<div class="rbox" style="--c:${tierColor(t)}"><h4>${pill(t)}${tip('tier-'+t,LABEL[t])} ${(t=>t.charAt(0).toUpperCase()+t.slice(1))(title.replace(/^\w+: /,''))}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+}
 function renderDetail(){
   if(view==='new') return renderNew();
   const a=state.accounts.find(x=>x.id===selected); if(!a) return;
@@ -577,7 +608,7 @@ function renderDetail(){
   $('detail').innerHTML=`
   <div class="sec">
     <div class="dhead">
-      <div><h2>${esc(a.name)}</h2><div class="meta"><span class="mono">${esc(a.domain)}</span> · ${esc(PROFILES[a.profile].label)} · ${a.exited?'Exited SmartStart':'Day '+a.age+' of 90'}</div></div>
+      <div><h2>${esc(a.name)}</h2><div class="meta"><span class="mono">${esc(a.domain)}</span> · ${esc(PROFILES[a.profile].label)} · ${a.exited?'Completed 90 days':'Day '+a.age+' of 90'}</div></div>
       <div class="chips">${pill(a.tier)}${tip('tier-'+a.tier,LABEL[a.tier])}${state.shadow?'<span class="tag warn">Shadow: not enforced</span>':''}${a.spikeHold?'<span class="tag warn">Spike hold</span>'+tip('spike','spike hold'):''}${a.exited?'<span class="tag">Standard controls</span>':''}</div>
     </div>
     <div class="kpis">
@@ -586,27 +617,26 @@ function renderDetail(){
       <div class="kpi"><span class="k">Bounce rate${hd}${tip('bounce','bounce rate')}</span><span class="v${h&&h.delivered?bad(h.bounce*100,policy.maxBounce):''}">${h&&h.delivered?pct(h.bounce,1):'–'}</span></div>
       <div class="kpi"><span class="k">Spam complaints${hd}${tip('complaint','spam complaint rate')}</span><span class="v${h&&h.delivered?bad(h.complaint*100,policy.maxComplaint):''}">${h&&h.delivered?pct(h.complaint):'–'}</span></div>
       <div class="kpi"><span class="k">Spam trap hits${hd}${tip('traps','spam trap hits')}</span><span class="v${h&&h.delivered?(h.traps>=policy.trapLimit?' bad':h.traps>0?' warn':''):''}">${h&&h.delivered?h.traps:'–'}</span></div>
-      <div class="kpi"><span class="k">Delivered to date</span><span class="v">${compact(a.cum)}</span></div>
     </div>
   </div>
-  <div class="sec" id="healthSec"><h3>Sending health, day by day${tip('health','sending health')}</h3>${healthTable(a)}</div>
+  <div class="tabs" role="tablist" aria-label="Account details">${[['overview','Overview'],['health','Sending health'],['signals','Risk signals'],['decisions','Decisions']].map(([k,l])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${detailTab===k}">${l}</button>`).join('')}</div>
+  ${detailTab==='overview'?`  <div class="sec"><h3>What this account can do right now${tip('enforcement','how enforcement works')}</h3>${restrictionBox(a)}</div>
   <div class="sec"><h3>Progress to next classification${tip('progress','how trust is earned')}</h3>${nextStep(a)}</div>
   <div class="sec">
     <h3>Daily sending, log scale${tip('chart','the chart')}</h3>
     <div class="chart-wrap">${chartSVG(a)}</div>
-    <div class="legend"><span><i class="dot" style="background:var(--bar-try)"></i>Tried to send</span><span><i class="dot" style="background:var(--t-developing)"></i>Delivered, colored by classification</span><span><i class="dot" style="background:transparent;border-top:2px dashed var(--ink);border-radius:0;height:0;width:12px"></i>Daily limit</span></div>
+    <div class="legend"><span><i class="dot" style="background:var(--bar-try)"></i>Tried to send</span><span><i class="dot" style="background:var(--t-developing)"></i>Delivered, colored by classification</span><span>Click a bar to see that day's numbers</span><span><i class="dot" style="background:transparent;border-top:2px dashed var(--ink);border-radius:0;height:0;width:12px"></i>Daily limit</span></div>
   </div>
-  <div class="sec"><h3>Domain and authentication${tip('auth','domain and authentication')}</h3>${authPanel(a)}</div>
-  <div class="sec two">
-    <div style="display:grid;gap:10px;min-width:0"><h3>Initial risk assessment${tip('score','the risk score')}</h3>
+  <div class="sec"><div style="display:grid;gap:10px;align-content:start;min-width:0"><h3>What the customer sees${tip('customer','the customer message')}</h3>${customerMsg(a)}
+      <p class="muted" style="margin:0;font-size:12.5px">Explains the restriction and next steps without exposing fraud thresholds.</p></div></div>
+`:''}${detailTab==='health'?`  <div class="sec" id="healthSec"><h3>Sending health, day by day${tip('health','sending health')}</h3>${healthTable(a)}</div>
+`:''}${detailTab==='signals'?`  <div class="sec"><h3>Domain and authentication${tip('auth','domain and authentication')}</h3>${authPanel(a)}</div>
+  <div class="sec"><div style="display:grid;gap:10px;min-width:0"><h3>Initial risk assessment${tip('score','the risk score')}</h3>
       <table class="sig"><tbody>${a.score.parts.map(p=>`<tr><td>${p[0]}${tip('sig-'+p[2],p[0])}</td><td>${p[1]>0?'+':''}${p[1]}</td></tr>`).join('')}
       <tr class="total"><td>Risk score → ${LABEL[a.score.tier]}</td><td>${a.score.total}</td></tr></tbody></table>
       <p class="muted" style="margin:0;font-size:12.5px">70 or above starts Restricted, 40 to 69 starts Limited, below 40 starts Developing.</p>
-    </div>
-    <div style="display:grid;gap:10px;align-content:start;min-width:0"><h3>What the customer sees${tip('customer','the customer message')}</h3>${customerMsg(a)}
-      <p class="muted" style="margin:0;font-size:12.5px">Explains the restriction and next steps without exposing fraud thresholds.</p></div>
-  </div>
-  <div class="sec"><h3>Decision log${tip('enforcement','how enforcement works')}</h3>
+    </div></div>
+`:''}${detailTab==='decisions'?`  <div class="sec"><h3>Decision log${tip('enforcement','how enforcement works')}</h3>
     <ul class="log">${a.log.slice().reverse().map(l=>`<li><span class="d">Day ${l.day}</span><span class="m" style="--c:${TYPE_COLOR[l.type]}"></span><span>${l.shadow?'<span class="tag warn">Shadow</span> ':''}${esc(l.text)}</span></li>`).join('')}</ul>
   </div>
   <div class="sec"><h3>Fraud ops override${tip('override','overrides')}</h3>
@@ -615,9 +645,10 @@ function renderDetail(){
       <label class="field" for="ovReason" style="flex:3 1 240px">Reason (recorded in the audit log)<input type="text" id="ovReason" placeholder="e.g. Verified business by phone, ticket FR-2291"></label>
       <button class="primary" type="submit"${a.exited?' disabled':''}>Apply override</button>
     </form>
-    <p class="muted" id="ovMsg" style="margin:0;font-size:12.5px">${a.exited?'This account has left SmartStart.':'Overrides take effect from the next simulated day.'}</p>
+    <p class="muted" id="ovMsg" style="margin:0;font-size:12.5px">${a.exited?'This account has completed SmartStart.':'Overrides take effect from the next simulated day.'}</p>
+`:''}
   </div>`;
-  $('ovForm').addEventListener('submit',e=>{
+  if($('ovForm')) $('ovForm').addEventListener('submit',e=>{
     e.preventDefault();
     const t=$('ovTier').value, reason=$('ovReason').value.trim();
     if(!reason){$('ovMsg').textContent='Add a reason so the override is auditable.';$('ovReason').focus();return;}
@@ -666,41 +697,20 @@ function renderPolicy(){
 const RANGES=[['recent','Last 21 days'],[1,'Days 1–30'],[31,'Days 31–60'],[61,'Days 61–90']];
 const rangeFor=d=>d<=30?1:d<=60?31:61;
 function showDay(id,day){
-  selected=id; view='detail'; focusDay=day; healthRange=day?rangeFor(day):healthRange;
-  renderLanes(); renderList(); renderDetail();
+  selected=id; view='detail'; focusDay=day; detailTab='health'; healthRange=day?rangeFor(day):healthRange;
+   renderList(); renderDetail();
   const row=document.querySelector('table.health tr.focus')||document.getElementById('healthSec');
   if(row&&row.scrollIntoView) row.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
 }
-const MARK={restrict:['✕','var(--t-restricted)',5],down:['▼','var(--t-limited)',4],override:['◆','var(--accent)',3],up:['▲','var(--t-established)',2],flag:['!','var(--t-limited)',1]};
-function renderLanes(){
-  $('axisRanges').innerHTML=RANGES.slice(1).map(([v,l])=>`<button type="button" class="rng${healthRange===v?' on':''}" data-range="${v}" aria-pressed="${healthRange===v}">${l}</button>`).join('');
-  $('lanes').innerHTML=state.accounts.map(a=>{
-    const ev={};
-    a.log.forEach(l=>{
-      let t=l.type; if(t==='restrict'&&!l.text.startsWith('Restricted')) return;
-      const m=MARK[t]; if(!m||l.day<1) return;
-      if(!ev[l.day]||MARK[ev[l.day]][2]<m[2]) ev[l.day]=t;
-    });
-    let marks='',cells='';
-    for(let d=1;d<=90;d++){
-      const h=a.history[d-1], e=ev[d];
-      marks+=`<span${e?` style="color:${MARK[e][1]}"`:''}>${e?`<b>${MARK[e][0]}</b>`:''}</span>`;
-      cells+=`<i${h?` data-day="${d}" title="Day ${d}: ${LABEL[h.tier]}" style="background:${tierColor(h.tier)}"`:''}${!a.exited&&d===a.age?' class="today"':''}></i>`;
-    }
-    const recent=a.changedAt!=null&&state.clock-a.changedAt<3&&!a.exited;
-    return `<button class="lane${a.id===selected&&view==='detail'?' sel':''}${recent?' recent':''}" data-id="${a.id}" aria-label="${esc(a.name)}: ${LABEL[a.tier]}, ${a.exited?'exited':'day '+a.age}">
-      <span class="nm">${esc(a.name)}</span>
-      <span class="tr"><span class="g90 marks">${marks}</span><span class="g90 cells">${cells}</span></span>
-      <span class="end">${pill(a.tier)}<span class="num">${a.exited?'Exited':'Day '+a.age}</span></span>
-    </button>`;
-  }).join('');
-}
-function render(){renderSummary();renderLanes();renderList();renderDetail();}
-$('lanes').addEventListener('click',e=>{const b=e.target.closest('.lane');if(!b)return;const c=e.target.closest('i[data-day]');if(c){showDay(+b.dataset.id,+c.dataset.day);return;}focusDay=null;selected=+b.dataset.id;view='detail';renderLanes();renderList();renderDetail();});
-document.addEventListener('click',e=>{const r=e.target.closest('.rng');if(!r)return;const v=r.dataset.range;healthRange=v==='recent'?'recent':+v;focusDay=null;if(view!=='detail')view='detail';renderLanes();renderList();renderDetail();if(r.closest('#axisRanges')){const sec=document.getElementById('healthSec');if(sec&&sec.scrollIntoView)sec.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}});
+$('detail').addEventListener('click',e=>{
+  const t=e.target.closest('[data-tab]'); if(t){detailTab=t.dataset.tab;renderDetail();return;}
+  const h=e.target.closest('rect.hit'); if(h){showDay(selected,+h.dataset.day);}
+});
+function render(){renderSummary();renderList();renderDetail();syncPlay();}
+document.addEventListener('click',e=>{const r=e.target.closest('.rng');if(!r)return;const v=r.dataset.range;healthRange=v==='recent'?'recent':+v;focusDay=null;if(view!=='detail')view='detail';renderList();renderDetail();if(r.closest('#axisRanges')){const sec=document.getElementById('healthSec');if(sec&&sec.scrollIntoView)sec.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}});
 
-$('acctList').addEventListener('click',e=>{const b=e.target.closest('.acct');if(!b)return;focusDay=null;selected=+b.dataset.id;view='detail';renderLanes();renderList();renderDetail();});
-$('addBtn').addEventListener('click',()=>{view='new';renderLanes();renderList();renderDetail();});
+$('acctList').addEventListener('click',e=>{const b=e.target.closest('.acct');if(!b)return;focusDay=null;selected=+b.dataset.id;view='detail';renderList();renderDetail();});
+$('addBtn').addEventListener('click',()=>{view='new';renderList();renderDetail();});
 $('step1').addEventListener('click',()=>advance(1));
 $('step7').addEventListener('click',()=>advance(7));
 $('run').addEventListener('click',()=>{stopPlay();advance(500);});
