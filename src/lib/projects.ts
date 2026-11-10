@@ -169,6 +169,16 @@ export const projects: Project[] = [
       "Tailwind",
     ],
     status: "Prototype",
+    link: {
+      label: "Try the live demo",
+      href: "https://risk-graph-production.up.railway.app/",
+    },
+    subLinksLabel: "Jump to",
+    subLinks: [
+      { label: "Report packs (board / regulator / customer)", href: "https://risk-graph-production.up.railway.app/report" },
+      { label: "Threat coverage + framework library", href: "https://risk-graph-production.up.railway.app/coverage" },
+      { label: "Gap board", href: "https://risk-graph-production.up.railway.app/gaps" },
+    ],
     highlights: [
       "One linked graph: risks, controls, policies, vendors/systems, KRIs, incidents, assessments, and actions — every page is a view over it",
       "Residual scoring from measured control effectiveness, halved for controls untested in 180 days",
@@ -384,7 +394,7 @@ export const projects: Project[] = [
     tagline:
       "Phone ordering for a real working bar — order from the patio or a barstool, pay in the app or start a tab, buy the whole bar a round, and get a ding when it's ready.",
     description:
-      "Built for Louie’s Corner House (Buckeye Lake, OH). It started as patio ordering, to stop the patio-to-bar-phone relay that kept pulling bartenders off service, and is now how customers order anywhere in the bar: patio tables have QR codes that bake the seat into the link, and inside orders are picked up at the bar when the phone buzzes. Customers browse a real menu — 300+ items with priced variants, mixers, flavours and bartender-only recipes — order in a tap, edit while they're still in line, message the bar, and get a chime-and-vibrate alert. Payment happens in the app through PayPal Checkout: any debit or credit card, PayPal, or Venmo, without leaving the page, and a Pay now order reaches the bartender only once the money has actually moved. Every amount sent to PayPal is read from the bar's own rows, never from the phone. Starting a tab no longer means leaving a card behind the bar: the app places a $50 authorization hold, adds another hold when the tab outgrows it, charges the real total at close and releases the rest. A cancelled or declined order is refunded the way it was paid, at the moment it's cancelled, so nobody has to remember. Buy the Bar a Round lets a customer treat the room or name up to eight friends, add a tip and a message, and pay; staff approve it before anything is announced, and then the bell rings on the buyer's phone, the bar screen, and a Wall of Rounds on the TV. Behind it: a specials engine that runs happy hour and one-off bartender specials and recalculates every price server-side at submit; role-based staff PINs; GPS geofencing with a gentle fallback for phones that won't share location; three service modes from open through pickup-only to closed; attributed customer blocking; and a loyalty card that rewards ten different days rather than ten visits or ten dollars, so it can't be farmed by buying four rounds in one sitting. A full card is redeemed by the customer spinning the prize wheel themselves.",
+      "Built for Louie’s Corner House (Buckeye Lake, OH). It started as patio ordering, to stop the patio-to-bar-phone relay that kept pulling bartenders off service, and is now how customers order anywhere in the bar: patio tables have QR codes that bake the seat into the link, and inside orders are picked up at the bar when the phone buzzes. Customers browse a real menu — 300+ items with priced variants, mixers, flavours and bartender-only recipes — order in a tap, edit while they're still in line, message the bar, and get a chime-and-vibrate alert. Payment happens in the app through PayPal Checkout without leaving the page, and a Pay now order reaches the bartender only once the money has actually moved. Every amount sent to PayPal is read from the bar's own rows, never from the phone. Starting a tab no longer means leaving a card behind the bar: the app places a $50 authorization hold, adds another hold when the tab outgrows it, charges the real total at close and releases the rest. A cancelled or declined order is refunded the way it was paid, at the moment it's cancelled, so nobody has to remember. Buy a Round lets a customer treat the room, name up to eight friends with a drink or a dollar amount each, or pay it forward: drinks for nobody in particular that go up on a Wall of Drinks, where anyone in the bar can claim one (one per phone a night, enforced by a unique index rather than a check that two taps could race). Staff approve every round before anything is announced, and then the bell rings on the buyer's phone, the bar screen, and a Wall of Rounds on the TV. Behind it: a specials engine that runs happy hour and one-off bartender specials and recalculates every price server-side at submit; role-based staff PINs; GPS geofencing with a gentle fallback for phones that won't share location; three service modes from open through pickup-only to closed; attributed customer blocking; and a loyalty card that rewards ten different days rather than ten visits or ten dollars, so it can't be farmed by buying four rounds in one sitting. A full card is redeemed by the customer spinning the prize wheel themselves.",
     role: "Solo engineer — product, UX, full-stack build, deployment",
     stack: [
       "Next.js 16",
@@ -407,10 +417,10 @@ export const projects: Project[] = [
       "Full menu with priced variants, option groups and server-authoritative pricing — the phone never decides what anything costs",
       "Scheduled specials engine: happy hour by day and hour, one-off bartender specials, scoped to sections or hand-picked products",
       "Order from anywhere in the bar: patio tables by QR code, inside orders picked up on a buzz",
-      "In-app payments via PayPal Checkout — card, PayPal or Venmo — with amounts read from the server, never the phone",
+      "In-app payments via PayPal Checkout, with amounts read from the server, never the phone",
       "Phone tabs on a $50 card hold that tops itself up, charges the real total at close, and releases the rest",
       "Cancelled or declined payments refund automatically, the way they came in",
-      "Buy the Bar a Round: treat the room or name friends, tip, message, staff approval, then a bell and a Wall of Rounds on the TV",
+      "Buy a Round: treat the room, name friends and their drinks, or pay it forward to a Wall of Drinks anyone can claim from",
       "Live queue with two-way messaging and web-push lock-screen alerts for the bar device",
       "GPS geofencing that flags rather than blocks, three service modes, and attributed customer blocking",
       "Loyalty card rewards ten different days, not visits or spend — un-farmable by design, keyed to an anonymous device cookie with no account to create",
