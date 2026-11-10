@@ -175,6 +175,12 @@ table.health td.dim{color:var(--muted)}
 @media (max-width:1100px){.authgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:560px){.authgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .rbox{border:1px solid color-mix(in srgb,var(--c) 45%,transparent);background:color-mix(in srgb,var(--c) 9%,transparent);border-radius:8px;padding:12px 14px;display:grid;gap:8px}
+.rtop{display:flex;align-items:center;gap:8px}
+.rtoggle{all:unset;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:8px;cursor:pointer;flex:1;min-width:0}
+.rtoggle:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.rtitle{font-family:var(--f-display);font-size:14px;font-weight:600}
+.rchev{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+.rtoggle:hover .rchev{color:var(--ink)}
 .rbox h4{margin:0;font-family:var(--f-display);font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .rbox ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:13px}
 .rbox li b{font-weight:600}
@@ -383,6 +389,7 @@ const TIPS={
   health:()=>['Sending health',`<p>The daily numbers SmartStart judges each account on, with the decision each day produced.</p><p><b>Delivery rate</b>: the share of sent mail accepted, so below ${100-policy.maxBounce}% means bounces above ${policy.maxBounce}%.<br><b>Bounces</b>: above ${policy.maxBounce}% steps down, ${policy.critBounce}% or more restricts.<br><b>Spam complaints</b>: above ${policy.maxComplaint}% steps down, ${policy.critComplaint}% or more restricts.<br><b>Spam traps</b>: ${policy.trapLimit} or more in a day restricts.</p><p>Rates are measured on delivered mail. Restricted accounts deliver nothing, so their rates show as dashes.</p>`],
   policy:()=>['Policy settings','<p>The thresholds fraud ops can tune without a code deploy: daily limits, step-down and restriction triggers, and what it takes to move up. Changes apply from the next simulated day.</p>']
 };
+let rboxOpen=false; try{rboxOpen=localStorage.getItem('ss-rbox')==='1';}catch(e){}
 let healthRange='all', focusDay=null, detailTab='overview';
 let state, nextSeed=1, playTimer=null, selected=0, view='detail';
 function makeAccount(def){
@@ -624,7 +631,8 @@ function restrictionBox(a){
   }
   if(ov) items.push(`<b>Last override:</b> ${esc(ov.text.replace('Override by fraud ops: ',''))} (day ${ov.day}).`);
   if(state.shadow) items.push('<b>Shadow mode:</b> none of this is enforced right now. Decisions are only logged.');
-  return `<div class="rbox" style="--c:${tierColor(t)}"><h4>${pill(t)}${tip('tier-'+t,LABEL[t])} ${(t=>t.charAt(0).toUpperCase()+t.slice(1))(title.replace(/^\w+: /,''))}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+  const heading=(t=>t.charAt(0).toUpperCase()+t.slice(1))(title.replace(/^\w+: /,''));
+  return `<div class="rbox" style="--c:${tierColor(t)}"><div class="rtop"><button type="button" class="rtoggle" data-action="rbox" aria-expanded="${rboxOpen}" aria-controls="rboxBody">${pill(t)}<span class="rtitle">${heading}</span><span class="rchev">${rboxOpen?'Hide details':'Show details'}</span></button>${tip('tier-'+t,LABEL[t])}</div>${rboxOpen?`<ul id="rboxBody">${items.map(i=>`<li>${i}</li>`).join('')}</ul>`:''}</div>`;
 }
 function renderDetail(){_renderDetail();if(state)syncPlay();}
 function _renderDetail(){
@@ -741,6 +749,7 @@ function showDay(id,day){
 $('detail').addEventListener('click',e=>{
   if(e.target.closest('[data-action="play"]')){togglePlay();return;}
   const act=e.target.closest('[data-action]')?.dataset.action;
+  if(act==='rbox'){rboxOpen=!rboxOpen;try{localStorage.setItem('ss-rbox',rboxOpen?'1':'0');}catch(err){}renderDetail();const b=document.querySelector('.rtoggle');if(b)b.focus();return;}
   if(act==='step1'){advance(1);return;} if(act==='step7'){advance(7);return;}
   if(act==='run'){stopPlay();advance(500);return;} if(act==='reset'){const keep=selected;init();if(state.accounts.some(x=>x.id===keep)){selected=keep;render();}return;}
   if(e.target.closest('[data-action="upgrade"]')){const a=state.accounts.find(x=>x.id===selected);if(a&&isFree(a)&&!a.exited){a.s={...a.s,plan:'paid'};a.streak=0;a.util=[];a.changedAt=state.clock;a.log.push({day:a.age,type:'upgrade',text:`Upgraded to a paid plan. Daily limit now ${fmt(capFor(a))}, and clean sending days start counting toward moving up.`});render();}return;}
