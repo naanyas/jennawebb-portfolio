@@ -149,8 +149,9 @@ details.policy summary .muted{font-weight:400;font-family:var(--f-body);font-siz
 .player .playBtn{min-width:86px}
 .pday{font-size:13px;white-space:nowrap}
 .pday b{font-size:15px;font-weight:500}
-.player .rngs{margin-left:auto}
-@media (max-width:700px){.player .rngs{margin-left:0}}
+.player .steps{display:flex;flex-wrap:wrap;gap:6px}
+.player .steps button{padding:6px 10px;font-size:13px}
+.player .rngs{flex-basis:100%}
 .tabs{display:flex;gap:2px;padding:0 12px;border-bottom:1px solid var(--line);overflow-x:auto}
 .tabs button{all:unset;box-sizing:border-box;cursor:pointer;padding:11px 12px;font-size:13.5px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
 .tabs button:hover{color:var(--ink)}
@@ -226,17 +227,11 @@ table.sig tr.total td{border-bottom:0;font-weight:600;padding-top:8px}
       <p>New accounts earn sending privileges through evidence over their first 90 days.</p>
     </div>
     <div class="controls">
-      <span class="clock">Day <b id="clock">0</b></span>
-      <button id="play" class="primary">Play</button>
-      <button id="step1">+1 day</button>
-      <button id="step7">+7 days</button>
-      <button id="run">Run to Day 90</button>
-      <button id="reset">Reset</button>
       <span style="display:inline-flex;align-items:center"><label class="switch" for="shadow"><input type="checkbox" id="shadow"> Shadow mode</label><button type="button" class="tip" data-tip="shadow" aria-label="Explain shadow mode" aria-expanded="false">?</button></span>
     </div>
   </header>
 
-  <p class="intro"><b>A working model of a new-sender trust framework I designed for an email platform.</b> Every new account gets a risk score at signup, starts in a tier with a matching daily sending limit, and moves up or down based on how it actually sends. Press Play to watch seven fictional accounts, from a healthy startup to a bust-out fraud ring, play out their first 90 days. Click any account to see why each decision was made.</p>
+  <p class="intro"><b>A working model of a new-sender trust framework I designed for an email platform.</b> Every new account gets a risk score at signup, starts in a tier with a matching daily sending limit, and moves up or down based on how it actually sends. Press Play in the account panel below to watch seven fictional accounts, from a healthy startup to a bust-out fraud ring, play out their first 90 days. Click any account to see why each decision was made.</p>
 
   <div class="tierkey" id="tierKey" aria-label="Trust classifications"></div>
 
@@ -476,7 +471,7 @@ function advance(n){
   render();
 }
 const finished=()=>state&&state.accounts.every(a=>a.exited);
-function syncPlay(){const l=playTimer?'Pause':finished()?'Replay':'Play';$('play').textContent=l;document.querySelectorAll('.playBtn').forEach(b=>b.textContent=l);}
+function syncPlay(){const l=playTimer?'Pause':finished()?'Replay':'Play';document.querySelectorAll('.playBtn').forEach(b=>b.textContent=l);}
 function stopPlay(){if(playTimer){clearInterval(playTimer);playTimer=null;}if(state)syncPlay();}
 function togglePlay(){
   if(playTimer){stopPlay();return;}
@@ -487,7 +482,6 @@ function togglePlay(){
 
 /* ---------- rendering ---------- */
 function renderSummary(){
-  $('clock').textContent=state.clock;
   const counts={restricted:0,limited:0,developing:0,established:0};
   state.accounts.forEach(a=>counts[a.tier]++);
   const n=state.accounts.length;
@@ -659,6 +653,7 @@ function _renderDetail(){
   <div class="player">
     <button type="button" class="primary playBtn" data-action="play">Play</button>
     <span class="pday"><b class="num">${a.exited?'Day 90':'Day '+a.age}</b> <span class="muted">of 90${a.exited?' · completed':''}</span></span>
+    <span class="steps"><button type="button" data-action="step1">+1 day</button><button type="button" data-action="step7">+7 days</button><button type="button" data-action="run">Run to Day 90</button><button type="button" data-action="reset">Reset</button></span>
     <div class="rngs" role="group" aria-label="Days to show">${RANGES.map(([v,l])=>`<button type="button" class="rng${healthRange===v?' on':''}" data-range="${v}" aria-pressed="${healthRange===v}">${l}</button>`).join('')}</div>
   </div>
   <div class="tabs" role="tablist" aria-label="Account details">${[['overview','Overview'],['health','Sending health'],['signals','Risk signals'],['decisions','Decisions']].map(([k,l])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${detailTab===k}">${l}</button>`).join('')}</div>
@@ -745,6 +740,9 @@ function showDay(id,day){
 }
 $('detail').addEventListener('click',e=>{
   if(e.target.closest('[data-action="play"]')){togglePlay();return;}
+  const act=e.target.closest('[data-action]')?.dataset.action;
+  if(act==='step1'){advance(1);return;} if(act==='step7'){advance(7);return;}
+  if(act==='run'){stopPlay();advance(500);return;} if(act==='reset'){const keep=selected;init();if(state.accounts.some(x=>x.id===keep)){selected=keep;render();}return;}
   if(e.target.closest('[data-action="upgrade"]')){const a=state.accounts.find(x=>x.id===selected);if(a&&isFree(a)&&!a.exited){a.s={...a.s,plan:'paid'};a.streak=0;a.util=[];a.changedAt=state.clock;a.log.push({day:a.age,type:'upgrade',text:`Upgraded to a paid plan. Daily limit now ${fmt(capFor(a))}, and clean sending days start counting toward moving up.`});render();}return;}
   const t=e.target.closest('[data-tab]'); if(t){detailTab=t.dataset.tab;renderDetail();syncPlay();return;}
   const h=e.target.closest('rect.hit'); if(h){showDay(selected,+h.dataset.day);}
@@ -754,11 +752,6 @@ document.addEventListener('click',e=>{const r=e.target.closest('.rng');if(!r)ret
 
 $('acctList').addEventListener('click',e=>{const b=e.target.closest('.acct');if(!b)return;focusDay=null;selected=+b.dataset.id;view='detail';renderList();renderDetail();});
 $('addBtn').addEventListener('click',()=>{view='new';renderList();renderDetail();});
-$('step1').addEventListener('click',()=>advance(1));
-$('step7').addEventListener('click',()=>advance(7));
-$('run').addEventListener('click',()=>{stopPlay();advance(500);});
-$('reset').addEventListener('click',init);
-$('play').addEventListener('click',togglePlay);
 $('shadow').addEventListener('change',e=>{state.shadow=e.target.checked;render();});
 const pop=document.createElement('div');pop.id='tipPop';pop.setAttribute('role','dialog');pop.hidden=true;document.body.appendChild(pop);
 let openTip=null;
