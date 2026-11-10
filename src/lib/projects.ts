@@ -157,9 +157,9 @@ export const projects: Project[] = [
     name: "Risk Graph",
     category: "detection",
     tagline:
-      "Risk as a linked graph, not a spreadsheet — a GRC platform that prices every gap in dollars, including the customers you would lose.",
+      "Risk as a linked graph, not a spreadsheet — a GRC prototype that prices every gap in dollars, including the customers you would lose.",
     description:
-      "A working prototype for a governance, risk, and compliance system built around ten linked objects — Risk, Control, Metric/KRI, Incident, Action, Policy, Vendor/Asset, Assessment — rather than the disconnected register-plus-spreadsheet setup most teams actually live in. The engine derives residual risk from the inherent score and measured control effectiveness, halved when a control has not been tested in 180 days, then scores every risk across four impact lenses: direct monetary, regulatory, reputational, and customer churn. The churn lens is the part most GRC tools do not have — affected customers × churn probability × lifetime value, with the churn coefficient learned from incident actuals rather than guessed. Compliance and bad-actor risk share one graph: a threat-framework library (MITRE ATT&CK, fraud kill chain, messaging-abuse patterns), attack-vector objects, and detections as a control subtype carrying TPR, FPR, and MTTD — so a vectors × detections coverage matrix becomes the fraud-side gap analysis. A gap engine makes absence first-class, and reporting comes out as three audience packs — regulator, board, and customer trust — frozen as immutable snapshots for defensibility.",
+      "A working prototype of a governance, risk, and compliance system built as one linked graph — risks, controls, policies, vendors and systems, metrics, incidents, assessments, and actions — instead of the register-plus-spreadsheets setup most teams live in. Residual risk comes from measured control effectiveness, halved for any control untested in 180 days, and every risk is priced across direct monetary, regulatory, reputational, and customer-churn lenses. Churn is the lens most GRC tools skip: exposed customers × churn probability × lifetime value, where the probability starts as an assumption and is updated by every incident that records how many affected customers actually left (a Beta-binomial update, so a 118-customer incident moves it far more than a 5-customer one). Compliance and fraud share the graph: attack vectors map onto a threat library spanning MITRE ATT&CK, a fraud kill chain, and messaging-abuse patterns, and detections carry TPR, FPR, and time to detect, so the vectors × detections matrix is the fraud-side gap analysis. A gap engine treats absence as a finding, and one graph produces three report packs — board, regulator, and customer trust — that can be issued as hash-chained snapshots the database refuses to edit or delete.",
     role: "Solo — product concept, risk model, scoring engine, prototype build",
     stack: [
       "Next.js 16",
@@ -168,13 +168,15 @@ export const projects: Project[] = [
       "SQLite (better-sqlite3)",
       "Tailwind",
     ],
-    status: "In progress",
+    status: "Prototype",
     highlights: [
-      "Ten linked core objects — every template is a view over the graph, never a separate table",
-      "Residual scoring from measured control effectiveness, with a staleness penalty for untested controls",
-      "Dollarized churn lens: affected customers × churn probability × LTV, calibrated on real incident outcomes",
-      "Compliance and fraud in one graph — attack vectors × detections coverage matrix as the gap analysis",
-      "Gap engine treats absence as a finding: unmeasured risks, stale metrics, unwatched vectors, broken report lineage",
+      "One linked graph: risks, controls, policies, vendors/systems, KRIs, incidents, assessments, and actions — every page is a view over it",
+      "Residual scoring from measured control effectiveness, halved for controls untested in 180 days",
+      "Churn priced in dollars and learned from incidents: exposed customers × calibrated churn probability × LTV",
+      "Threat library across MITRE ATT&CK, a fraud kill chain, and messaging abuse, with each technique marked watched, modeled, or unmodeled",
+      "Gap engine covering unmeasured risks, broken data lineage, unwatched vectors, paper policies, lapsed vendor reviews, and untested controls",
+      "Board, regulator, and customer-trust packs from the same data; the customer pack fails its build if it would leak a dollar figure, internal code, or staff name",
+      "Issued reports are frozen as hash-chained snapshots the database refuses to edit or delete",
       "Dig-deeper queue ranks investigations by exposure × blindness × velocity",
     ],
     accent: "sky",
@@ -292,9 +294,9 @@ export const projects: Project[] = [
     name: "Tangled Webb Bar Platform",
     category: "entertainment",
     tagline:
-      "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, Triple Down, Shut Up & Roll, and Tab Out, all running off one host console.",
+      "Live bar entertainment platform plus a public marketing site — trivia, bingo, open mic, hosted game nights, Triple Down, Shut Up & Roll, and Tab Out, all running off one host console with phones and the bar TV in sync.",
     description:
-      "A full multi-game platform for venues, running live bar nights every week and still in active beta testing at the venue — real crowds are the test harness. Players join by scanning a QR code, hosts run rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. A shared prize wheel runs across the games with per-prize stock that pulls a prize once it hits zero, a physical-deck mode for hosts who would rather deal real cards, and landing math centralized behind regression tests after it drifted between the wedge and the prize text. Bar Bingo was rebuilt phone-first this summer: server-side auto-call (the old client-side timer died whenever the host backgrounded the tab), themed square rounds, generated trash talk, and proper handling for two people calling bingo at once. For Veterans Day it gained a third look alongside Classic and Halloween: five new winning shapes (chevron, dog tag, poppy, service star, flag), two 75-square lists, and two ceremonies that take over the TV and every phone — a branch roll call in order of precedence with cues for the host, and a sixty-second moment of remembrance that ends itself on a server-issued clock, because the one person who would remember to end it is holding a microphone. Venues that run their own phone games can also license Tab Out, Triple Down, and the verified trivia bank through service routes that deal a round on the real engine, instead of keeping a copy of the rules that drifts. Tab Out gained sabotage cards and rotating banter. The TV displays now survive a crash and hold their screen when the event stream drops. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
+      "A full multi-game platform for venues, running live bar nights every week and still in active beta testing at the venue — real crowds are the test harness. Players join by scanning a QR code, hosts run rounds from a unified console, and admins manage venues, question banks, promotions, performer profiles, and booking flows. Anti-cheat detects when players leave the app mid-question. A shared prize wheel runs across the games with per-prize stock that pulls a prize once it hits zero, a physical-deck mode for hosts who would rather deal real cards, and landing math centralized behind regression tests after it drifted between the wedge and the prize text. Bar Bingo was rebuilt phone-first this summer: server-side auto-call (the old client-side timer died whenever the host backgrounded the tab), themed square rounds, generated trash talk, and proper handling for two people calling bingo at once. For Veterans Day it gained a third look alongside Classic and Halloween: five new winning shapes (chevron, dog tag, poppy, service star, flag), two 75-square lists, and two ceremonies that take over the TV and every phone — a branch roll call in order of precedence with cues for the host, and a sixty-second moment of remembrance that ends itself on a server-issued clock, because the one person who would remember to end it is holding a microphone. Venues that run their own phone games can also license Tab Out, Triple Down, and the verified trivia bank through service routes that deal a round on the real engine, instead of keeping a copy of the rules that drifts. Tab Out gained sabotage cards and rotating banter. The platform also runs Louie’s weekly hosted game nights. Hangman gives every player their own gallows against the same phrase, and the TV shows only a small hangman per player, never the word or the letters, because anything on the bar TV can be read off it; phrases come from an editable bank and rest 60 days after they’re played. The Corner House Crew is a king-of-the-hill survey-show tournament with a server-enforced buzzer race (the first guarded database update wins, so two simultaneous taps can’t both buzz in), turns that rotate through each team automatically, and boards built from real patron surveys. UNO runs on real decks across up to four independent tables, with the winner spinning the prize wheel on their own phone. Euchre comes two ways: real-deck tables that draw partners blind and swap them after every game to five, and a fully automated phone-and-TV version with bots, going alone, and stick the dealer. The TV displays now survive a crash and hold their screen when the event stream drops. The same Next.js app serves tanglewebb.com — the public marketing site with about, services, schedule, venues, gallery, blog, and testimonials.",
     role: "Solo founder & engineer — product, UX, full-stack build, marketing site",
     stack: [
       "Next.js 16",
@@ -309,7 +311,7 @@ export const projects: Project[] = [
       label: "Try the live Open Mic demo",
       href: "https://tanglewebb.com/demo/openmic",
     },
-    subLinksLabel: "Game pages on tanglewebb.com",
+    subLinksLabel: "Demos & game pages",
     subLinks: [
       { label: "Trivia", href: "https://tanglewebb.com/services/trivia" },
       { label: "Open Mic", href: "https://tanglewebb.com/services/openmic" },
@@ -317,15 +319,20 @@ export const projects: Project[] = [
       { label: "Triple Down", href: "https://tanglewebb.com/services/triple-down" },
       { label: "Shut Up & Roll", href: "https://tanglewebb.com/services/shutuproll" },
       { label: "Tab Out", href: "https://tanglewebb.com/services/tabout" },
+      { label: "Triple Down demo", href: "https://tanglewebb.com/demo/triple-down" },
+      { label: "Corner House Crew survey", href: "https://trivia-app-orcin.vercel.app/survey" },
       { label: "Main site", href: "https://tanglewebb.com" },
     ],
     highlights: [
-      "Seven game modes share one player join flow and host console, including a Queen of Hearts raffle tracker",
+      "A dozen game formats share one player join flow and host console, including a Queen of Hearts raffle tracker",
       "Player, host, admin, and performer roles each get a tailored interface",
       "Shared prize wheel: per-prize stock with auto-removal at zero, physical-deck mode, landing math under regression test",
       "Bingo rebuilt phone-first — server-side auto-call that survives a backgrounded tab, themed rounds, co-winner handling",
       "Veterans Day Bingo: new shapes and lists, plus roll-call and remembrance ceremonies that end on a server clock, not a host tap",
       "Licensed game service routes: other venues rent Tab Out, Triple Down, and verified trivia from the real engine",
+      "Hosted game nights: Hangman with a TV that shows nothing to cheat from, and a 60-day phrase rest across the venue",
+      "The Corner House Crew: race-safe server buzzers, auto-rotating turns, boards built from real patron surveys",
+      "UNO on 1–4 independent real-deck tables, and Euchre as real-deck tables with partner swaps or a fully automated game with bots",
       "Turso resilience work: self-healing connections, graceful degradation, and paged reads after a week of production outages",
       "TV displays recover from a crash and hold their screen when the event stream drops",
       "Same codebase serves the public marketing site at tanglewebb.com",
@@ -371,45 +378,13 @@ export const projects: Project[] = [
     accent: "violet",
   },
   {
-    slug: "louies-game-nights",
-    name: "Louie’s Game Nights",
-    category: "entertainment",
-    tagline:
-      "Four hosted game-night formats built for the bar — Hangman, a survey-show face-off called The Corner House Crew, UNO with real decks, and Euchre — each run from a host console with phones and the bar TV in sync.",
-    description:
-      "Live, hosted games for Louie’s weekly game nights, built on the Tangled Webb platform’s host-console-plus-phones-plus-TV pattern. Hangman gives every player their own gallows against the same phrase; the TV never shows the word, the letters called, or a letter feed — only a small hangman per player with a name and points — because anything on the bar TV can be read off it. Puzzles come in rounds, and the prize wheel goes to the top scorer across the round rather than each puzzle’s solver. Phrases live in an editable database word bank, and a played phrase rests for 60 days across every game at the venue. The Corner House Crew is a king-of-the-hill survey-show tournament: two teams, a server-enforced buzzer race (the first guarded database update wins, so two simultaneous taps can’t both buzz in), face-off and answer turns that rotate through each team’s roster automatically, and a host who judges spoken answers with a tap so nobody types on a phone. Its boards come from a starter bank, a host editor, and real patron surveys collected through a public form. UNO runs on real decks across up to four tables: the host seats players from their phones, each table plays its own rounds without waiting on the others, the winner spins the prize wheel on their own phone, and the TV queues full-screen spin pop-ups and a leaderboard per table. Euchre comes two ways. Real-deck tables draw partners blind and swap them after every game to five, with waiting players rotating in at the swap so nobody sits out a whole night. The automated version is played entirely on phones and the TV, with bots filling empty seats and the house rules people actually play — going alone and stick the dealer. All four share breaks, announcements, promo cards in the lobby, and an animated how-to-play loop on the TV.",
-    role: "Solo engineer — game design, host tooling, full-stack build, deployment",
-    stack: [
-      "Next.js 16",
-      "React 19",
-      "TypeScript",
-      "Turso (libsql)",
-      "Tailwind",
-    ],
-    status: "Shipped",
-    link: {
-      label: "Take a Corner House Crew survey",
-      href: "https://trivia-app-orcin.vercel.app/survey",
-    },
-    highlights: [
-      "Hangman: per-player gallows against one shared phrase; the TV deliberately shows nothing a player could cheat from",
-      "Rounds with a wheel for the round’s top scorer, host-only puzzle advance, kick/restore, and send-a-spin to any player",
-      "Database word bank with a 60-day rest per phrase across every game at the venue",
-      "The Corner House Crew: king-of-the-hill teams, race-safe server buzzers, auto-rotating turns, host-judged answers",
-      "Boards built from real patron surveys (“We surveyed N patrons”) alongside a 40-board starter bank",
-      "UNO with physical decks: 1–4 independent tables, winner spins on their phone, TV pop-ups and per-table standings",
-      "Euchre: real-deck tables with blind-draw partners that swap each game, or a fully automated phone-and-TV game with bots, going alone, and stick the dealer",
-    ],
-    accent: "amber",
-  },
-  {
     slug: "louies-orders",
-    name: "Louie’s Patio & Bar Orders",
+    name: "Louie’s Phone Ordering",
     category: "operations",
     tagline:
-      "QR-code ordering for a real working bar — patio customers scan their table's code, the bartender works a live queue, and phones ding when the order's ready.",
+      "Phone ordering for a real working bar — order from the patio or a barstool, pay in the app or start a tab, buy the whole bar a round, and get a ding when it's ready.",
     description:
-      "Built for Louie’s Corner House (Buckeye Lake, OH) to replace the patio-to-bar-phone workflow that kept pulling bartenders off service. Each table's QR code bakes the seat into the link, so nobody types a table number and nobody gets it wrong. Customers browse a real menu — 300+ items with priced variants, mixers, flavours and bartender-only recipes — order in a tap, edit while they're still in line, message the bar, and get a chime-and-vibrate alert with their total. Behind it: a specials engine that runs happy hour and one-off bartender specials on a schedule and recalculates every price server-side at submit; running tabs; and a bartender queue where one tap finishes an order. The admin console runs the rest — role-based staff PINs, GPS geofencing with a gentle fallback for phones that won't share location, three service modes from open through pickup-only to closed, attributed customer blocking, a loyalty card, and an impact dashboard. The card rewards ten different days rather than ten visits or ten dollars — ordering a drink or playing a game both count, two devices on one night still count once, and it cannot be farmed by buying four rounds in a single sitting. A full card is redeemed by the customer spinning the prize wheel themselves, with no staff involved. In production at the bar today, switched on for the shifts it's being tested on.",
+      "Built for Louie’s Corner House (Buckeye Lake, OH). It started as patio ordering, to stop the patio-to-bar-phone relay that kept pulling bartenders off service, and is now how customers order anywhere in the bar: patio tables have QR codes that bake the seat into the link, and inside orders are picked up at the bar when the phone buzzes. Customers browse a real menu — 300+ items with priced variants, mixers, flavours and bartender-only recipes — order in a tap, edit while they're still in line, message the bar, and get a chime-and-vibrate alert. Payment happens in the app through PayPal Checkout: any debit or credit card, PayPal, or Venmo, without leaving the page, and a Pay now order reaches the bartender only once the money has actually moved. Every amount sent to PayPal is read from the bar's own rows, never from the phone. Starting a tab no longer means leaving a card behind the bar: the app places a $50 authorization hold, adds another hold when the tab outgrows it, charges the real total at close and releases the rest. A cancelled or declined order is refunded the way it was paid, at the moment it's cancelled, so nobody has to remember. Buy the Bar a Round lets a customer treat the room or name up to eight friends, add a tip and a message, and pay; staff approve it before anything is announced, and then the bell rings on the buyer's phone, the bar screen, and a Wall of Rounds on the TV. Behind it: a specials engine that runs happy hour and one-off bartender specials and recalculates every price server-side at submit; role-based staff PINs; GPS geofencing with a gentle fallback for phones that won't share location; three service modes from open through pickup-only to closed; attributed customer blocking; and a loyalty card that rewards ten different days rather than ten visits or ten dollars, so it can't be farmed by buying four rounds in one sitting. A full card is redeemed by the customer spinning the prize wheel themselves.",
     role: "Solo engineer — product, UX, full-stack build, deployment",
     stack: [
       "Next.js 16",
@@ -424,10 +399,19 @@ export const projects: Project[] = [
       label: "Play with the working demo",
       href: "https://louies-orders.vercel.app/demo",
     },
+    subLinksLabel: "Also live",
+    subLinks: [
+      { label: "Wall of Rounds (the bar TV page)", href: "https://louies-orders.vercel.app/rounds" },
+    ],
     highlights: [
       "Full menu with priced variants, option groups and server-authoritative pricing — the phone never decides what anything costs",
       "Scheduled specials engine: happy hour by day and hour, one-off bartender specials, scoped to sections or hand-picked products",
-      "Live queue with per-table QR codes, two-way messaging, running tabs, and web-push lock-screen alerts for the bar device",
+      "Order from anywhere in the bar: patio tables by QR code, inside orders picked up on a buzz",
+      "In-app payments via PayPal Checkout — card, PayPal or Venmo — with amounts read from the server, never the phone",
+      "Phone tabs on a $50 card hold that tops itself up, charges the real total at close, and releases the rest",
+      "Cancelled or declined payments refund automatically, the way they came in",
+      "Buy the Bar a Round: treat the room or name friends, tip, message, staff approval, then a bell and a Wall of Rounds on the TV",
+      "Live queue with two-way messaging and web-push lock-screen alerts for the bar device",
       "GPS geofencing that flags rather than blocks, three service modes, and attributed customer blocking",
       "Loyalty card rewards ten different days, not visits or spend — un-farmable by design, keyed to an anonymous device cookie with no account to create",
       "A full card is redeemed by the customer spinning the prize wheel themselves — no staff in the loop",
@@ -440,9 +424,9 @@ export const projects: Project[] = [
     name: "Louie’s Bar Screen & Back Office",
     category: "operations",
     tagline:
-      "The staff side of the ordering app — taking orders at the table, running tabs, counting the drawer, scheduling the staff, and selling out of a cooler at events.",
+      "The staff side of the ordering app — the order and round queues, payments and tabs, the drawer and the night's settlement, Queen of Hearts tickets, the staff schedule, and a cooler bar for events.",
     description:
-      "What started as a queue for patio orders became the tool the bar staff run their shift from. Bartenders take orders at a table on their own phone — set the table once, add each person, and everyone gets their own order and their own tab. Tabs can be split by order (never by dividing a total, because half of a round somebody bought isn’t anybody’s half) or combined; “their usual” turns “another Coors” into one tap; family pricing is applied by the person ringing it rather than as a special anyone standing there would get; and tips written on the slip after a card runs go into a pile to fill in later instead of holding a screen open per slip. A card surcharge was replaced with a cash discount after working through the rules — a surcharge is capped, can’t touch debit, and needs registration, while a discount has none of those problems and reads as a favour rather than a penalty. The night ends at 5am, not midnight, so a 1:30am tab lands on the right day; the drawer is counted against what was rung up as cash, and paid-outs are logged as they happen and voided rather than deleted. Scheduling treats publishing as a step so a late week is visible, totals everyone’s hours in the open, and records every change made after publishing. A time clock and an hours report put scheduled and worked side by side. For outdoor events, a cooler bar sells in one tap with no tab or customer, copies the price onto each sale, and settles owner-stocked gear separately from the bar’s takings.",
+      "What started as a queue for patio orders became the tool the bar staff run their shift from. Phone orders, paid or on a tab, land in one queue; Buy a Round requests land in another, where a bartender approves one (ringing the bell on the TV) or declines it, which refunds it automatically. Payments made through the Venmo or PayPal links, which the app can't see land, carry a short code like LCH-7F3A so the bartender can find “Sarah, $14” in the Venmo app on a busy night; PayPal Checkout payments are captured and refunded by the app itself. Quick-pick buttons fill from what's actually selling but can be pinned, so a dollar-domestic night gets the domestics up front. Queen of Hearts tickets reserved on the website show up in two piles, still owed and paid-and-ready-to-print, and the bar can see why someone is blocked from reserving and text them from the bar phone. Bartenders take orders at a table on their own phone — set the table once, add each person, and everyone gets their own order and their own tab. Tabs can be split by order (never by dividing a total, because half of a round somebody bought isn’t anybody’s half) or combined; “their usual” turns “another Coors” into one tap; family pricing is applied by the person ringing it rather than as a special anyone standing there would get; and tips written on the slip after a card runs go into a pile to fill in later instead of holding a screen open per slip. A card surcharge was replaced with a cash discount after working through the rules — a surcharge is capped, can’t touch debit, and needs registration, while a discount has none of those problems and reads as a favour rather than a penalty. The night ends at 5am, not midnight, so a 1:30am tab lands on the right day; the drawer is counted against what was rung up as cash, and paid-outs are logged as they happen and voided rather than deleted. Scheduling treats publishing as a step so a late week is visible, totals everyone’s hours in the open, and records every change made after publishing. A time clock and an hours report put scheduled and worked side by side. For outdoor events, a cooler bar sells in one tap with no tab or customer, copies the price onto each sale, and settles owner-stocked gear separately from the bar’s takings. End-of-night reporting covers settlement, comps, tips, top sellers, and event close-out, and staff roles run from bartender through admin to owner.",
     role: "Solo engineer — product, UX, full-stack build, deployment",
     stack: [
       "Next.js 16",
@@ -454,6 +438,10 @@ export const projects: Project[] = [
     ],
     status: "Shipped",
     highlights: [
+      "Order and round queues: approve a round to ring the bell on the TV, decline it to refund it automatically",
+      "Payment matching codes for Venmo/PayPal links; PayPal Checkout captured, held, and refunded by the app",
+      "Queen of Hearts reservations in owed and ready-to-print piles, with blocklist lookup and text-the-customer",
+      "Pinnable quick picks backed by live sales, plus settlement, comps, tips, top-seller and event reports",
       "Staff ordering at the table: one person per order, one tab per person, matched on name and table",
       "Split by order and combine tabs, one-tap “their usual”, family pricing, and a tips-to-add pile for card slips",
       "Cash discount instead of a card surcharge — same recovery, no cap, no debit restriction, no registration",
@@ -508,7 +496,7 @@ export const projects: Project[] = [
     tagline:
       "The bar’s front door — a database-driven website where the team adds events, menu options, and entire new apps without anyone touching code.",
     description:
-      "The main site for Louie’s Corner House and the hub that ties the other apps together. Everything on it is data, not code: the top nav and the homepage app tiles are driven by rows in a site_links table, so when the next app ships the team adds it themselves and it appears with no deploy. Events carry uploaded flyers, the homepage headlines the current Queen of Hearts jackpot, and a password-gated admin console runs all four surfaces — events, Queen of Hearts, menu options, and site info. The raffle section is the substantial one: a 54-envelope board, live 1-in-N odds, a jackpot trend chart, per-draw history, and admin-editable rules. Logging a draw rolls the jackpot, recomputes the odds, rejects a duplicate envelope, and records the winner automatically when the Queen turns up. Customers reserve raffle tickets online and the bar prints them from its own screen; the default is “I’ll pick numbers at the bar”, because a reservation without card numbers becomes one sticker image with copies set to N on the bar’s handheld label printer instead of one import per number. Pricing lives in one function so the customer’s quote, the admin preview, and the bar screen can never disagree, and the public lookup by reservation code never returns a name or phone. The bar can block a phone number from reserving online, with a plain-spoken message rather than a vague error that would read as a broken app. Sharing the raffle page produces a live Open Graph card with the current jackpot and cards left. Custom pages carry generic signup sheets — named slots with optional limits — so one primitive covers a 50th-anniversary potluck, a Friendsgiving main-dish sign-up, a chili cook-off entry list (with a QR-coded flyer), a volunteer list, and local businesses offering game-night prizes. Repeating events can have one themed date with its own flyer. The front page shows the games as a physics-driven attract screen (bouncing dice with restitution, a real pendulum, a beer-pong arc solved for its target cup) on a single canvas that stops when scrolled out of view. A first-party analytics tracker shared by all four Louie’s apps feeds a dashboard tab with no IP, name, or phone stored. Admin passwords are self-service from the dashboard — a hash in the database overrides the environment variable and signs every other device out.",
+      "The main site for Louie’s Corner House and the hub that ties the other apps together. Everything on it is data, not code: the top nav and the homepage app tiles are driven by rows in a site_links table, so when the next app ships the team adds it themselves and it appears with no deploy. Events carry uploaded flyers, the homepage headlines the current Queen of Hearts jackpot, and a password-gated admin console runs all four surfaces — events, Queen of Hearts, menu options, and site info. The raffle section is the substantial one: a 54-envelope board, live 1-in-N odds, a jackpot trend chart, per-draw history, and admin-editable rules. Logging a draw rolls the jackpot, recomputes the odds, rejects a duplicate envelope, and records the winner automatically when the Queen turns up. Customers reserve raffle tickets online and the bar prints them from its own screen; the default is “I’ll pick numbers at the bar”, because a reservation without card numbers becomes one sticker image with copies set to N on the bar’s handheld label printer instead of one import per number. Pricing lives in one function so the customer’s quote, the admin preview, and the bar screen can never disagree, and the public lookup by reservation code never returns a name or phone. The bar can block a phone number from reserving online, with a plain-spoken message rather than a vague error that would read as a broken app. Each reservation carries two kinds of note kept in separate columns on purpose: a staff note that never leaves the admin screen (“paid half in cash”) and a customer message that appears under the reservation on the customer's own phone (“Card #23 got flipped — come pick a new number”). Reservations flow to the bar screen in the ordering app, sorted into still-owed and paid-and-ready-to-print. Sharing the raffle page produces a live Open Graph card with the current jackpot and cards left. Custom pages carry generic signup sheets — named slots with optional limits — so one primitive covers a 50th-anniversary potluck, a Friendsgiving main-dish sign-up, a chili cook-off entry list (with a QR-coded flyer), a volunteer list, and local businesses offering game-night prizes. Repeating events can have one themed date with its own flyer. The front page shows the games as a physics-driven attract screen (bouncing dice with restitution, a real pendulum, a beer-pong arc solved for its target cup) on a single canvas that stops when scrolled out of view. A first-party analytics tracker shared by all four Louie’s apps feeds a dashboard tab with no IP, name, or phone stored. Admin passwords are self-service from the dashboard — a hash in the database overrides the environment variable and signs every other device out.",
     role: "Solo engineer — product, UX, full-stack build, deployment",
     stack: [
       "Next.js 16",
@@ -534,6 +522,7 @@ export const projects: Project[] = [
       "Nav and homepage tiles are database rows — the team adds new apps without a deploy",
       "Queen of Hearts: envelope board, live 1-in-N odds, jackpot trend chart, auto-recorded winner",
       "Online raffle reservations printed at the bar — designed around a handheld label printer that takes one image at a time",
+      "Reservation notes split by audience: bar-only staff notes vs. messages the customer sees on their phone",
       "Phone-number blocklist that fails open: a database error never locks out a real customer",
       "Live Open Graph share card with the current jackpot, rendered per request so the pot never freezes",
       "Custom pages with generic signup sheets — potlucks, Friendsgiving, a chili cook-off, volunteers, and business sponsors on one primitive",

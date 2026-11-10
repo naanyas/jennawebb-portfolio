@@ -144,7 +144,13 @@ details.policy summary .muted{font-weight:400;font-family:var(--f-body);font-siz
 .dhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
 .dhead .meta{color:var(--muted);font-size:13px;margin-top:2px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 12px}
+.player{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--soft)}
+.player .playBtn{min-width:86px}
+.pday{font-size:13px;white-space:nowrap}
+.pday b{font-size:15px;font-weight:500}
+.player .rngs{margin-left:auto}
+@media (max-width:700px){.player .rngs{margin-left:0}}
 .tabs{display:flex;gap:2px;padding:0 12px;border-bottom:1px solid var(--line);overflow-x:auto}
 .tabs button{all:unset;box-sizing:border-box;cursor:pointer;padding:11px 12px;font-size:13.5px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
 .tabs button:hover{color:var(--ink)}
@@ -163,7 +169,7 @@ table.health tr:last-child td{border-bottom:0}
 table.health td.warn{color:var(--t-limited);font-weight:600}
 table.health td.bad{color:var(--t-restricted);font-weight:600}
 table.health td.dim{color:var(--muted)}
-.authgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.authgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 12px}
 .authitem{display:grid;gap:6px;justify-items:start;font-size:12px;color:var(--muted)}
 @media (max-width:1100px){.authgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:560px){.authgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -206,7 +212,6 @@ table.sig tr.total td{border-bottom:0;font-weight:600;padding-top:8px}
 .preview .score{font-family:var(--f-mono);font-size:24px}
 
 @media (max-width:980px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.summary .stat:first-child{grid-column:1/-1}}
-@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:minmax(0,1fr)}.bar{grid-template-columns:110px minmax(0,1fr) auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -277,11 +282,13 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const $=id=>document.getElementById(id);
 const tip=(k,label)=>`<button type="button" class="tip" data-tip="${k}" aria-label="Explain ${label||k}" aria-expanded="false">?</button>`;
 
-const DEFAULT_POLICY={limLimited:500,limDeveloping:5000,limEstablished:50000,maxBounce:5,maxComplaint:0.10,critBounce:10,critComplaint:0.30,trapLimit:2,daysLD:7,utilLD:75,daysDE:21,utilDE:75,spikeX:4};
+const DEFAULT_POLICY={freeCap:25,limLimited:500,limDeveloping:5000,limEstablished:50000,maxBounce:5,maxComplaint:0.10,critBounce:10,critComplaint:0.30,trapLimit:2,daysLD:7,utilLD:75,daysDE:21,utilDE:75,spikeX:4};
 let policy={...DEFAULT_POLICY};
+const isFree=a=>a.s.plan==='free';
+const capFor=a=>a.tier==='restricted'?0:isFree(a)?Math.min(policy.freeCap,limitFor(a.tier)):limitFor(a.tier);
 const limitFor=t=>({restricted:0,limited:policy.limLimited,developing:policy.limDeveloping,established:policy.limEstablished})[t];
 const POLICY_FIELDS=[
-  ['limLimited','Limited: daily limit (emails)',1],['limDeveloping','Developing: daily limit',1],['limEstablished','Established: daily limit (plan cap)',1],
+  ['freeCap','Free plan: daily limit (emails)',1],['limLimited','Limited: daily limit (emails)',1],['limDeveloping','Developing: daily limit',1],['limEstablished','Established: daily limit (plan cap)',1],
   ['maxBounce','Step-down: bounce rate above (%)',0.5],['maxComplaint','Step-down: complaint rate above (%)',0.01],
   ['critBounce','Restrict: bounce rate at or above (%)',0.5],['critComplaint','Restrict: complaint rate at or above (%)',0.01],['trapLimit','Restrict: spam trap hits per day',1],
   ['daysLD','Limited → Developing: clean sending days',1],['utilLD','Limited → Developing: average use of daily limit (%)',5],
@@ -294,6 +301,9 @@ const SIG={
   email:{label:'Signup email',opts:{corporate:['Company domain',0],webmail:['Free webmail',15],disposable:['Disposable address',40]}},
   ip:{label:'Signup IP',opts:{clean:['Clean reputation',0],proxy:['VPN or proxy',15],bad:['Known abusive range',35]}},
   plan:{label:'Plan',opts:{paid:['Paid plan',0],free:['Free plan',5]}},
+  spfAll:{label:'SPF record ending',opts:{hard:['SPF ends in -all (reject others)',-5],soft:['SPF ends in ~all (soft fail)',0],neutral:['SPF ends in ?all (no opinion)',10],open:['SPF ends in +all (anyone can send)',25]}},
+  spfIncl:{label:'Senders the SPF record authorizes',opts:{one:['SPF authorizes only this platform',0],several:['SPF authorizes 2 to 4 other senders',5],many:['SPF authorizes 5+ senders or breaks the 10-lookup limit',10]}},
+  spfAge:{label:'SPF record history',opts:{stable:['SPF record unchanged for 30+ days',0],recent:['SPF record changed in the last 7 days',10]}},
   dmarc:{label:'DMARC policy',opts:{enforced:['DMARC enforced (quarantine or reject)',-10],none:['DMARC monitoring only (p=none)',0],missing:['No DMARC record',10]}},
   age:{label:'Sending domain age',opts:{old:['Domain over a year old',-5],mid:['Domain 1 to 12 months old',0],fresh:['Domain registered in the last 30 days',15]}}
 };
@@ -303,8 +313,7 @@ function score(s){
   parts.push([SIG.ip.opts[s.ip][0],SIG.ip.opts[s.ip][1],'ip']);
   parts.push([SIG.plan.opts[s.plan][0],SIG.plan.opts[s.plan][1],'plan']);
   parts.push(s.payment?['Payment method verified',0,'payment']:['Payment method not verified',15,'payment']);
-  parts.push(s.spf?['SPF record passes',0,'spf']:['No SPF record',5,'spf']);
-  parts.push(s.dkim?['Mail signed with DKIM',-5,'dkim']:['Mail not signed with DKIM',10,'dkim']);
+  ['spfAll','spfIncl','spfAge'].forEach(k=>parts.push([SIG[k].opts[s[k]][0],SIG[k].opts[s[k]][1],k]));
   parts.push([SIG.dmarc.opts[s.dmarc][0],SIG.dmarc.opts[s.dmarc][1],'dmarc']);
   parts.push([SIG.age.opts[s.age][0],SIG.age.opts[s.age][1],'age']);
   parts.push(s.unsub?['One-click unsubscribe in place',0,'unsub']:['No one-click unsubscribe',5,'unsub']);
@@ -326,13 +335,13 @@ function rng(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a
 
 /* example accounts (fictional) */
 const SEED=[
-  {name:'Northwind Analytics',domain:'northwind-analytics.io',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,spf:true,dkim:true,dmarc:'enforced',age:'old',unsub:true,identity:true,linked:false}},
-  {name:'Harbor Fitness',domain:'harborfit.com',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,spf:true,dkim:false,dmarc:'missing',age:'mid',unsub:true,identity:false,linked:false}},
-  {name:'Lumen Bakery Co.',domain:'lumenbakery.shop',profile:'slow',s:{email:'webmail',ip:'clean',plan:'free',payment:true,spf:true,dkim:false,dmarc:'missing',age:'old',unsub:true,identity:false,linked:false}},
-  {name:'BrightCart Outlet',domain:'brightcart-outlet.com',profile:'listbuy',s:{email:'webmail',ip:'clean',plan:'paid',payment:false,spf:true,dkim:true,dmarc:'none',age:'mid',unsub:false,identity:false,linked:false}},
-  {name:'Fieldstone Realty',domain:'fieldstone-realty.net',profile:'sleeper',s:{email:'corporate',ip:'proxy',plan:'paid',payment:true,spf:true,dkim:true,dmarc:'none',age:'old',unsub:true,identity:false,linked:false}},
-  {name:'Velora Partners',domain:'velora-partners.co',profile:'burst',s:{email:'webmail',ip:'clean',plan:'paid',payment:true,spf:true,dkim:true,dmarc:'enforced',age:'mid',unsub:true,identity:false,linked:false}},
-  {name:'acct-88213',domain:'promo-deals-247.top',profile:'burst',s:{email:'disposable',ip:'bad',plan:'free',payment:false,spf:false,dkim:false,dmarc:'missing',age:'fresh',unsub:false,identity:false,linked:true}}
+  {name:'Northwind Analytics',domain:'northwind-analytics.io',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,spfAll:'hard',spfIncl:'one',spfAge:'stable',dmarc:'enforced',age:'old',unsub:true,identity:true,linked:false}},
+  {name:'Harbor Fitness',domain:'harborfit.com',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,spfAll:'soft',spfIncl:'one',spfAge:'stable',dmarc:'missing',age:'mid',unsub:true,identity:false,linked:false}},
+  {name:'Lumen Bakery Co.',domain:'lumenbakery.shop',profile:'slow',s:{email:'webmail',ip:'clean',plan:'free',payment:true,spfAll:'soft',spfIncl:'one',spfAge:'stable',dmarc:'missing',age:'old',unsub:true,identity:false,linked:false}},
+  {name:'BrightCart Outlet',domain:'brightcart-outlet.com',profile:'listbuy',s:{email:'webmail',ip:'clean',plan:'paid',payment:false,spfAll:'soft',spfIncl:'one',spfAge:'stable',dmarc:'none',age:'mid',unsub:false,identity:false,linked:false}},
+  {name:'Fieldstone Realty',domain:'fieldstone-realty.net',profile:'sleeper',s:{email:'corporate',ip:'proxy',plan:'paid',payment:true,spfAll:'hard',spfIncl:'one',spfAge:'stable',dmarc:'none',age:'old',unsub:true,identity:false,linked:false}},
+  {name:'Velora Partners',domain:'velora-partners.co',profile:'burst',s:{email:'webmail',ip:'clean',plan:'paid',payment:true,spfAll:'hard',spfIncl:'one',spfAge:'stable',dmarc:'enforced',age:'mid',unsub:true,identity:false,linked:false}},
+  {name:'acct-88213',domain:'promo-deals-247.top',profile:'burst',s:{email:'disposable',ip:'bad',plan:'free',payment:false,spfAll:'open',spfIncl:'many',spfAge:'recent',dmarc:'missing',age:'fresh',unsub:false,identity:false,linked:true}}
 ];
 
 const L=()=>({lim:fmt(policy.limLimited),dev:fmt(policy.limDeveloping),est:fmt(policy.limEstablished)});
@@ -346,14 +355,16 @@ const TIPS={
   'sig-base':()=>['Baseline','<p>A brand-new account has no sending history, so every account starts with some uncertainty built in.</p>'],
   'sig-email':()=>['Signup email','<p>A company domain is the strongest start. Free webmail is common for real small businesses but also easy to create in bulk. Disposable addresses are built to be thrown away, which makes them a top fraud signal.</p>'],
   'sig-ip':()=>['Signup IP','<p>The reputation of the network the account signed up from. A VPN or proxy hides where someone really is. A known abusive range has been tied to earlier abuse.</p>'],
-  'sig-plan':()=>['Plan','<p>Free plans cost nothing to abuse at scale, so they carry a small amount of extra risk. Paid plans add a financial tie.</p>'],
+  'sig-plan':()=>['Plan','<p>Free plans cost nothing to abuse at scale, so they carry a small amount of extra risk. They are also capped at a small daily limit and can\'t move up until they upgrade. Paid plans add a financial tie.</p>'],
   'sig-payment':()=>['Payment method','<p>A verified card ties the account to a real financial identity, which is costly for fraudsters to fake over and over. Without one, risk goes up.</p>'],
-  'sig-spf':()=>['SPF','<p>SPF lists the servers allowed to send mail for a domain. A missing record means inbox providers can\'t tell real mail from spoofed mail. Most legitimate senders set it up on day one.</p>'],
-  'sig-dkim':()=>['DKIM','<p>DKIM adds a cryptographic signature that proves the message came from the domain and wasn\'t altered. Unlike SPF, it survives forwarding, so it\'s the stronger signal. Signed mail lowers risk; unsigned mail raises it.</p>'],
+  'sig-domauth':()=>['Domain authentication','<p>Before any account can send, it must prove it controls its sending domain by publishing SPF and DKIM records that the platform verifies. Mail is never sent from an unverified domain, so this is a requirement rather than a risk score.</p><p>SPF lists the servers allowed to send for the domain. DKIM signs each message so receivers can tell it was not altered.</p>'],
+  'sig-spfAll':()=>['SPF record ending','<p>The last part of an SPF record says what receivers should do with mail from servers not on the list.</p><p><b>-all</b> rejects it, the strictest setting (−5). <b>~all</b> marks it as suspicious, which is common and fine (0). <b>?all</b> takes no position, so SPF protects nothing (+10). <b>+all</b> authorizes every server on the internet, which almost only happens on domains set up to spoof or spam (+25).</p>'],
+  'sig-spfIncl':()=>['Senders the SPF record authorizes','<p>An SPF record can include other email services. A business usually uses one or two. A record that authorizes five or more, or that breaks SPF\'s 10-DNS-lookup limit, often belongs to someone rotating across services to stay ahead of blocks (+10). Two to four is a small signal (+5).</p>'],
+  'sig-spfAge':()=>['SPF record history','<p>A record changed in the last few days, especially right before signup, suggests the domain was just set up or repurposed for this account (+10). A record that has been stable for a month or more adds nothing.</p>'],
   'sig-dmarc':()=>['DMARC','<p>DMARC tells inbox providers what to do when mail fails SPF and DKIM checks, and sends the domain owner reports. <b>p=none</b> only monitors. <b>Quarantine</b> or <b>reject</b> means the owner has confirmed all their real mail is authenticated, which is hard for a throwaway sender to bother with.</p><p>Gmail and Yahoo require at least p=none from bulk senders.</p>'],
   'sig-age':()=>['Sending domain age','<p>Fraud campaigns usually run on domains registered days before they start sending, then abandon them. A domain registered in the last 30 days adds 15 points; one with more than a year of history takes 5 off.</p>'],
   'sig-unsub':()=>['One-click unsubscribe','<p>A List-Unsubscribe header lets recipients opt out from the inbox in one tap instead of hitting the spam button. Gmail and Yahoo require it for bulk marketing mail, and senders who skip it collect more complaints.</p>'],
-  auth:()=>['Domain and authentication','<p>The technical setup inbox providers check before trusting a sender. Gmail and Yahoo\'s bulk sender rules require SPF, DKIM, a DMARC record, one-click unsubscribe, and a spam complaint rate under 0.3%.</p><p>Each item here also adds to or subtracts from the starting risk score.</p>'],
+  auth:()=>['Domain and authentication','<p>SPF and DKIM must be verified before an account can send at all. Beyond that requirement, SmartStart looks at how the domain is set up: the SPF record\'s ending, how many senders it authorizes, whether it just changed, DMARC, domain age and one-click unsubscribe.</p><p>Each of those adds to or subtracts from the starting risk score. Gmail and Yahoo also require DMARC, one-click unsubscribe and a spam complaint rate under 0.3% from bulk senders.</p>'],
   'sig-identity':()=>['Identity verification','<p>A completed identity check is the strongest positive signal at signup and takes 15 points off the score.</p>'],
   'sig-linked':()=>['Linked to a suspended account','<p>The account shares a device, payment method, IP or identity with an account that was already suspended. This adds 40 points, which is usually enough to start Restricted.</p>'],
   limit:()=>['Daily limit','<p>The most emails the account can have delivered in one day. Anything it tries to send beyond that is held, not sent.</p>'],
@@ -371,18 +382,20 @@ const TIPS={
   risky:()=>['Risky email held','<p>Mail from abusive sending that limits or restrictions kept from going out. It only counts mail the account actually tried to send, so the impact is not overstated.</p>'],
   legit:()=>['Legitimate email held','<p>Mail from healthy accounts that limits held back. This is the cost of the controls, and the goal is to keep it near zero. Try lowering the Developing limit in Policy settings to watch it rise.</p>'],
   decisions:()=>['Decisions','<p>Promotions count every move up a tier. The second number counts restrictions and step-downs triggered by sending behavior. Accounts that start Restricted at signup are not counted here.</p>'],
+  delivery:()=>['Delivery rate',`<p>The share of sent email that receiving mail servers accepted, rather than bouncing back. It is the flip side of the bounce rate.</p><p>Below <b>${100-policy.maxBounce}%</b> counts as a bad day and steps the account down. At or below <b>${100-policy.critBounce}%</b> restricts it. Healthy senders usually stay above 98%.</p>`],
+  free:()=>['Free plan',`<p>Free accounts can send up to <b>${fmt(policy.freeCap)}</b> emails a day, whatever their tier, and never move up while they stay free. Free accounts cost nothing to create in bulk, so time alone shouldn't buy them more sending.</p><p>Upgrading to a paid plan lifts the free cap and starts the normal path to Developing.</p>`],
   traps:()=>['Spam trap hits',`<p>Spam traps are addresses that never signed up for anything, so any mail sent to them proves the list was bought, scraped or badly out of date.</p><p>One hit is a warning. <b>${policy.trapLimit}</b> or more in a day restricts the account.</p>`],
-  health:()=>['Sending health',`<p>The daily numbers SmartStart judges each account on, with the decision each day produced.</p><p><b>Bounces</b>: above ${policy.maxBounce}% steps down, ${policy.critBounce}% or more restricts.<br><b>Spam complaints</b>: above ${policy.maxComplaint}% steps down, ${policy.critComplaint}% or more restricts.<br><b>Spam traps</b>: ${policy.trapLimit} or more in a day restricts.</p><p>Rates are measured on delivered mail. Restricted accounts deliver nothing, so their rates show as dashes.</p>`],
+  health:()=>['Sending health',`<p>The daily numbers SmartStart judges each account on, with the decision each day produced.</p><p><b>Delivery rate</b>: the share of sent mail accepted, so below ${100-policy.maxBounce}% means bounces above ${policy.maxBounce}%.<br><b>Bounces</b>: above ${policy.maxBounce}% steps down, ${policy.critBounce}% or more restricts.<br><b>Spam complaints</b>: above ${policy.maxComplaint}% steps down, ${policy.critComplaint}% or more restricts.<br><b>Spam traps</b>: ${policy.trapLimit} or more in a day restricts.</p><p>Rates are measured on delivered mail. Restricted accounts deliver nothing, so their rates show as dashes.</p>`],
   policy:()=>['Policy settings','<p>The thresholds fraud ops can tune without a code deploy: daily limits, step-down and restriction triggers, and what it takes to move up. Changes apply from the next simulated day.</p>']
 };
-let healthRange='recent', focusDay=null, detailTab='overview';
+let healthRange='all', focusDay=null, detailTab='overview';
 let state, nextSeed=1, playTimer=null, selected=0, view='detail';
 function makeAccount(def){
   const sc=score(def.s);
   const a={id:nextSeed,seed:nextSeed*1013,name:def.name,domain:def.domain,profile:def.profile,s:def.s,score:sc,
     tier:sc.tier,age:0,createdAt:state.clock,exited:false,streak:0,util:[],spikeHold:0,cum:0,lastSoft:-9,history:[],log:[]};
   nextSeed++;
-  a.log.push({day:0,type:'info',text:`Entered SmartStart. Risk score ${sc.total} sets the starting classification to ${LABEL[sc.tier]}${sc.tier==='restricted'?', so sending is blocked pending review.':` with a daily limit of ${fmt(limitFor(sc.tier))}.`}`});
+  a.log.push({day:0,type:'info',text:`Entered SmartStart. Risk score ${sc.total} sets the starting classification to ${LABEL[sc.tier]}${sc.tier==='restricted'?', so sending is blocked pending review.':` with a daily limit of ${fmt(def.s.plan==='free'?Math.min(policy.freeCap,limitFor(sc.tier)):limitFor(sc.tier))}${def.s.plan==='free'?' (free plan cap)':''}.`}`});
   return a;
 }
 function init(){
@@ -392,7 +405,7 @@ function init(){
   selected=state.accounts[0].id; view='detail'; render();
 }
 
-const TYPE_COLOR={up:'var(--t-established)',down:'var(--t-limited)',hold:'var(--t-limited)',flag:'var(--t-limited)',restrict:'var(--t-restricted)',override:'var(--accent)',exit:'var(--ink)',info:'var(--muted)'};
+const TYPE_COLOR={upgrade:'var(--t-established)',up:'var(--t-established)',down:'var(--t-limited)',hold:'var(--t-limited)',flag:'var(--t-limited)',restrict:'var(--t-restricted)',override:'var(--accent)',exit:'var(--ink)',info:'var(--muted)'};
 
 const avgUse=(a,n)=>{const u=a.util.slice(-n);return u.length?u.reduce((x,y)=>x+y,0)/u.length:0;};
 function stepAccount(a){
@@ -400,7 +413,7 @@ function stepAccount(a){
   const d=a.age+1; a.age=d;
   const r=rng(a.seed*7919+d);
   const p=PROFILES[a.profile].fn(d,r);
-  const tier=a.tier, limit=limitFor(tier), shadow=state.shadow;
+  const tier=a.tier, limit=capFor(a), shadow=state.shadow;
   a._before=tier;
   const allowed=Math.min(p.attempt,limit);
   const delivered=shadow?p.attempt:allowed;
@@ -425,7 +438,7 @@ function stepAccount(a){
     const why=b>policy.maxBounce?`bounce rate ${b.toFixed(1)}% is above ${policy.maxBounce}%`:`complaint rate ${c.toFixed(2)}% is above ${policy.maxComplaint}%`;
     a.streak=0; a.util=[];
     const i=TIERS.indexOf(tier);
-    if(i>1){a.tier=TIERS[i-1];say('down',`Stepped down to ${LABEL[a.tier]}: ${why}. Daily limit now ${fmt(limitFor(a.tier))}.`);}
+    if(i>1){a.tier=TIERS[i-1];say('down',`Stepped down to ${LABEL[a.tier]}: ${why}. Daily limit now ${fmt(capFor(a))}.`);}
     else if(a.lastSoft!==d-1) say('hold',`Held at Limited: ${why}. Clean-day count reset.`);
     a.lastSoft=d;
   } else {
@@ -436,6 +449,9 @@ function stepAccount(a){
     }
     if(delivered>0){a.streak++;a.util.push(Math.min(1,delivered/limit));}
     if(a.spikeHold>0) a.spikeHold--;
+    else if(isFree(a)){
+      if(!a.freeNoted && a.streak>=policy.daysLD){a.freeNoted=true;say('hold',`Sending is clean, but free plans stay at ${fmt(policy.freeCap)} emails a day and can't move up until they upgrade.`);}
+    }
     else if(tier==='limited' && a.streak>=policy.daysLD && avgUse(a,policy.daysLD)*100>=policy.utilLD){
       const u=Math.round(avgUse(a,policy.daysLD)*100);
       a.tier='developing'; a.streak=0; a.util=[];
@@ -460,7 +476,7 @@ function advance(n){
   render();
 }
 const finished=()=>state&&state.accounts.every(a=>a.exited);
-function syncPlay(){$('play').textContent=playTimer?'Pause':finished()?'Replay':'Play';}
+function syncPlay(){const l=playTimer?'Pause':finished()?'Replay':'Play';$('play').textContent=l;document.querySelectorAll('.playBtn').forEach(b=>b.textContent=l);}
 function stopPlay(){if(playTimer){clearInterval(playTimer);playTimer=null;}if(state)syncPlay();}
 function togglePlay(){
   if(playTimer){stopPlay();return;}
@@ -487,54 +503,60 @@ function renderSummary(){
   $('sLegitK').textContent=anyShadow?'Legitimate email held (incl. projected)':'Legitimate email held (friction)';
   $('sUp').textContent=up;$('sDown').textContent=down;
   $('shadowBanner').hidden=!state.shadow;
-  $('tierKey').innerHTML='<span>Classifications:</span>'+TIERS.map(t=>`<span class="item">${pill(t)}<span class="num">${t==='restricted'?'blocked':fmt(limitFor(t))+'/day'}</span>${tip('tier-'+t,LABEL[t])}</span>`).join('');
+  $('tierKey').innerHTML='<span>Classifications:</span>'+TIERS.map(t=>`<span class="item">${pill(t)}<span class="num">${t==='restricted'?'blocked':fmt(limitFor(t))+'/day'}</span>${tip('tier-'+t,LABEL[t])}</span>`).join('')+`<span class="item"><span class="tag">Free plan</span><span class="num">${fmt(policy.freeCap)}/day</span>${tip('free','the free plan')}</span>`;
 }
 function renderList(){
   $('acctList').innerHTML=state.accounts.map(a=>`
     <button class="acct${a.id===selected&&view==='detail'?' sel':''}" data-id="${a.id}" aria-label="${esc(a.name)}, ${LABEL[a.tier]}">
-      <span class="row"><span class="name">${esc(a.name)}</span>${pill(a.tier)}</span>
+      <span class="row"><span class="name">${esc(a.name)}${isFree(a)?' <span class="tag">Free</span>':''}</span>${pill(a.tier)}</span>
       <span class="sub"><span>${esc(PROFILES[a.profile].label)}</span><span class="num">${a.exited?'Completed':'Day '+a.age}</span></span>
       <span class="strip" aria-hidden="true">${Array.from({length:90},(_,i)=>{const h=a.history[i];return `<i${h?` style="background:${tierColor(h.tier)}"`:''}></i>`;}).join('')}</span>
     </button>`).join('');
 }
 function chartSVG(a){
   const W=700,H=236,L=44,R=14,T=14,ph=150,stripY=T+ph+10,pw=W-L-R;
-  const x=d=>L+(d-0.5)/90*pw, bw=pw/90*0.74;
+  const [lo,hi]=winFor(a), n=hi-lo+1, cw=pw/n;
+  const x=d=>L+(d-lo+0.5)*cw, bw=cw*0.74;
+  const rows=a.history.filter(h=>h.day>=lo&&h.day<=hi);
+  const step=n>60?15:n>25?5:3, ticks=[lo];for(let d=Math.ceil(lo/step)*step;d<=hi;d+=step){if(d-ticks.at(-1)>=step/2)ticks.push(d);}
   const y=v=>T+ph-(Math.log10(Math.max(v,1))/5)*ph;
   let g='';
   [1,10,100,1000,10000,100000].forEach((v,i)=>{const yy=y(v);g+=`<line x1="${L}" x2="${W-R}" y1="${yy}" y2="${yy}" style="stroke:var(--line)" stroke-width="1"/><text x="${L-6}" y="${yy+4}" text-anchor="end" font-size="11" style="fill:var(--muted)" font-family="JetBrains Mono, monospace">${['1','10','100','1k','10k','100k'][i]}</text>`;});
-  [1,15,30,45,60,75,90].forEach(d=>{g+=`<text x="${x(d)}" y="${H-6}" text-anchor="middle" font-size="11" style="fill:var(--muted)" font-family="JetBrains Mono, monospace">${d}</text>`;});
+  ticks.forEach(d=>{g+=`<text x="${x(d)}" y="${H-6}" text-anchor="middle" font-size="11" style="fill:var(--muted)" font-family="JetBrains Mono, monospace">${d}</text>`;});
   let bars='',lim='',strip='';
-  a.history.forEach(h=>{
+  rows.forEach(h=>{
     const cx=x(h.day);
     if(h.attempt>0) bars+=`<rect x="${cx-bw/2}" y="${y(h.attempt)}" width="${bw}" height="${T+ph-y(h.attempt)}" style="fill:var(--bar-try)"/>`;
     if(h.delivered>0) bars+=`<rect x="${cx-bw/2}" y="${y(h.delivered)}" width="${bw}" height="${T+ph-y(h.delivered)}" style="fill:${tierColor(h.tier)}"/>`;
     const ly=y(h.limit);
-    lim+=`<line x1="${cx-pw/180}" x2="${cx+pw/180}" y1="${ly}" y2="${ly}" style="stroke:var(--ink)" stroke-width="1.5" stroke-dasharray="3 2"/>`;
-    strip+=`<rect x="${cx-pw/180}" y="${stripY}" width="${pw/90+0.3}" height="8" style="fill:${tierColor(h.tier)}"/>`;
+    lim+=`<line x1="${cx-cw/2}" x2="${cx+cw/2}" y1="${ly}" y2="${ly}" style="stroke:var(--ink)" stroke-width="1.5" stroke-dasharray="3 2"/>`;
+    strip+=`<rect x="${cx-cw/2}" y="${stripY}" width="${cw+0.3}" height="8" style="fill:${tierColor(h.tier)}"/>`;
   });
-  let hits='';a.history.forEach(h=>{const cx=x(h.day);hits+=`<rect class="hit" data-day="${h.day}" x="${cx-pw/180}" y="${T}" width="${pw/90}" height="${ph+18}"><title>Day ${h.day}</title></rect>`;});
-  const now=a.exited?'':`<line x1="${x(a.age+1)}" x2="${x(a.age+1)}" y1="${T}" y2="${stripY+8}" style="stroke:var(--accent)" stroke-width="1" stroke-dasharray="2 3"/>`;
+  let hits='';rows.forEach(h=>{const cx=x(h.day);hits+=`<rect class="hit" data-day="${h.day}" x="${cx-cw/2}" y="${T}" width="${cw}" height="${ph+18}"><title>Day ${h.day}</title></rect>`;});
+  const now=(a.exited||a.age+1<lo||a.age+1>hi)?'':`<line x1="${x(a.age+1)}" x2="${x(a.age+1)}" y1="${T}" y2="${stripY+8}" style="stroke:var(--accent)" stroke-width="1" stroke-dasharray="2 3"/>`;
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily sending for ${esc(a.name)}: emails attempted, delivered and the daily limit over 90 days">${g}<rect x="${L}" y="${stripY}" width="${pw}" height="8" style="fill:var(--soft)"/>${bars}${lim}${strip}${now}${hits}<text x="${L}" y="${stripY+24}" font-size="11" style="fill:var(--muted)">Day</text></svg>`;
 }
 function nextStep(a){
   if(a.exited) return `<p class="muted" style="margin:0">Completed SmartStart on day 90 as ${LABEL[a.tier]}. Standard fraud monitoring continues.</p>`;
   if(a.tier==='restricted') return `<p class="muted" style="margin:0">Under fraud ops review. Only an override on the Decisions tab can lift a restriction.</p>`;
+  if(isFree(a)) return `<p class="muted" style="margin:0">Free plan: capped at ${fmt(policy.freeCap)} emails a day and can't move up, no matter how long it has been sending. Upgrading to a paid plan starts the path to Developing.</p><div><button type="button" class="primary" data-action="upgrade">Upgrade to paid</button></div>`;
   if(a.tier==='established') return `<p class="muted" style="margin:0">Top classification. Abuse signals can still restrict this account at any time.</p>`;
   const [days,util,to]=a.tier==='limited'?[policy.daysLD,policy.utilLD,'Developing']:[policy.daysDE,policy.utilDE,'Established'];
   const use=Math.round(avgUse(a,days)*100);
   const row=(k,v,t,suf='')=>`<div class="bar"><span>${k}</span><span class="track"><i style="width:${Math.min(100,v/t*100)}%"></i></span><span class="num">${fmt(Math.min(v,t))}${suf} / ${fmt(t)}${suf}</span></div>`;
-  return `<div class="prog">${row('Clean sending days',a.streak,days)}${row('Average use of daily limit',use,util,'%')}</div>${a.spikeHold?`<p class="muted" style="margin:0">Promotion paused for ${a.spikeHold} more day${a.spikeHold>1?'s':''} after a volume spike.</p>`:''}<p class="muted" style="margin:0;font-size:12.5px">Next: ${to}. Average use is measured over the last ${days} clean sending days against the current ${fmt(limitFor(a.tier))} daily limit. Days with no sending don't count.</p>`;
+  return `<div class="prog">${row('Clean sending days',a.streak,days)}${row('Average use of daily limit',use,util,'%')}</div>${a.spikeHold?`<p class="muted" style="margin:0">Promotion paused for ${a.spikeHold} more day${a.spikeHold>1?'s':''} after a volume spike.</p>`:''}<p class="muted" style="margin:0;font-size:12.5px">Next: ${to}. Average use is measured over the last ${days} clean sending days against the current ${fmt(capFor(a))} daily limit. Days with no sending don't count.</p>`;
 }
 function customerMsg(a){
-  const lim=fmt(limitFor(a.tier));
+  const lim=fmt(capFor(a));
+  if(isFree(a)&&a.tier!=='restricted') return `<div class="cust"><span>You're on the free plan, which allows ${lim} emails a day. Upgrade to a paid plan to raise your limit as your sending history grows.</span></div>`;
   const m={restricted:'Sending is paused on your account while we review recent activity. Contact support to start a review.',
     limited:`Your account is new, so daily sending is capped at ${lim} emails. Your limit grows as you build a healthy sending history.`,
     developing:`Your sending history looks healthy, so your daily cap is now ${lim} emails. Keep sending to engaged recipients to keep growing.`,
     established:'Your account has full sending access within your plan.'}[a.tier];
   const tips=[];
   if(a.tier!=='established'&&a.tier!=='restricted'){
-    if(!a.s.spf||!a.s.dkim) tips.push('Set up SPF and DKIM for your sending domain.');
+    if(a.s.spfAll==='neutral'||a.s.spfAll==='open') tips.push('Tighten your SPF record so it ends in -all or ~all.');
+    if(a.s.spfIncl==='many') tips.push('Remove senders you no longer use from your SPF record.');
     if(a.s.dmarc==='missing') tips.push('Publish a DMARC record for your domain.');
     if(!a.s.unsub) tips.push('Add a one-click unsubscribe link to marketing email.');
     if(!a.s.identity) tips.push('Complete identity verification.');
@@ -542,41 +564,44 @@ function customerMsg(a){
   }
   return `<div class="cust"><span>${m}</span>${tips.length?`<ul>${tips.map(t=>`<li>${t}</li>`).join('')}</ul>`:''}</div>`;
 }
-const DLABEL={up:'Moved up',down:'Stepped down',hold:'Held, clean days reset',flag:'Spike hold',restrict:'Restricted',override:'Override',exit:'Completed SmartStart'};
+const DLABEL={upgrade:'Upgraded to paid',up:'Moved up',down:'Stepped down',hold:'Held, clean days reset',flag:'Spike hold',restrict:'Restricted',override:'Override',exit:'Completed SmartStart'};
 function healthTable(a){
-  if(!a.history.length) return '<p class="empty-note">No sending yet. Press Play or +1 day to see daily bounce, spam complaint and spam trap numbers here.</p>';
+  if(!a.history.length) return '<p class="empty-note">No sending yet. Press Play above to see daily bounce, spam complaint and spam trap numbers here.</p>';
   const cls=(v,soft,hard,measured)=>!measured?' class="dim"':v>=hard?' class="bad"':v>soft?' class="warn"':'';
-  const list=healthRange==='recent'?a.history.slice(-21):a.history.filter(h=>h.day>=healthRange&&h.day<healthRange+30);
-  const btns=`<div class="rngs" role="group" aria-label="Days to show">${RANGES.map(([v,l])=>`<button type="button" class="rng${healthRange===v?' on':''}" data-range="${v}" aria-pressed="${healthRange===v}">${l}</button>`).join('')}</div>`;
-  if(!list.length) return btns+`<p class="empty-note">This account hasn't reached day ${healthRange} yet. Press Play to get there.</p>`;
+  const [lo,hi]=winFor(a); const list=a.history.filter(h=>h.day>=lo&&h.day<=hi);
+  const btns='';
+  if(!list.length) return btns+`<p class="empty-note">This account hasn't reached day ${lo} yet. Press Play above to get there.</p>`;
   const rows=list.slice().reverse().map(h=>{
     const m=h.delivered>=50;
     const evs=a.log.filter(l=>l.day===h.day&&DLABEL[l.type]).map(l=>l.type==='restrict'&&!l.text.startsWith('Restricted')?'Blocked':DLABEL[l.type]);
     return `<tr${h.day===focusDay?' class="focus"':''}><td>Day ${h.day}</td><td>${pill(h.tier)}</td><td>${fmt(h.attempt)}</td><td>${fmt(h.delivered)}</td><td${h.held?' class="warn"':''}>${fmt(h.held)}</td>
+      <td${!m?' class="dim"':(1-h.bounce)*100<=100-policy.critBounce?' class="bad"':(1-h.bounce)*100<100-policy.maxBounce?' class="warn"':''}>${h.delivered?((1-h.bounce)*100).toFixed(1)+'%':'–'}</td>
       <td${cls(h.bounce*100,policy.maxBounce,policy.critBounce,m)}>${h.delivered?(h.bounce*100).toFixed(1)+'%':'–'}</td>
       <td${cls(h.complaint*100,policy.maxComplaint,policy.critComplaint,m)}>${h.delivered?(h.complaint*100).toFixed(2)+'%':'–'}</td>
       <td${!m?' class="dim"':h.traps>=policy.trapLimit?' class="bad"':h.traps>0?' class="warn"':''}>${h.delivered?h.traps:'–'}</td>
       <td>${evs.length?evs.join(', '):'<span class="muted">No change</span>'}</td></tr>`;
   }).join('');
-  return btns+`<div class="health-wrap"><table class="health"><thead><tr><th>Day</th><th>Tier that day</th><th>Tried</th><th>Delivered</th><th>Held</th><th>Bounces</th><th>Spam complaints</th><th>Spam traps</th><th>Decision</th></tr></thead><tbody>${rows}</tbody></table></div>
-  <p class="empty-note" style="font-size:12px">Newest first. Click a bar on the Overview chart to jump to that day. Amber is above the step-down limit and red is at or above the restriction limit. Days with fewer than 50 emails delivered are too small to judge and show in grey.</p>`;
+  return btns+`<div class="health-wrap"><table class="health"><thead><tr><th>Day</th><th>Tier that day</th><th>Tried</th><th>Sent</th><th>Held</th><th>Delivery rate</th><th>Bounces</th><th>Spam complaints</th><th>Spam traps</th><th>Decision</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p class="empty-note" style="font-size:12px">Newest first. Use the day ranges above to change which days show, or click a bar on the Overview chart to jump to a day. Amber is above the step-down limit and red is at or above the restriction limit. Days with fewer than 50 emails delivered are too small to judge and show in grey.</p>`;
 }
 function authPanel(a){
   const s=a.s;
-  const st=(ok,mid,text)=>`<span class="pill" style="--c:${ok?'var(--t-established)':mid?'var(--t-limited)':'var(--t-restricted)'}">${text}</span>`;
+  const st=(lvl,text)=>`<span class="pill" style="--c:${lvl===0?'var(--t-established)':lvl===1?'var(--t-limited)':'var(--t-restricted)'}">${text}</span>`;
   const items=[
-    ['SPF','spf',st(s.spf,false,s.spf?'Passes':'Missing')],
-    ['DKIM','dkim',st(s.dkim,false,s.dkim?'Signed':'Not signed')],
-    ['DMARC','dmarc',st(s.dmarc==='enforced',s.dmarc==='none',{enforced:'Enforced',none:'p=none',missing:'Missing'}[s.dmarc])],
-    ['Domain age','age',st(s.age==='old',s.age==='mid',{old:'Over 1 year',mid:'1 to 12 months',fresh:'Under 30 days'}[s.age])],
-    ['One-click unsubscribe','unsub',st(s.unsub,false,s.unsub?'In place':'Missing')]
+    ['Domain authentication','domauth',st(0,'Verified')],
+    ['SPF ending','spfAll',st({hard:0,soft:0,neutral:1,open:2}[s.spfAll],{hard:'-all',soft:'~all',neutral:'?all',open:'+all'}[s.spfAll])],
+    ['SPF senders','spfIncl',st({one:0,several:1,many:2}[s.spfIncl],{one:'This platform only',several:'2 to 4 others',many:'5+ or over limit'}[s.spfIncl])],
+    ['SPF history','spfAge',st(s.spfAge==='stable'?0:1,s.spfAge==='stable'?'Stable 30+ days':'Changed this week')],
+    ['DMARC','dmarc',st({enforced:0,none:1,missing:2}[s.dmarc],{enforced:'Enforced',none:'p=none',missing:'Missing'}[s.dmarc])],
+    ['Domain age','age',st({old:0,mid:1,fresh:2}[s.age],{old:'Over 1 year',mid:'1 to 12 months',fresh:'Under 30 days'}[s.age])],
+    ['One-click unsubscribe','unsub',st(s.unsub?0:2,s.unsub?'In place':'Missing')]
   ];
-  const meets=s.spf&&s.dkim&&s.dmarc!=='missing'&&s.unsub;
+  const meets=s.dmarc!=='missing'&&s.unsub;
   return `<div class="authgrid">${items.map(([l,k,v])=>`<div class="authitem"><span class="k">${l}${tip('sig-'+k,l)}</span>${v}</div>`).join('')}</div>
-  <p class="empty-note" style="font-size:12.5px">${meets?'Meets the Gmail and Yahoo bulk sender authentication rules.':'Does not meet the Gmail and Yahoo bulk sender rules, so its mail is more likely to be filtered or rejected.'}</p>`;
+  <p class="empty-note" style="font-size:12.5px">SPF and DKIM must be verified before an account can send at all, so every account here has passed that check. SmartStart scores how the SPF record is set up. ${meets?'This account also meets the Gmail and Yahoo bulk sender rules.':'This account does not meet the Gmail and Yahoo bulk sender rules, so its mail is more likely to be filtered.'}</p>`;
 }
 function restrictionBox(a){
-  const lim=limitFor(a.tier), t=a.tier;
+  const lim=capFor(a), t=a.tier;
   const trig=[...a.log].reverse().find(l=>l.type==='restrict'&&l.text.startsWith('Restricted'));
   const ov=[...a.log].reverse().find(l=>l.type==='override');
   let title, items;
@@ -588,6 +613,12 @@ function restrictionBox(a){
       `<b>Review:</b> the account is in the fraud ops queue. Only a reviewer override in Decisions can lift it.`,
       `<b>Customer view:</b> they're told sending is paused for review, without the thresholds.`,
       `<b>At Day 90:</b> the restriction stays in place under standard fraud controls.`];
+  } else if(isFree(a)){
+    title=`Free plan: capped at ${fmt(lim)} emails a day`;
+    items=[`<b>Daily cap:</b> up to ${fmt(lim)} emails per day on the free plan. Anything over the cap is held, not sent.`,
+      `<b>Moving up:</b> free accounts don't move up, no matter how long they've been sending. Upgrading to a paid plan starts the normal path to Developing.`,
+      `<b>Restriction:</b> bounces at ${policy.critBounce}%, complaints at ${policy.critComplaint}%, or ${policy.trapLimit}+ spam trap hits in a day still block all sending.`];
+    if(!a.exited) items.push(`<button type="button" class="primary" data-action="upgrade">Upgrade to paid</button>`);
   } else {
     const nextTier={limited:'Developing',developing:'Established'}[t];
     title=`${LABEL[t]}: capped at ${fmt(lim)} emails a day`;
@@ -601,27 +632,34 @@ function restrictionBox(a){
   if(state.shadow) items.push('<b>Shadow mode:</b> none of this is enforced right now. Decisions are only logged.');
   return `<div class="rbox" style="--c:${tierColor(t)}"><h4>${pill(t)}${tip('tier-'+t,LABEL[t])} ${(t=>t.charAt(0).toUpperCase()+t.slice(1))(title.replace(/^\w+: /,''))}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
 }
-function renderDetail(){
+function renderDetail(){_renderDetail();if(state)syncPlay();}
+function _renderDetail(){
   if(view==='new') return renderNew();
   const a=state.accounts.find(x=>x.id===selected); if(!a) return;
   const h0=a.history.at(-1);
   const h=[...a.history].reverse().find(x=>x.delivered>0)||h0;
   const hd=h&&h0&&h!==h0?`<span class="muted" style="font-size:11px"> · day ${h.day}</span>`:'';
-  const lim=limitFor(a.tier);
+  const lim=capFor(a);
   const bad=(v,t)=>v>t?' bad':'';
   $('detail').innerHTML=`
   <div class="sec">
     <div class="dhead">
       <div><h2>${esc(a.name)}</h2><div class="meta"><span class="mono">${esc(a.domain)}</span> · ${esc(PROFILES[a.profile].label)} · ${a.exited?'Completed 90 days':'Day '+a.age+' of 90'}</div></div>
-      <div class="chips">${pill(a.tier)}${tip('tier-'+a.tier,LABEL[a.tier])}${state.shadow?'<span class="tag warn">Shadow: not enforced</span>':''}${a.spikeHold?'<span class="tag warn">Spike hold</span>'+tip('spike','spike hold'):''}${a.exited?'<span class="tag">Standard controls</span>':''}</div>
+      <div class="chips">${pill(a.tier)}${tip('tier-'+a.tier,LABEL[a.tier])}${isFree(a)?'<span class="tag">Free plan</span>'+tip('free','the free plan'):''}${state.shadow?'<span class="tag warn">Shadow: not enforced</span>':''}${a.spikeHold?'<span class="tag warn">Spike hold</span>'+tip('spike','spike hold'):''}${a.exited?'<span class="tag">Standard controls</span>':''}</div>
     </div>
     <div class="kpis">
       <div class="kpi"><span class="k">Daily limit${tip('limit','daily limit')}</span><span class="v">${a.tier==='restricted'?'Blocked':fmt(lim)}</span></div>
       <div class="kpi"><span class="k">Last day sent / tried${tip('lastday','sent and tried')}</span><span class="v">${h0?compact(h0.delivered)+' / '+compact(h0.attempt):'–'}</span></div>
+      <div class="kpi"><span class="k">Delivery rate${hd}${tip('delivery','delivery rate')}</span><span class="v${h&&h.delivered?((1-h.bounce)*100<=100-policy.critBounce?' bad':(1-h.bounce)*100<100-policy.maxBounce?' warn':''):''}">${h&&h.delivered?pct(1-h.bounce,1):'–'}</span></div>
       <div class="kpi"><span class="k">Bounce rate${hd}${tip('bounce','bounce rate')}</span><span class="v${h&&h.delivered?bad(h.bounce*100,policy.maxBounce):''}">${h&&h.delivered?pct(h.bounce,1):'–'}</span></div>
       <div class="kpi"><span class="k">Spam complaints${hd}${tip('complaint','spam complaint rate')}</span><span class="v${h&&h.delivered?bad(h.complaint*100,policy.maxComplaint):''}">${h&&h.delivered?pct(h.complaint):'–'}</span></div>
       <div class="kpi"><span class="k">Spam trap hits${hd}${tip('traps','spam trap hits')}</span><span class="v${h&&h.delivered?(h.traps>=policy.trapLimit?' bad':h.traps>0?' warn':''):''}">${h&&h.delivered?h.traps:'–'}</span></div>
     </div>
+  </div>
+  <div class="player">
+    <button type="button" class="primary playBtn" data-action="play">Play</button>
+    <span class="pday"><b class="num">${a.exited?'Day 90':'Day '+a.age}</b> <span class="muted">of 90${a.exited?' · completed':''}</span></span>
+    <div class="rngs" role="group" aria-label="Days to show">${RANGES.map(([v,l])=>`<button type="button" class="rng${healthRange===v?' on':''}" data-range="${v}" aria-pressed="${healthRange===v}">${l}</button>`).join('')}</div>
   </div>
   <div class="tabs" role="tablist" aria-label="Account details">${[['overview','Overview'],['health','Sending health'],['signals','Risk signals'],['decisions','Decisions']].map(([k,l])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${detailTab===k}">${l}</button>`).join('')}</div>
   ${detailTab==='overview'?`  <div class="sec"><h3>What this account can do right now${tip('enforcement','how enforcement works')}</h3>${restrictionBox(a)}</div>
@@ -629,7 +667,7 @@ function renderDetail(){
   <div class="sec">
     <h3>Daily sending, log scale${tip('chart','the chart')}</h3>
     <div class="chart-wrap">${chartSVG(a)}</div>
-    <div class="legend"><span><i class="dot" style="background:var(--bar-try)"></i>Tried to send</span><span><i class="dot" style="background:var(--t-developing)"></i>Delivered, colored by classification</span><span>Click a bar to see that day's numbers</span><span><i class="dot" style="background:transparent;border-top:2px dashed var(--ink);border-radius:0;height:0;width:12px"></i>Daily limit</span></div>
+    <div class="legend"><span><i class="dot" style="background:var(--bar-try)"></i>Tried to send</span><span><i class="dot" style="background:var(--t-developing)"></i>Sent, colored by classification</span><span>Click a bar to see that day's numbers</span><span><i class="dot" style="background:transparent;border-top:2px dashed var(--ink);border-radius:0;height:0;width:12px"></i>Daily limit</span></div>
   </div>
   <div class="sec"><div style="display:grid;gap:10px;align-content:start;min-width:0"><h3>What the customer sees${tip('customer','the customer message')}</h3>${customerMsg(a)}
       <p class="muted" style="margin:0;font-size:12.5px">Explains the restriction and next steps without exposing fraud thresholds.</p></div></div>
@@ -663,7 +701,7 @@ function renderDetail(){
 }
 function renderNew(){
   $('detail').innerHTML=`
-  <div class="sec"><h2>New account</h2><p class="muted" style="margin:0">Set signup signals and a sending behavior. The account joins at day ${state.clock} and starts its own 90-day lifecycle.</p></div>
+  <div class="sec"><h2>New account</h2><p class="muted" style="margin:0">Set signup signals and a sending behavior. The account joins at day ${state.clock} and starts its own 90-day lifecycle. Like every sending account, it has already verified SPF and DKIM for its domain; the SPF settings below describe how that record is set up.</p></div>
   <form class="sec" id="newForm">
     <div class="form-grid">
       <label class="field" for="nName">Account name<input type="text" id="nName" value="Copperline Studio" required></label>
@@ -673,8 +711,6 @@ function renderNew(){
     </div>
     <div class="form-grid">
       <label class="check"><input type="checkbox" id="n_payment" checked> Payment method verified</label>
-      <label class="check"><input type="checkbox" id="n_spf" checked> SPF record passes</label>
-      <label class="check"><input type="checkbox" id="n_dkim"> Mail signed with DKIM</label>
       <label class="check"><input type="checkbox" id="n_unsub"> One-click unsubscribe in place</label>
       <label class="check"><input type="checkbox" id="n_identity"> Identity verification complete</label>
       <label class="check"><input type="checkbox" id="n_linked"> Linked to a suspended account</label>
@@ -682,8 +718,8 @@ function renderNew(){
     <div class="preview" id="nPreview"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="primary" type="submit">Create account</button><button type="button" id="nCancel">Cancel</button></div>
   </form>`;
-  const read=()=>({email:$('n_email').value,ip:$('n_ip').value,plan:$('n_plan').value,payment:$('n_payment').checked,spf:$('n_spf').checked,dkim:$('n_dkim').checked,dmarc:$('n_dmarc').value,age:$('n_age').value,unsub:$('n_unsub').checked,identity:$('n_identity').checked,linked:$('n_linked').checked});
-  const upd=()=>{const s=score(read());$('nPreview').innerHTML=`<span class="score">${s.total}</span><span>Risk score. Starts as</span>${pill(s.tier)}<span class="muted">${s.tier==='restricted'?'Sending blocked pending review':'Daily limit '+fmt(limitFor(s.tier))}</span>`;};
+  const read=()=>({email:$('n_email').value,ip:$('n_ip').value,plan:$('n_plan').value,payment:$('n_payment').checked,spfAll:$('n_spfAll').value,spfIncl:$('n_spfIncl').value,spfAge:$('n_spfAge').value,dmarc:$('n_dmarc').value,age:$('n_age').value,unsub:$('n_unsub').checked,identity:$('n_identity').checked,linked:$('n_linked').checked});
+  const upd=()=>{const s=score(read());$('nPreview').innerHTML=`<span class="score">${s.total}</span><span>Risk score. Starts as</span>${pill(s.tier)}<span class="muted">${s.tier==='restricted'?'Sending blocked pending review':'Daily limit '+fmt(read().plan==='free'?Math.min(policy.freeCap,limitFor(s.tier)):limitFor(s.tier))+(read().plan==='free'?' (free plan)':'')}</span>`;};
   $('newForm').addEventListener('input',upd);$('newForm').addEventListener('change',upd);upd();
   $('nCancel').addEventListener('click',()=>{view='detail';render();});
   $('newForm').addEventListener('submit',e=>{
@@ -698,7 +734,8 @@ function renderPolicy(){
   $('policyGrid').addEventListener('change',e=>{const k=e.target.id.replace('p_','');if(k in policy){const v=parseFloat(e.target.value);if(!isNaN(v)&&v>=0)policy[k]=v;render();}});
   $('pReset').addEventListener('click',()=>{policy={...DEFAULT_POLICY};renderPolicy();render();});
 }
-const RANGES=[['recent','Last 21 days'],[1,'Days 1–30'],[31,'Days 31–60'],[61,'Days 61–90']];
+const RANGES=[['all','All 90 days'],['recent','Last 21 days'],[1,'Days 1–30'],[31,'Days 31–60'],[61,'Days 61–90']];
+const winFor=a=>healthRange==='all'?[1,90]:healthRange==='recent'?(h=>[h-20,h])(Math.max(21,a.age)):[healthRange,healthRange+29];
 const rangeFor=d=>d<=30?1:d<=60?31:61;
 function showDay(id,day){
   selected=id; view='detail'; focusDay=day; detailTab='health'; healthRange=day?rangeFor(day):healthRange;
@@ -707,11 +744,13 @@ function showDay(id,day){
   if(row&&row.scrollIntoView) row.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
 }
 $('detail').addEventListener('click',e=>{
-  const t=e.target.closest('[data-tab]'); if(t){detailTab=t.dataset.tab;renderDetail();return;}
+  if(e.target.closest('[data-action="play"]')){togglePlay();return;}
+  if(e.target.closest('[data-action="upgrade"]')){const a=state.accounts.find(x=>x.id===selected);if(a&&isFree(a)&&!a.exited){a.s={...a.s,plan:'paid'};a.streak=0;a.util=[];a.changedAt=state.clock;a.log.push({day:a.age,type:'upgrade',text:`Upgraded to a paid plan. Daily limit now ${fmt(capFor(a))}, and clean sending days start counting toward moving up.`});render();}return;}
+  const t=e.target.closest('[data-tab]'); if(t){detailTab=t.dataset.tab;renderDetail();syncPlay();return;}
   const h=e.target.closest('rect.hit'); if(h){showDay(selected,+h.dataset.day);}
 });
 function render(){renderSummary();renderList();renderDetail();syncPlay();}
-document.addEventListener('click',e=>{const r=e.target.closest('.rng');if(!r)return;const v=r.dataset.range;healthRange=v==='recent'?'recent':+v;focusDay=null;if(view!=='detail')view='detail';renderList();renderDetail();if(r.closest('#axisRanges')){const sec=document.getElementById('healthSec');if(sec&&sec.scrollIntoView)sec.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}});
+document.addEventListener('click',e=>{const r=e.target.closest('.rng');if(!r)return;const v=r.dataset.range;healthRange=(v==='recent'||v==='all')?v:+v;focusDay=null;if(view!=='detail')view='detail';renderList();renderDetail();if(r.closest('#axisRanges')){const sec=document.getElementById('healthSec');if(sec&&sec.scrollIntoView)sec.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}});
 
 $('acctList').addEventListener('click',e=>{const b=e.target.closest('.acct');if(!b)return;focusDay=null;selected=+b.dataset.id;view='detail';renderList();renderDetail();});
 $('addBtn').addEventListener('click',()=>{view='new';renderList();renderDetail();});
