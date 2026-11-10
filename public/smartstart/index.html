@@ -665,13 +665,13 @@ function _renderDetail(){
     <div class="rngs" role="group" aria-label="Days to show">${RANGES.map(([v,l])=>`<button type="button" class="rng${healthRange===v?' on':''}" data-range="${v}" aria-pressed="${healthRange===v}">${l}</button>`).join('')}</div>
   </div>
   <div class="tabs" role="tablist" aria-label="Account details">${[['overview','Overview'],['health','Sending health'],['signals','Risk signals'],['decisions','Decisions']].map(([k,l])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${detailTab===k}">${l}</button>`).join('')}</div>
-  ${detailTab==='overview'?`  <div class="sec"><h3>What this account can do right now${tip('enforcement','how enforcement works')}</h3>${restrictionBox(a)}</div>
-  <div class="sec"><h3>Progress to next classification${tip('progress','how trust is earned')}</h3>${nextStep(a)}</div>
-  <div class="sec">
+  ${detailTab==='overview'?`  <div class="sec">
     <h3>Daily sending, log scale${tip('chart','the chart')}</h3>
     <div class="chart-wrap">${chartSVG(a)}</div>
     <div class="legend"><span><i class="dot" style="background:var(--bar-try)"></i>Tried to send</span><span><i class="dot" style="background:var(--t-developing)"></i>Sent, colored by classification</span><span>Click a bar to see that day's numbers</span><span><i class="dot" style="background:transparent;border-top:2px dashed var(--ink);border-radius:0;height:0;width:12px"></i>Daily limit</span></div>
   </div>
+  <div class="sec"><h3>What this account can do right now${tip('enforcement','how enforcement works')}</h3>${restrictionBox(a)}</div>
+  <div class="sec"><h3>Progress to next classification${tip('progress','how trust is earned')}</h3>${nextStep(a)}</div>
   <div class="sec"><div style="display:grid;gap:10px;align-content:start;min-width:0"><h3>What the customer sees${tip('customer','the customer message')}</h3>${customerMsg(a)}
       <p class="muted" style="margin:0;font-size:12.5px">Explains the restriction and next steps without exposing fraud thresholds.</p></div></div>
 `:''}${detailTab==='health'?`  <div class="sec" id="healthSec"><h3>Sending health, day by day${tip('health','sending health')}</h3>${healthTable(a)}</div>
