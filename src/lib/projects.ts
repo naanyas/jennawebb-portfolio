@@ -180,6 +180,31 @@ export const projects: Project[] = [
     accent: "sky",
   },
   {
+    slug: "smartstart",
+    name: "SmartStart",
+    category: "detection",
+    tagline:
+      "A 90-day trust framework for new senders: accounts earn their sending limits through evidence instead of getting them on day one.",
+    description:
+      "New accounts are where an email platform knows the least and fraud moves the fastest: a bad actor can sign up, upgrade, blast phishing at full capacity, and abandon the account before traditional detection responds. SmartStart replaces that all-or-nothing access with a lifecycle. Signup signals produce a risk score that sets a starting tier — Restricted, Limited, Developing, or Established — and each tier carries its own daily sending limit. From there, trust is earned, not aged into: an account moves up only after enough clean sending days and enough mail actually delivered, so a dormant account never coasts to full access. High bounces step an account down, severe bounces, complaints, or spam-trap hits restrict it on the spot regardless of tier, and a sudden volume spike pauses promotion. At Day 90 the account leaves the framework but keeps its controls. I wrote the product requirements and then built the simulator to pressure-test the policy: seven scenarios, from a healthy startup to a bust-out that builds trust for a month before turning, play out day by day with every decision explained.",
+    role: "Solo — framework design, product requirements, policy logic, simulator build",
+    stack: ["JavaScript", "HTML", "CSS", "SVG"],
+    status: "Prototype",
+    link: {
+      label: "Try the live demo",
+      href: "/smartstart",
+    },
+    highlights: [
+      "Signup risk score sets the starting tier and daily sending limit",
+      "Promotion needs clean sending days and delivered volume — inactivity never counts as trust",
+      "Step-downs for soft signals, immediate restriction for severe ones, at any tier",
+      "Shadow mode logs every decision without enforcing it, for a safe rollout",
+      "Every threshold is editable live, and the summary weighs risky mail held against legitimate mail held",
+      "Fraud ops overrides require a reason and land in an audit log",
+    ],
+    accent: "rose",
+  },
+  {
     slug: "gap-fade-screener",
     name: "Gap Up + Fade Screener (v1)",
     category: "trading",
