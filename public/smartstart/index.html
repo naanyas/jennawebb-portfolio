@@ -277,15 +277,15 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const $=id=>document.getElementById(id);
 const tip=(k,label)=>`<button type="button" class="tip" data-tip="${k}" aria-label="Explain ${label||k}" aria-expanded="false">?</button>`;
 
-const DEFAULT_POLICY={limLimited:500,limDeveloping:5000,limEstablished:50000,maxBounce:5,maxComplaint:0.10,critBounce:10,critComplaint:0.30,trapLimit:2,daysLD:7,volLD:1000,daysDE:21,volDE:25000,spikeX:4};
+const DEFAULT_POLICY={limLimited:500,limDeveloping:5000,limEstablished:50000,maxBounce:5,maxComplaint:0.10,critBounce:10,critComplaint:0.30,trapLimit:2,daysLD:7,utilLD:75,daysDE:21,utilDE:75,spikeX:4};
 let policy={...DEFAULT_POLICY};
 const limitFor=t=>({restricted:0,limited:policy.limLimited,developing:policy.limDeveloping,established:policy.limEstablished})[t];
 const POLICY_FIELDS=[
   ['limLimited','Limited: daily limit (emails)',1],['limDeveloping','Developing: daily limit',1],['limEstablished','Established: daily limit (plan cap)',1],
   ['maxBounce','Step-down: bounce rate above (%)',0.5],['maxComplaint','Step-down: complaint rate above (%)',0.01],
   ['critBounce','Restrict: bounce rate at or above (%)',0.5],['critComplaint','Restrict: complaint rate at or above (%)',0.01],['trapLimit','Restrict: spam trap hits per day',1],
-  ['daysLD','Limited → Developing: clean sending days',1],['volLD','Limited → Developing: emails delivered',100],
-  ['daysDE','Developing → Established: clean sending days',1],['volDE','Developing → Established: emails delivered',1000],
+  ['daysLD','Limited → Developing: clean sending days',1],['utilLD','Limited → Developing: average use of daily limit (%)',5],
+  ['daysDE','Developing → Established: clean sending days',1],['utilDE','Developing → Established: average use of daily limit (%)',5],
   ['spikeX','Spike: times the 7-day average',0.5]
 ];
 
@@ -339,8 +339,8 @@ const L=()=>({lim:fmt(policy.limLimited),dev:fmt(policy.limDeveloping),est:fmt(p
 const TIPS={
   tiers:()=>['Trust classifications',`<p>Every account sits in one of four tiers, and the tier sets how much it can send each day.</p><p><b>Restricted</b>: blocked, under review<br><b>Limited</b>: ${L().lim} a day<br><b>Developing</b>: ${L().dev} a day<br><b>Established</b>: ${L().est} a day (plan cap)</p><p>No account starts Established. That tier has to be earned.</p>`],
   'tier-restricted':()=>['Restricted','<p>High-confidence fraud signals, either at signup or from how the account sent. All sending is blocked and the account goes to fraud ops for review.</p><p>Only a human override can lift a restriction.</p>'],
-  'tier-limited':()=>['Limited',`<p>A new account with little history or some uncertainty in its signup signals. It can send up to <b>${L().lim}</b> emails a day.</p><p>It moves up to Developing after ${policy.daysLD} clean sending days and ${fmt(policy.volLD)} emails delivered.</p>`],
-  'tier-developing':()=>['Developing',`<p>Positive sending history and acceptable risk. It can send up to <b>${L().dev}</b> emails a day.</p><p>It moves up to Established after ${policy.daysDE} clean sending days and ${fmt(policy.volDE)} emails delivered.</p>`],
+  'tier-limited':()=>['Limited',`<p>A new account with little history or some uncertainty in its signup signals. It can send up to <b>${L().lim}</b> emails a day.</p><p>It moves up to Developing after ${policy.daysLD} clean sending days that use at least ${policy.utilLD}% of its daily limit on average.</p>`],
+  'tier-developing':()=>['Developing',`<p>Positive sending history and acceptable risk. It can send up to <b>${L().dev}</b> emails a day.</p><p>It moves up to Established after ${policy.daysDE} clean sending days that use at least ${policy.utilDE}% of its daily limit on average.</p>`],
   'tier-established':()=>['Established',`<p>Enough positive evidence and low observed risk. It can send up to <b>${L().est}</b> emails a day, the plan cap.</p><p>A high tier never overrides abuse controls: a severe signal still restricts the account immediately.</p>`],
   score:()=>['How the risk score works','<p>Every account starts at 30. Each signup signal adds or subtracts points, and the total is capped between 0 and 100.</p><p><b>70 or above</b> starts Restricted, <b>40 to 69</b> starts Limited, and <b>below 40</b> starts Developing.</p><p>The score only sets the starting point. After that, sending behavior decides.</p>'],
   'sig-base':()=>['Baseline','<p>A brand-new account has no sending history, so every account starts with some uncertainty built in.</p>'],
@@ -360,7 +360,7 @@ const TIPS={
   lastday:()=>['Sent and tried','<p>How many emails the account tried to send on the last simulated day, and how many were actually delivered. The gap is mail held by the daily limit or a restriction.</p>'],
   bounce:()=>['Bounce rate',`<p>The share of delivered mail rejected by receiving servers, usually because the address does not exist. High bounces point to bought or scraped lists.</p><p>Above <b>${policy.maxBounce}%</b> steps the account down. At or above <b>${policy.critBounce}%</b> restricts it.</p>`],
   complaint:()=>['Complaint rate',`<p>The share of recipients who marked the email as spam. Inbox providers watch this closely, and a few bad senders can hurt delivery for everyone on the platform.</p><p>Above <b>${policy.maxComplaint}%</b> steps the account down. At or above <b>${policy.critComplaint}%</b> restricts it.</p>`],
-  progress:()=>['How trust is earned','<p>Moving up takes two things: enough <b>clean sending days</b> and enough <b>emails delivered</b>. Age alone never earns trust.</p><p>A clean day is a day the account sent mail with bounce and complaint rates under the limits. Days with no sending don\'t count. Any bad day resets the count, and so does a promotion.</p>'],
+  progress:()=>['How trust is earned','<p>Moving up takes two things: enough <b>clean sending days</b>, and real use of the current cap, measured as the <b>average share of the daily limit</b> sent over those days. Age alone never earns trust, and neither does a trickle of mail that never tests the limit.</p><p>A clean day is a day the account sent mail with bounce and complaint rates under the limits. Days with no sending don\'t count. Any bad day resets the count, and so does a promotion.</p>'],
   chart:()=>['Reading the chart','<p><b>Grey bars</b> are emails the account tried to send. <b>Colored bars</b> are emails delivered, colored by the tier it was in that day. The <b>dashed line</b> is the daily limit, and the strip underneath shows the tier over time.</p><p>The scale is logarithmic so 50 emails and 50,000 both stay readable.</p>'],
   enforcement:()=>['How enforcement works',`<p>SmartStart responds in proportion to the risk instead of suspending everything:</p><ol><li><b>Throttle</b>: mail over the daily limit is held.</li><li><b>Hold</b>: a soft signal at Limited resets the clean-day count.</li><li><b>Step down</b>: a soft signal drops the account one tier (bounces above ${policy.maxBounce}% or complaints above ${policy.maxComplaint}%).</li><li><b>Spike hold</b>: volume above ${policy.spikeX}× the 7-day average and over the limit pauses promotion for 7 days.</li><li><b>Restrict</b>: severe signals block all sending at any tier (bounces at ${policy.critBounce}%, complaints at ${policy.critComplaint}%, or ${policy.trapLimit}+ spam trap hits).</li></ol><p>In the log, green is a promotion, amber is a hold or step-down, red is a restriction and coral is a human override. A spam trap is an address that never signed up for anything, so mail to it proves a bad list.</p>`],
   spike:()=>['Spike hold',`<p>The account suddenly tried to send more than ${policy.spikeX}× its recent daily average. That pattern often comes before a bust-out, so promotion pauses for 7 days while the account keeps sending within its current limit.</p>`],
@@ -380,7 +380,7 @@ let state, nextSeed=1, playTimer=null, selected=0, view='detail';
 function makeAccount(def){
   const sc=score(def.s);
   const a={id:nextSeed,seed:nextSeed*1013,name:def.name,domain:def.domain,profile:def.profile,s:def.s,score:sc,
-    tier:sc.tier,age:0,createdAt:state.clock,exited:false,streak:0,spikeHold:0,cum:0,lastSoft:-9,history:[],log:[]};
+    tier:sc.tier,age:0,createdAt:state.clock,exited:false,streak:0,util:[],spikeHold:0,cum:0,lastSoft:-9,history:[],log:[]};
   nextSeed++;
   a.log.push({day:0,type:'info',text:`Entered SmartStart. Risk score ${sc.total} sets the starting classification to ${LABEL[sc.tier]}${sc.tier==='restricted'?', so sending is blocked pending review.':` with a daily limit of ${fmt(limitFor(sc.tier))}.`}`});
   return a;
@@ -394,6 +394,7 @@ function init(){
 
 const TYPE_COLOR={up:'var(--t-established)',down:'var(--t-limited)',hold:'var(--t-limited)',flag:'var(--t-limited)',restrict:'var(--t-restricted)',override:'var(--accent)',exit:'var(--ink)',info:'var(--muted)'};
 
+const avgUse=(a,n)=>{const u=a.util.slice(-n);return u.length?u.reduce((x,y)=>x+y,0)/u.length:0;};
 function stepAccount(a){
   if(a.exited) return;
   const d=a.age+1; a.age=d;
@@ -418,11 +419,11 @@ function stepAccount(a){
     if(b>=policy.critBounce) why.push(`bounce rate ${b.toFixed(1)}%`);
     if(c>=policy.critComplaint) why.push(`complaint rate ${c.toFixed(2)}%`);
     if(traps>=policy.trapLimit) why.push(`${traps} spam trap hits`);
-    a.tier='restricted'; a.streak=0; a.spikeHold=0;
+    a.tier='restricted'; a.streak=0; a.util=[]; a.spikeHold=0;
     say('restrict',`Restricted from ${LABEL[tier]}: ${why.join(', ')} on ${fmt(delivered)} emails. Routed to fraud ops for review.${tier==='established'?' A high classification never overrides abuse controls.':''}`);
   } else if(measured && (b>policy.maxBounce||c>policy.maxComplaint)){
     const why=b>policy.maxBounce?`bounce rate ${b.toFixed(1)}% is above ${policy.maxBounce}%`:`complaint rate ${c.toFixed(2)}% is above ${policy.maxComplaint}%`;
-    a.streak=0;
+    a.streak=0; a.util=[];
     const i=TIERS.indexOf(tier);
     if(i>1){a.tier=TIERS[i-1];say('down',`Stepped down to ${LABEL[a.tier]}: ${why}. Daily limit now ${fmt(limitFor(a.tier))}.`);}
     else if(a.lastSoft!==d-1) say('hold',`Held at Limited: ${why}. Clean-day count reset.`);
@@ -433,14 +434,16 @@ function stepAccount(a){
       const avg=prior.reduce((x,y)=>x+y,0)/prior.length;
       if(p.attempt>policy.spikeX*avg && p.attempt>limit){a.spikeHold=7;say('flag',`Volume spike: tried ${fmt(p.attempt)} emails, ${(p.attempt/avg).toFixed(1)}× the 7-day average. Promotion paused for 7 days.`);}
     }
-    if(delivered>0) a.streak++;
+    if(delivered>0){a.streak++;a.util.push(Math.min(1,delivered/limit));}
     if(a.spikeHold>0) a.spikeHold--;
-    else if(tier==='limited' && a.streak>=policy.daysLD && a.cum>=policy.volLD){
-      a.tier='developing'; a.streak=0;
-      say('up',`Moved up to Developing after ${policy.daysLD}+ clean sending days and ${fmt(a.cum)} emails delivered. Daily limit now ${fmt(limitFor('developing'))}.`);
-    } else if(tier==='developing' && a.streak>=policy.daysDE && a.cum>=policy.volDE){
-      a.tier='established'; a.streak=0;
-      say('up',`Moved up to Established after ${policy.daysDE}+ clean sending days and ${fmt(a.cum)} emails delivered. Daily limit now ${fmt(limitFor('established'))}.`);
+    else if(tier==='limited' && a.streak>=policy.daysLD && avgUse(a,policy.daysLD)*100>=policy.utilLD){
+      const u=Math.round(avgUse(a,policy.daysLD)*100);
+      a.tier='developing'; a.streak=0; a.util=[];
+      say('up',`Moved up to Developing after ${policy.daysLD} clean sending days using ${u}% of its daily limit on average. Daily limit now ${fmt(limitFor('developing'))}.`);
+    } else if(tier==='developing' && a.streak>=policy.daysDE && avgUse(a,policy.daysDE)*100>=policy.utilDE){
+      const u=Math.round(avgUse(a,policy.daysDE)*100);
+      a.tier='established'; a.streak=0; a.util=[];
+      say('up',`Moved up to Established after ${policy.daysDE} clean sending days using ${u}% of its daily limit on average. Daily limit now ${fmt(limitFor('established'))}.`);
     }
   }
   if(a.tier!==a._before) a.changedAt=state.clock;
@@ -518,9 +521,10 @@ function nextStep(a){
   if(a.exited) return `<p class="muted" style="margin:0">Completed SmartStart on day 90 as ${LABEL[a.tier]}. Standard fraud monitoring continues.</p>`;
   if(a.tier==='restricted') return `<p class="muted" style="margin:0">Under fraud ops review. Only an override on the Decisions tab can lift a restriction.</p>`;
   if(a.tier==='established') return `<p class="muted" style="margin:0">Top classification. Abuse signals can still restrict this account at any time.</p>`;
-  const [days,vol,to]=a.tier==='limited'?[policy.daysLD,policy.volLD,'Developing']:[policy.daysDE,policy.volDE,'Established'];
-  const row=(k,v,t)=>`<div class="bar"><span>${k}</span><span class="track"><i style="width:${Math.min(100,v/t*100)}%"></i></span><span class="num">${fmt(Math.min(v,t))} / ${fmt(t)}</span></div>`;
-  return `<div class="prog">${row('Clean sending days',a.streak,days)}${row('Emails delivered',a.cum,vol)}</div>${a.spikeHold?`<p class="muted" style="margin:0">Promotion paused for ${a.spikeHold} more day${a.spikeHold>1?'s':''} after a volume spike.</p>`:''}<p class="muted" style="margin:0;font-size:12.5px">Next: ${to}. Days with no sending don't count toward trust.</p>`;
+  const [days,util,to]=a.tier==='limited'?[policy.daysLD,policy.utilLD,'Developing']:[policy.daysDE,policy.utilDE,'Established'];
+  const use=Math.round(avgUse(a,days)*100);
+  const row=(k,v,t,suf='')=>`<div class="bar"><span>${k}</span><span class="track"><i style="width:${Math.min(100,v/t*100)}%"></i></span><span class="num">${fmt(Math.min(v,t))}${suf} / ${fmt(t)}${suf}</span></div>`;
+  return `<div class="prog">${row('Clean sending days',a.streak,days)}${row('Average use of daily limit',use,util,'%')}</div>${a.spikeHold?`<p class="muted" style="margin:0">Promotion paused for ${a.spikeHold} more day${a.spikeHold>1?'s':''} after a volume spike.</p>`:''}<p class="muted" style="margin:0;font-size:12.5px">Next: ${to}. Average use is measured over the last ${days} clean sending days against the current ${fmt(limitFor(a.tier))} daily limit. Days with no sending don't count.</p>`;
 }
 function customerMsg(a){
   const lim=fmt(limitFor(a.tier));
@@ -588,7 +592,7 @@ function restrictionBox(a){
     const nextTier={limited:'Developing',developing:'Established'}[t];
     title=`${LABEL[t]}: capped at ${fmt(lim)} emails a day`;
     items=[`<b>Daily cap:</b> up to ${fmt(lim)} emails delivered per day. Anything over the cap is held, not sent.`,
-      t==='established'?`<b>Next:</b> this is the top tier. It stays here while sending stays clean.`:`<b>To move up to ${nextTier}:</b> ${t==='limited'?policy.daysLD:policy.daysDE} clean sending days and ${fmt(t==='limited'?policy.volLD:policy.volDE)} emails delivered.`,
+      t==='established'?`<b>Next:</b> this is the top tier. It stays here while sending stays clean.`:`<b>To move up to ${nextTier}:</b> ${t==='limited'?policy.daysLD:policy.daysDE} clean sending days using at least ${t==='limited'?policy.utilLD:policy.utilDE}% of the daily limit on average.`,
       `<b>Step-down:</b> bounces above ${policy.maxBounce}% or spam complaints above ${policy.maxComplaint}% drop it a tier${t==='limited'?' (at Limited, the clean-day count resets instead)':''}.`,
       `<b>Restriction:</b> bounces at ${policy.critBounce}%, complaints at ${policy.critComplaint}%, or ${policy.trapLimit}+ spam trap hits in a day block all sending, at any tier.`];
     if(a.spikeHold) items.splice(1,0,`<b>Spike hold:</b> promotion is paused for ${a.spikeHold} more day${a.spikeHold>1?'s':''} after a sudden volume jump.`);
@@ -654,7 +658,7 @@ function renderDetail(){
     if(!reason){$('ovMsg').textContent='Add a reason so the override is auditable.';$('ovReason').focus();return;}
     if(t===a.tier){$('ovMsg').textContent=`${a.name} is already ${LABEL[t]}.`;return;}
     a.log.push({day:a.age,type:'override',text:`Override by fraud ops: ${LABEL[a.tier]} → ${LABEL[t]}. Reason: ${reason}`});
-    a.tier=t;a.streak=0;a.spikeHold=0;a.changedAt=state.clock;render();
+    a.tier=t;a.streak=0;a.util=[];a.spikeHold=0;a.changedAt=state.clock;render();
   });
 }
 function renderNew(){
