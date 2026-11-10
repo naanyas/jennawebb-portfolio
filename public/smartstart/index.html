@@ -35,6 +35,41 @@ html,body{margin:0;-webkit-font-smoothing:antialiased}
 #tipPop p+p,#tipPop p+ol,#tipPop ol+p{margin-top:6px}
 #tipPop ol{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:4px}
 #tipPop b{color:var(--ink);font-weight:600}
+.lanes{overflow:hidden}
+.lanes-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.lanes-head .muted{font-size:12.5px}
+.lane,.lane-axis{display:grid;grid-template-columns:170px minmax(0,1fr) 150px;grid-template-areas:"nm tr end";gap:6px 14px;align-items:center;padding:8px 16px}
+.lane{all:unset;box-sizing:border-box;display:grid;grid-template-columns:170px minmax(0,1fr) 150px;grid-template-areas:"nm tr end";gap:6px 14px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--line);border-left:3px solid transparent;cursor:pointer;width:100%}
+.lane:last-child{border-bottom:0}
+.lane:hover{background:var(--soft)}
+.lane.sel{border-left-color:var(--accent);background:var(--soft)}
+.lane.recent{background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.lane:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.lane .nm{grid-area:nm;font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.lane .tr,.lane-axis .tr{grid-area:tr;min-width:0;display:grid;gap:2px}
+.lane .end{grid-area:end;display:flex;justify-content:flex-end;align-items:center;gap:8px;font-size:12px;color:var(--muted);white-space:nowrap}
+.g90{display:grid;grid-template-columns:repeat(90,minmax(0,1fr));gap:1px}
+.marks{height:11px;font-size:9px;line-height:11px;text-align:center;overflow:visible}
+.marks b{font-weight:700}
+.cells{height:12px}
+.cells i{display:block;height:100%;background:var(--soft);border-radius:1px}
+.cells i.today{outline:1px solid var(--ink);outline-offset:0}
+.lane-axis{padding-top:8px;padding-bottom:0;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.lane-axis .tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px}
+.rng{all:unset;box-sizing:border-box;cursor:pointer;text-align:center;font:500 11px/1 var(--f-mono);color:var(--muted);padding:5px 0;border:1px solid var(--line);border-radius:5px;white-space:nowrap}
+.rng:hover{color:var(--ink);border-color:var(--muted)}
+.rng.on{color:var(--on-accent);background:var(--accent);border-color:var(--accent)}
+.rng:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rngs{display:flex;flex-wrap:wrap;gap:6px}
+.rngs .rng{padding:6px 10px}
+.cells i[data-day]{cursor:pointer}
+.cells i[data-day]:hover{outline:1px solid var(--ink)}
+table.health tr.focus td{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+.lane-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--muted)}
+@media (max-width:760px){
+  .lane,.lane-axis{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nm end" "tr tr"}
+  .lane-axis .end{display:none}
+}
 .tierkey{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:13px;color:var(--muted)}
 .tierkey .item{display:inline-flex;align-items:center;gap:6px}
 
@@ -109,7 +144,23 @@ details.policy summary .muted{font-weight:400;font-family:var(--f-body);font-siz
 .dhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
 .dhead .meta{color:var(--muted);font-size:13px;margin-top:2px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.kpi .v.warn{color:var(--t-limited)}
+.health-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table.health{width:100%;border-collapse:collapse;font-size:12.5px;min-width:620px}
+table.health th{font-weight:500;color:var(--muted);text-align:right;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--soft)}
+table.health th:first-child,table.health td:first-child,table.health th:last-child,table.health td:last-child{text-align:left}
+table.health td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.health td:last-child{font-family:var(--f-body);white-space:normal;min-width:180px}
+table.health tr:last-child td{border-bottom:0}
+table.health td.warn{color:var(--t-limited);font-weight:600}
+table.health td.bad{color:var(--t-restricted);font-weight:600}
+table.health td.dim{color:var(--muted)}
+.authgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.authitem{display:grid;gap:6px;justify-items:start;font-size:12px;color:var(--muted)}
+@media (max-width:1100px){.authgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.authgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.empty-note{margin:0;color:var(--muted);font-size:13px}
 .kpi{display:grid;gap:2px}
 .kpi .k{font-size:12px;color:var(--muted)}
 .kpi .v{font-family:var(--f-mono);font-size:17px;font-variant-numeric:tabular-nums}
@@ -144,6 +195,7 @@ table.sig tr.total td{border-bottom:0;font-weight:600;padding-top:8px}
 .preview .score{font-family:var(--f-mono);font-size:24px}
 
 @media (max-width:980px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.summary .stat:first-child{grid-column:1/-1}}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:minmax(0,1fr)}.bar{grid-template-columns:110px minmax(0,1fr) auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -184,6 +236,15 @@ table.sig tr.total td{border-bottom:0;font-weight:600;padding-top:8px}
     <div class="stat"><span class="v" id="sRisky">0</span><span class="k"><span id="sRiskyK">Risky email held</span><button type="button" class="tip" data-tip="risky" aria-label="Explain risky email held" aria-expanded="false">?</button></span></div>
     <div class="stat"><span class="v" id="sLegit">0</span><span class="k"><span id="sLegitK">Legitimate email held (friction)</span><button type="button" class="tip" data-tip="legit" aria-label="Explain legitimate email held" aria-expanded="false">?</button></span></div>
     <div class="stat"><span class="v"><span id="sUp">0</span> / <span id="sDown">0</span></span><span class="k">Promotions / restrictions and step-downs<button type="button" class="tip" data-tip="decisions" aria-label="Explain decision counts" aria-expanded="false">?</button></span></div>
+  </section>
+
+  <section class="panel lanes" aria-label="Every account, day by day">
+    <div class="lanes-head">
+      <h3>Every account, day by day<button type="button" class="tip" data-tip="lanes" aria-label="Explain the lifecycle board" aria-expanded="false">?</button></h3>
+      <div class="lane-legend"><span><b style="color:var(--t-established)">▲</b> moved up</span><span><b style="color:var(--t-limited)">▼</b> stepped down</span><span><b style="color:var(--t-limited)">!</b> spike hold</span><span><b style="color:var(--t-restricted)">✕</b> restricted</span><span><b style="color:var(--accent)">◆</b> override</span></div>
+    </div>
+    <div class="lane-axis"><span class="nm">Account day</span><span class="tr" id="axisRanges"></span><span class="end"></span></div>
+    <div id="lanes"></div>
   </section>
 
   <details class="panel policy" id="policyBox">
@@ -230,7 +291,9 @@ const POLICY_FIELDS=[
 const SIG={
   email:{label:'Signup email',opts:{corporate:['Company domain',0],webmail:['Free webmail',15],disposable:['Disposable address',40]}},
   ip:{label:'Signup IP',opts:{clean:['Clean reputation',0],proxy:['VPN or proxy',15],bad:['Known abusive range',35]}},
-  plan:{label:'Plan',opts:{paid:['Paid plan',0],free:['Free plan',5]}}
+  plan:{label:'Plan',opts:{paid:['Paid plan',0],free:['Free plan',5]}},
+  dmarc:{label:'DMARC policy',opts:{enforced:['DMARC enforced (quarantine or reject)',-10],none:['DMARC monitoring only (p=none)',0],missing:['No DMARC record',10]}},
+  age:{label:'Sending domain age',opts:{old:['Domain over a year old',-5],mid:['Domain 1 to 12 months old',0],fresh:['Domain registered in the last 30 days',15]}}
 };
 function score(s){
   const parts=[['Baseline for a new account',30,'base']];
@@ -238,7 +301,11 @@ function score(s){
   parts.push([SIG.ip.opts[s.ip][0],SIG.ip.opts[s.ip][1],'ip']);
   parts.push([SIG.plan.opts[s.plan][0],SIG.plan.opts[s.plan][1],'plan']);
   parts.push(s.payment?['Payment method verified',0,'payment']:['Payment method not verified',15,'payment']);
-  parts.push(s.domainAuth?['Sending domain authenticated',-10,'domainAuth']:['Sending domain not authenticated',10,'domainAuth']);
+  parts.push(s.spf?['SPF record passes',0,'spf']:['No SPF record',5,'spf']);
+  parts.push(s.dkim?['Mail signed with DKIM',-5,'dkim']:['Mail not signed with DKIM',10,'dkim']);
+  parts.push([SIG.dmarc.opts[s.dmarc][0],SIG.dmarc.opts[s.dmarc][1],'dmarc']);
+  parts.push([SIG.age.opts[s.age][0],SIG.age.opts[s.age][1],'age']);
+  parts.push(s.unsub?['One-click unsubscribe in place',0,'unsub']:['No one-click unsubscribe',5,'unsub']);
   if(s.identity) parts.push(['Identity verification complete',-15,'identity']);
   if(s.linked) parts.push(['Linked to a suspended account',40,'linked']);
   const total=Math.max(0,Math.min(100,parts.reduce((a,p)=>a+p[1],0)));
@@ -257,13 +324,13 @@ function rng(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a
 
 /* example accounts (fictional) */
 const SEED=[
-  {name:'Northwind Analytics',domain:'northwind-analytics.io',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,domainAuth:true,identity:true,linked:false}},
-  {name:'Harbor Fitness',domain:'harborfit.com',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,domainAuth:false,identity:false,linked:false}},
-  {name:'Lumen Bakery Co.',domain:'lumenbakery.shop',profile:'slow',s:{email:'webmail',ip:'clean',plan:'free',payment:true,domainAuth:false,identity:false,linked:false}},
-  {name:'BrightCart Outlet',domain:'brightcart-outlet.com',profile:'listbuy',s:{email:'webmail',ip:'clean',plan:'paid',payment:false,domainAuth:true,identity:false,linked:false}},
-  {name:'Fieldstone Realty',domain:'fieldstone-realty.net',profile:'sleeper',s:{email:'corporate',ip:'proxy',plan:'paid',payment:true,domainAuth:true,identity:false,linked:false}},
-  {name:'Velora Partners',domain:'velora-partners.co',profile:'burst',s:{email:'webmail',ip:'clean',plan:'paid',payment:true,domainAuth:true,identity:false,linked:false}},
-  {name:'acct-88213',domain:'promo-deals-247.top',profile:'burst',s:{email:'disposable',ip:'bad',plan:'free',payment:false,domainAuth:false,identity:false,linked:true}}
+  {name:'Northwind Analytics',domain:'northwind-analytics.io',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,spf:true,dkim:true,dmarc:'enforced',age:'old',unsub:true,identity:true,linked:false}},
+  {name:'Harbor Fitness',domain:'harborfit.com',profile:'steady',s:{email:'corporate',ip:'clean',plan:'paid',payment:true,spf:true,dkim:false,dmarc:'missing',age:'mid',unsub:true,identity:false,linked:false}},
+  {name:'Lumen Bakery Co.',domain:'lumenbakery.shop',profile:'slow',s:{email:'webmail',ip:'clean',plan:'free',payment:true,spf:true,dkim:false,dmarc:'missing',age:'old',unsub:true,identity:false,linked:false}},
+  {name:'BrightCart Outlet',domain:'brightcart-outlet.com',profile:'listbuy',s:{email:'webmail',ip:'clean',plan:'paid',payment:false,spf:true,dkim:true,dmarc:'none',age:'mid',unsub:false,identity:false,linked:false}},
+  {name:'Fieldstone Realty',domain:'fieldstone-realty.net',profile:'sleeper',s:{email:'corporate',ip:'proxy',plan:'paid',payment:true,spf:true,dkim:true,dmarc:'none',age:'old',unsub:true,identity:false,linked:false}},
+  {name:'Velora Partners',domain:'velora-partners.co',profile:'burst',s:{email:'webmail',ip:'clean',plan:'paid',payment:true,spf:true,dkim:true,dmarc:'enforced',age:'mid',unsub:true,identity:false,linked:false}},
+  {name:'acct-88213',domain:'promo-deals-247.top',profile:'burst',s:{email:'disposable',ip:'bad',plan:'free',payment:false,spf:false,dkim:false,dmarc:'missing',age:'fresh',unsub:false,identity:false,linked:true}}
 ];
 
 const L=()=>({lim:fmt(policy.limLimited),dev:fmt(policy.limDeveloping),est:fmt(policy.limEstablished)});
@@ -279,7 +346,12 @@ const TIPS={
   'sig-ip':()=>['Signup IP','<p>The reputation of the network the account signed up from. A VPN or proxy hides where someone really is. A known abusive range has been tied to earlier abuse.</p>'],
   'sig-plan':()=>['Plan','<p>Free plans cost nothing to abuse at scale, so they carry a small amount of extra risk. Paid plans add a financial tie.</p>'],
   'sig-payment':()=>['Payment method','<p>A verified card ties the account to a real financial identity, which is costly for fraudsters to fake over and over. Without one, risk goes up.</p>'],
-  'sig-domainAuth':()=>['Sending domain authentication','<p>SPF and DKIM prove the sender controls the domain in the From address. Legitimate senders usually set this up early, so it lowers risk. Skipping it raises risk.</p>'],
+  'sig-spf':()=>['SPF','<p>SPF lists the servers allowed to send mail for a domain. A missing record means inbox providers can\'t tell real mail from spoofed mail. Most legitimate senders set it up on day one.</p>'],
+  'sig-dkim':()=>['DKIM','<p>DKIM adds a cryptographic signature that proves the message came from the domain and wasn\'t altered. Unlike SPF, it survives forwarding, so it\'s the stronger signal. Signed mail lowers risk; unsigned mail raises it.</p>'],
+  'sig-dmarc':()=>['DMARC','<p>DMARC tells inbox providers what to do when mail fails SPF and DKIM checks, and sends the domain owner reports. <b>p=none</b> only monitors. <b>Quarantine</b> or <b>reject</b> means the owner has confirmed all their real mail is authenticated, which is hard for a throwaway sender to bother with.</p><p>Gmail and Yahoo require at least p=none from bulk senders.</p>'],
+  'sig-age':()=>['Sending domain age','<p>Fraud campaigns usually run on domains registered days before they start sending, then abandon them. A domain registered in the last 30 days adds 15 points; one with more than a year of history takes 5 off.</p>'],
+  'sig-unsub':()=>['One-click unsubscribe','<p>A List-Unsubscribe header lets recipients opt out from the inbox in one tap instead of hitting the spam button. Gmail and Yahoo require it for bulk marketing mail, and senders who skip it collect more complaints.</p>'],
+  auth:()=>['Domain and authentication','<p>The technical setup inbox providers check before trusting a sender. Gmail and Yahoo\'s bulk sender rules require SPF, DKIM, a DMARC record, one-click unsubscribe, and a spam complaint rate under 0.3%.</p><p>Each item here also adds to or subtracts from the starting risk score.</p>'],
   'sig-identity':()=>['Identity verification','<p>A completed identity check is the strongest positive signal at signup and takes 15 points off the score.</p>'],
   'sig-linked':()=>['Linked to a suspended account','<p>The account shares a device, payment method, IP or identity with an account that was already suspended. This adds 40 points, which is usually enough to start Restricted.</p>'],
   limit:()=>['Daily limit','<p>The most emails the account can have delivered in one day. Anything it tries to send beyond that is held, not sent.</p>'],
@@ -297,8 +369,12 @@ const TIPS={
   risky:()=>['Risky email held','<p>Mail from abusive sending that limits or restrictions kept from going out. It only counts mail the account actually tried to send, so the impact is not overstated.</p>'],
   legit:()=>['Legitimate email held','<p>Mail from healthy accounts that limits held back. This is the cost of the controls, and the goal is to keep it near zero. Try lowering the Developing limit in Policy settings to watch it rise.</p>'],
   decisions:()=>['Decisions','<p>Promotions count every move up a tier. The second number counts restrictions and step-downs triggered by sending behavior. Accounts that start Restricted at signup are not counted here.</p>'],
+  traps:()=>['Spam trap hits',`<p>Spam traps are addresses that never signed up for anything, so any mail sent to them proves the list was bought, scraped or badly out of date.</p><p>One hit is a warning. <b>${policy.trapLimit}</b> or more in a day restricts the account.</p>`],
+  health:()=>['Sending health',`<p>The daily numbers SmartStart judges each account on, with the decision each day produced.</p><p><b>Bounces</b>: above ${policy.maxBounce}% steps down, ${policy.critBounce}% or more restricts.<br><b>Spam complaints</b>: above ${policy.maxComplaint}% steps down, ${policy.critComplaint}% or more restricts.<br><b>Spam traps</b>: ${policy.trapLimit} or more in a day restricts.</p><p>Rates are measured on delivered mail. Restricted accounts deliver nothing, so their rates show as dashes.</p>`],
+  lanes:()=>['Every account, day by day','<p>One row per customer. Each square is one day of that account\'s 90-day lifecycle, colored by the classification it was in that day, so you can watch every account progress at once while the simulation plays.</p><p>Symbols mark the decisions: moving up, stepping down, a spike hold, a restriction, or a fraud ops override. A row is highlighted for a few days after its classification changes. Click a row to see that account in detail.</p>'],
   policy:()=>['Policy settings','<p>The thresholds fraud ops can tune without a code deploy: daily limits, step-down and restriction triggers, and what it takes to move up. Changes apply from the next simulated day.</p>']
 };
+let healthRange='recent', focusDay=null;
 let state, nextSeed=1, playTimer=null, selected=0, view='detail';
 function makeAccount(def){
   const sc=score(def.s);
@@ -323,6 +399,7 @@ function stepAccount(a){
   const r=rng(a.seed*7919+d);
   const p=PROFILES[a.profile].fn(d,r);
   const tier=a.tier, limit=limitFor(tier), shadow=state.shadow;
+  a._before=tier;
   const allowed=Math.min(p.attempt,limit);
   const delivered=shadow?p.attempt:allowed;
   const wouldHold=p.attempt-allowed;
@@ -365,6 +442,7 @@ function stepAccount(a){
       say('up',`Moved up to Established after ${policy.daysDE}+ clean sending days and ${fmt(a.cum)} emails delivered. Daily limit now ${fmt(limitFor('established'))}.`);
     }
   }
+  if(a.tier!==a._before) a.changedAt=state.clock;
   if(d>=90){
     a.exited=true;
     say('exit',a.tier==='restricted'?'Day 90: exits SmartStart. The restriction stays in place under standard fraud controls.':`Day 90: exits SmartStart as ${LABEL[a.tier]}. Standard fraud monitoring continues.`);
@@ -447,16 +525,53 @@ function customerMsg(a){
     established:'Your account has full sending access within your plan.'}[a.tier];
   const tips=[];
   if(a.tier!=='established'&&a.tier!=='restricted'){
-    if(!a.s.domainAuth) tips.push('Authenticate your sending domain (SPF and DKIM).');
+    if(!a.s.spf||!a.s.dkim) tips.push('Set up SPF and DKIM for your sending domain.');
+    if(a.s.dmarc==='missing') tips.push('Publish a DMARC record for your domain.');
+    if(!a.s.unsub) tips.push('Add a one-click unsubscribe link to marketing email.');
     if(!a.s.identity) tips.push('Complete identity verification.');
     tips.push('Send only to people who asked to hear from you, and remove addresses that bounce.');
   }
   return `<div class="cust"><span>${m}</span>${tips.length?`<ul>${tips.map(t=>`<li>${t}</li>`).join('')}</ul>`:''}</div>`;
 }
+const DLABEL={up:'Moved up',down:'Stepped down',hold:'Held, clean days reset',flag:'Spike hold',restrict:'Restricted',override:'Override',exit:'Exited SmartStart'};
+function healthTable(a){
+  if(!a.history.length) return '<p class="empty-note">No sending yet. Press Play or +1 day to see daily bounce, spam complaint and spam trap numbers here.</p>';
+  const cls=(v,soft,hard,measured)=>!measured?' class="dim"':v>=hard?' class="bad"':v>soft?' class="warn"':'';
+  const list=healthRange==='recent'?a.history.slice(-21):a.history.filter(h=>h.day>=healthRange&&h.day<healthRange+30);
+  const btns=`<div class="rngs" role="group" aria-label="Days to show">${RANGES.map(([v,l])=>`<button type="button" class="rng${healthRange===v?' on':''}" data-range="${v}" aria-pressed="${healthRange===v}">${l}</button>`).join('')}</div>`;
+  if(!list.length) return btns+`<p class="empty-note">This account hasn't reached day ${healthRange} yet. Press Play to get there.</p>`;
+  const rows=list.slice().reverse().map(h=>{
+    const m=h.delivered>=50;
+    const evs=a.log.filter(l=>l.day===h.day&&DLABEL[l.type]).map(l=>l.type==='restrict'&&!l.text.startsWith('Restricted')?'Blocked':DLABEL[l.type]);
+    return `<tr${h.day===focusDay?' class="focus"':''}><td>Day ${h.day}</td><td>${pill(h.tier)}</td><td>${fmt(h.attempt)}</td><td>${fmt(h.delivered)}</td><td${h.held?' class="warn"':''}>${fmt(h.held)}</td>
+      <td${cls(h.bounce*100,policy.maxBounce,policy.critBounce,m)}>${h.delivered?(h.bounce*100).toFixed(1)+'%':'–'}</td>
+      <td${cls(h.complaint*100,policy.maxComplaint,policy.critComplaint,m)}>${h.delivered?(h.complaint*100).toFixed(2)+'%':'–'}</td>
+      <td${!m?' class="dim"':h.traps>=policy.trapLimit?' class="bad"':h.traps>0?' class="warn"':''}>${h.delivered?h.traps:'–'}</td>
+      <td>${evs.length?evs.join(', '):'<span class="muted">No change</span>'}</td></tr>`;
+  }).join('');
+  return btns+`<div class="health-wrap"><table class="health"><thead><tr><th>Day</th><th>Tier that day</th><th>Tried</th><th>Delivered</th><th>Held</th><th>Bounces</th><th>Spam complaints</th><th>Spam traps</th><th>Decision</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p class="empty-note" style="font-size:12px">Newest first. Click any square on the board above to jump to that day. Amber is above the step-down limit and red is at or above the restriction limit. Days with fewer than 50 emails delivered are too small to judge and show in grey.</p>`;
+}
+function authPanel(a){
+  const s=a.s;
+  const st=(ok,mid,text)=>`<span class="pill" style="--c:${ok?'var(--t-established)':mid?'var(--t-limited)':'var(--t-restricted)'}">${text}</span>`;
+  const items=[
+    ['SPF','spf',st(s.spf,false,s.spf?'Passes':'Missing')],
+    ['DKIM','dkim',st(s.dkim,false,s.dkim?'Signed':'Not signed')],
+    ['DMARC','dmarc',st(s.dmarc==='enforced',s.dmarc==='none',{enforced:'Enforced',none:'p=none',missing:'Missing'}[s.dmarc])],
+    ['Domain age','age',st(s.age==='old',s.age==='mid',{old:'Over 1 year',mid:'1 to 12 months',fresh:'Under 30 days'}[s.age])],
+    ['One-click unsubscribe','unsub',st(s.unsub,false,s.unsub?'In place':'Missing')]
+  ];
+  const meets=s.spf&&s.dkim&&s.dmarc!=='missing'&&s.unsub;
+  return `<div class="authgrid">${items.map(([l,k,v])=>`<div class="authitem"><span class="k">${l}${tip('sig-'+k,l)}</span>${v}</div>`).join('')}</div>
+  <p class="empty-note" style="font-size:12.5px">${meets?'Meets the Gmail and Yahoo bulk sender authentication rules.':'Does not meet the Gmail and Yahoo bulk sender rules, so its mail is more likely to be filtered or rejected.'}</p>`;
+}
 function renderDetail(){
   if(view==='new') return renderNew();
   const a=state.accounts.find(x=>x.id===selected); if(!a) return;
-  const h=a.history.at(-1);
+  const h0=a.history.at(-1);
+  const h=[...a.history].reverse().find(x=>x.delivered>0)||h0;
+  const hd=h&&h0&&h!==h0?`<span class="muted" style="font-size:11px"> · day ${h.day}</span>`:'';
   const lim=limitFor(a.tier);
   const bad=(v,t)=>v>t?' bad':'';
   $('detail').innerHTML=`
@@ -467,18 +582,21 @@ function renderDetail(){
     </div>
     <div class="kpis">
       <div class="kpi"><span class="k">Daily limit${tip('limit','daily limit')}</span><span class="v">${a.tier==='restricted'?'Blocked':fmt(lim)}</span></div>
-      <div class="kpi"><span class="k">Last day sent / tried${tip('lastday','sent and tried')}</span><span class="v">${h?compact(h.delivered)+' / '+compact(h.attempt):'–'}</span></div>
-      <div class="kpi"><span class="k">Bounce rate${tip('bounce','bounce rate')}</span><span class="v${h&&h.delivered?bad(h.bounce*100,policy.maxBounce):''}">${h&&h.delivered?pct(h.bounce,1):'–'}</span></div>
-      <div class="kpi"><span class="k">Complaint rate${tip('complaint','complaint rate')}</span><span class="v${h&&h.delivered?bad(h.complaint*100,policy.maxComplaint):''}">${h&&h.delivered?pct(h.complaint):'–'}</span></div>
+      <div class="kpi"><span class="k">Last day sent / tried${tip('lastday','sent and tried')}</span><span class="v">${h0?compact(h0.delivered)+' / '+compact(h0.attempt):'–'}</span></div>
+      <div class="kpi"><span class="k">Bounce rate${hd}${tip('bounce','bounce rate')}</span><span class="v${h&&h.delivered?bad(h.bounce*100,policy.maxBounce):''}">${h&&h.delivered?pct(h.bounce,1):'–'}</span></div>
+      <div class="kpi"><span class="k">Spam complaints${hd}${tip('complaint','spam complaint rate')}</span><span class="v${h&&h.delivered?bad(h.complaint*100,policy.maxComplaint):''}">${h&&h.delivered?pct(h.complaint):'–'}</span></div>
+      <div class="kpi"><span class="k">Spam trap hits${hd}${tip('traps','spam trap hits')}</span><span class="v${h&&h.delivered?(h.traps>=policy.trapLimit?' bad':h.traps>0?' warn':''):''}">${h&&h.delivered?h.traps:'–'}</span></div>
       <div class="kpi"><span class="k">Delivered to date</span><span class="v">${compact(a.cum)}</span></div>
     </div>
   </div>
+  <div class="sec" id="healthSec"><h3>Sending health, day by day${tip('health','sending health')}</h3>${healthTable(a)}</div>
   <div class="sec"><h3>Progress to next classification${tip('progress','how trust is earned')}</h3>${nextStep(a)}</div>
   <div class="sec">
     <h3>Daily sending, log scale${tip('chart','the chart')}</h3>
     <div class="chart-wrap">${chartSVG(a)}</div>
     <div class="legend"><span><i class="dot" style="background:var(--bar-try)"></i>Tried to send</span><span><i class="dot" style="background:var(--t-developing)"></i>Delivered, colored by classification</span><span><i class="dot" style="background:transparent;border-top:2px dashed var(--ink);border-radius:0;height:0;width:12px"></i>Daily limit</span></div>
   </div>
+  <div class="sec"><h3>Domain and authentication${tip('auth','domain and authentication')}</h3>${authPanel(a)}</div>
   <div class="sec two">
     <div style="display:grid;gap:10px;min-width:0"><h3>Initial risk assessment${tip('score','the risk score')}</h3>
       <table class="sig"><tbody>${a.score.parts.map(p=>`<tr><td>${p[0]}${tip('sig-'+p[2],p[0])}</td><td>${p[1]>0?'+':''}${p[1]}</td></tr>`).join('')}
@@ -505,7 +623,7 @@ function renderDetail(){
     if(!reason){$('ovMsg').textContent='Add a reason so the override is auditable.';$('ovReason').focus();return;}
     if(t===a.tier){$('ovMsg').textContent=`${a.name} is already ${LABEL[t]}.`;return;}
     a.log.push({day:a.age,type:'override',text:`Override by fraud ops: ${LABEL[a.tier]} → ${LABEL[t]}. Reason: ${reason}`});
-    a.tier=t;a.streak=0;a.spikeHold=0;render();
+    a.tier=t;a.streak=0;a.spikeHold=0;a.changedAt=state.clock;render();
   });
 }
 function renderNew(){
@@ -520,14 +638,16 @@ function renderNew(){
     </div>
     <div class="form-grid">
       <label class="check"><input type="checkbox" id="n_payment" checked> Payment method verified</label>
-      <label class="check"><input type="checkbox" id="n_domainAuth"> Sending domain authenticated</label>
+      <label class="check"><input type="checkbox" id="n_spf" checked> SPF record passes</label>
+      <label class="check"><input type="checkbox" id="n_dkim"> Mail signed with DKIM</label>
+      <label class="check"><input type="checkbox" id="n_unsub"> One-click unsubscribe in place</label>
       <label class="check"><input type="checkbox" id="n_identity"> Identity verification complete</label>
       <label class="check"><input type="checkbox" id="n_linked"> Linked to a suspended account</label>
     </div>
     <div class="preview" id="nPreview"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="primary" type="submit">Create account</button><button type="button" id="nCancel">Cancel</button></div>
   </form>`;
-  const read=()=>({email:$('n_email').value,ip:$('n_ip').value,plan:$('n_plan').value,payment:$('n_payment').checked,domainAuth:$('n_domainAuth').checked,identity:$('n_identity').checked,linked:$('n_linked').checked});
+  const read=()=>({email:$('n_email').value,ip:$('n_ip').value,plan:$('n_plan').value,payment:$('n_payment').checked,spf:$('n_spf').checked,dkim:$('n_dkim').checked,dmarc:$('n_dmarc').value,age:$('n_age').value,unsub:$('n_unsub').checked,identity:$('n_identity').checked,linked:$('n_linked').checked});
   const upd=()=>{const s=score(read());$('nPreview').innerHTML=`<span class="score">${s.total}</span><span>Risk score. Starts as</span>${pill(s.tier)}<span class="muted">${s.tier==='restricted'?'Sending blocked pending review':'Daily limit '+fmt(limitFor(s.tier))}</span>`;};
   $('newForm').addEventListener('input',upd);$('newForm').addEventListener('change',upd);upd();
   $('nCancel').addEventListener('click',()=>{view='detail';render();});
@@ -543,10 +663,44 @@ function renderPolicy(){
   $('policyGrid').addEventListener('change',e=>{const k=e.target.id.replace('p_','');if(k in policy){const v=parseFloat(e.target.value);if(!isNaN(v)&&v>=0)policy[k]=v;render();}});
   $('pReset').addEventListener('click',()=>{policy={...DEFAULT_POLICY};renderPolicy();render();});
 }
-function render(){renderSummary();renderList();renderDetail();}
+const RANGES=[['recent','Last 21 days'],[1,'Days 1–30'],[31,'Days 31–60'],[61,'Days 61–90']];
+const rangeFor=d=>d<=30?1:d<=60?31:61;
+function showDay(id,day){
+  selected=id; view='detail'; focusDay=day; healthRange=day?rangeFor(day):healthRange;
+  renderLanes(); renderList(); renderDetail();
+  const row=document.querySelector('table.health tr.focus')||document.getElementById('healthSec');
+  if(row&&row.scrollIntoView) row.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+}
+const MARK={restrict:['✕','var(--t-restricted)',5],down:['▼','var(--t-limited)',4],override:['◆','var(--accent)',3],up:['▲','var(--t-established)',2],flag:['!','var(--t-limited)',1]};
+function renderLanes(){
+  $('axisRanges').innerHTML=RANGES.slice(1).map(([v,l])=>`<button type="button" class="rng${healthRange===v?' on':''}" data-range="${v}" aria-pressed="${healthRange===v}">${l}</button>`).join('');
+  $('lanes').innerHTML=state.accounts.map(a=>{
+    const ev={};
+    a.log.forEach(l=>{
+      let t=l.type; if(t==='restrict'&&!l.text.startsWith('Restricted')) return;
+      const m=MARK[t]; if(!m||l.day<1) return;
+      if(!ev[l.day]||MARK[ev[l.day]][2]<m[2]) ev[l.day]=t;
+    });
+    let marks='',cells='';
+    for(let d=1;d<=90;d++){
+      const h=a.history[d-1], e=ev[d];
+      marks+=`<span${e?` style="color:${MARK[e][1]}"`:''}>${e?`<b>${MARK[e][0]}</b>`:''}</span>`;
+      cells+=`<i${h?` data-day="${d}" title="Day ${d}: ${LABEL[h.tier]}" style="background:${tierColor(h.tier)}"`:''}${!a.exited&&d===a.age?' class="today"':''}></i>`;
+    }
+    const recent=a.changedAt!=null&&state.clock-a.changedAt<3&&!a.exited;
+    return `<button class="lane${a.id===selected&&view==='detail'?' sel':''}${recent?' recent':''}" data-id="${a.id}" aria-label="${esc(a.name)}: ${LABEL[a.tier]}, ${a.exited?'exited':'day '+a.age}">
+      <span class="nm">${esc(a.name)}</span>
+      <span class="tr"><span class="g90 marks">${marks}</span><span class="g90 cells">${cells}</span></span>
+      <span class="end">${pill(a.tier)}<span class="num">${a.exited?'Exited':'Day '+a.age}</span></span>
+    </button>`;
+  }).join('');
+}
+function render(){renderSummary();renderLanes();renderList();renderDetail();}
+$('lanes').addEventListener('click',e=>{const b=e.target.closest('.lane');if(!b)return;const c=e.target.closest('i[data-day]');if(c){showDay(+b.dataset.id,+c.dataset.day);return;}focusDay=null;selected=+b.dataset.id;view='detail';renderLanes();renderList();renderDetail();});
+document.addEventListener('click',e=>{const r=e.target.closest('.rng');if(!r)return;const v=r.dataset.range;healthRange=v==='recent'?'recent':+v;focusDay=null;if(view!=='detail')view='detail';renderLanes();renderList();renderDetail();if(r.closest('#axisRanges')){const sec=document.getElementById('healthSec');if(sec&&sec.scrollIntoView)sec.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}});
 
-$('acctList').addEventListener('click',e=>{const b=e.target.closest('.acct');if(!b)return;selected=+b.dataset.id;view='detail';renderList();renderDetail();});
-$('addBtn').addEventListener('click',()=>{view='new';renderList();renderDetail();});
+$('acctList').addEventListener('click',e=>{const b=e.target.closest('.acct');if(!b)return;focusDay=null;selected=+b.dataset.id;view='detail';renderLanes();renderList();renderDetail();});
+$('addBtn').addEventListener('click',()=>{view='new';renderLanes();renderList();renderDetail();});
 $('step1').addEventListener('click',()=>advance(1));
 $('step7').addEventListener('click',()=>advance(7));
 $('run').addEventListener('click',()=>{stopPlay();advance(500);});
